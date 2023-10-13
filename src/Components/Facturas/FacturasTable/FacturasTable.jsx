@@ -20,8 +20,42 @@ const FacturasTable = () => {
 
   const [searchTerm, setSearchTerm] = useState('');
 
+  const facturasPRUEBA = [
+    {
+      id: 1,
+      fecha: "2023-10-10",
+      concepto: "Producto A",
+      cantidad: 5,
+      precioUnitario: 10,
+      iva: 0.16,
+      importe: 50,
+      cliente: "Cliente A",
+    },
+    {
+      id: 2,
+      fecha: "2023-10-11",
+      concepto: "Producto B",
+      cantidad: 3,
+      precioUnitario: 15,
+      iva: 0.16,
+      importe: 45,
+      cliente: "Cliente B",
+    },
+    {
+      id: 3,
+      fecha: "2023-10-12",
+      concepto: "Producto C",
+      cantidad: 8,
+      precioUnitario: 12,
+      iva: 0.16,
+      importe: 96,
+      cliente: "Cliente C",
+    },
+  ];
+
+
   // Filtrar las facturas basadas en el término de búsqueda
-  const filteredFacturas = facturas.filter((factura) => {
+  const filteredFacturas = facturasPRUEBA.filter((factura) => { // facturas.filter
     // Filtra por todas las propiedades excepto 'fecha'
     return Object.values(factura).some(
       (value) =>
@@ -32,7 +66,6 @@ const FacturasTable = () => {
   });
 
   const handleDelete = (facturaId) => {
-    // Dispara la acción de borrado utilizando Redux
     dispatch(DeleteFactura(facturaId));
   };
 
@@ -48,7 +81,7 @@ const FacturasTable = () => {
   return (
     <div>
       <TextField
-        label="Buscar"
+        label="Buscar Factura"
         variant="outlined"
         fullWidth
         value={searchTerm}

@@ -2,7 +2,7 @@
 import { combineReducers } from 'redux';
 
 const initialState = {
-  hola: "HOLAAAAA",
+  nombreApp: "Conta Consulting",
   facturas: [],
   clientes: [],
   facturaDetail: [],
