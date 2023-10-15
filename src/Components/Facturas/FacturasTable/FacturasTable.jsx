@@ -16,6 +16,7 @@ import { GetClientes, GetFacturas, UpdateFactura, DeleteFactura } from '../../..
 
 const FacturasTable = () => {
   const facturas = useSelector((state) => state.facturas);
+  const clientes = useSelector((state) => state.clientes);
   const dispatch = useDispatch();
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -55,7 +56,7 @@ const FacturasTable = () => {
 
 
   // Filtrar las facturas basadas en el término de búsqueda
-  const filteredFacturas = facturasPRUEBA.filter((factura) => { // facturas.filter
+  const filteredFacturas = facturas.filter((factura) => { // facturas.filter
     // Filtra por todas las propiedades excepto 'fecha'
     return Object.values(factura).some(
       (value) =>
@@ -67,6 +68,8 @@ const FacturasTable = () => {
 
   const handleDelete = (facturaId) => {
     dispatch(DeleteFactura(facturaId));
+    dispatch(GetFacturas());
+    dispatch(GetClientes());
   };
 
   const handleEdit = (facturaId) => {
@@ -110,10 +113,10 @@ const FacturasTable = () => {
                 <TableCell>{factura.fecha}</TableCell>
                 <TableCell>{factura.concepto}</TableCell>
                 <TableCell>{factura.cantidad}</TableCell>
-                <TableCell>{factura.precioUnitario}</TableCell>
+                <TableCell>{factura.precioxu}</TableCell>
                 <TableCell>{factura.iva}</TableCell>
                 <TableCell>{factura.importe}</TableCell>
-                <TableCell>{factura.cliente}</TableCell>
+                <TableCell>{factura.id_cliente}</TableCell>
                 <TableCell>
                   <Button
                     variant="primary"
