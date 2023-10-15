@@ -15,12 +15,15 @@ export default function Home() {
 
   return (<div>
     <h1>Bienvenido a {nombreApp}</h1>
-    <p></p>
+    <br />
+    <a href="/clients">
+
+    <button >Clientes</button>
+    </a>
     <h4>Tabla de Facturas</h4>
     <FacturasTable></FacturasTable>
     <p></p>
-    <h4>Tabla de Clientes</h4>
-    <ClientesTable></ClientesTable>
+    
     
   </div>)
 }
