@@ -9,7 +9,8 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
-import Button from "react-bootstrap/Button";
+import Button from "@mui/material/Button"; 
+import Styles from "./ClientesTable.module.css";
 
 import {
   DeleteCliente,
@@ -23,9 +24,7 @@ const ClientesTable = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Filtrar los clientes basados en el término de búsqueda
   const filteredClientes = clientes.filter((cliente) => {
-    // clientes
     return Object.values(cliente).some(
       (value) =>
         (typeof value === "string" &&
@@ -49,14 +48,27 @@ const ClientesTable = () => {
 
   return (
     <div>
-      <a href="/addclient">
-        <Button
-          variant="success" 
-          style={{ fontSize: "1.5em" }} 
-        >
-          + Agregar cliente
-        </Button>
-      </a>
+      <h2 className={Styles.title}>Registro Clientes</h2>
+      <div className={Styles.buttonContainer}>
+        <a href="/home">
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ fontSize: "16px" }}
+          >
+            Volver
+          </Button>
+        </a>
+        <a href="/addclient">
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ fontSize: "16px" }}
+          >
+            + Agregar cliente
+          </Button>
+        </a>
+      </div>
       <div>
         <TextField
           label="Buscar Cliente"
@@ -94,13 +106,16 @@ const ClientesTable = () => {
                 <TableCell>{cliente.numero_controladora_fiscal}</TableCell>
                 <TableCell>
                   <Button
-                    variant="primary"
+                    variant="contained"
+                    color="primary"
                     onClick={() => handleEdit(cliente.id)}
+                    style={{marginRight: '5px'}}
                   >
                     Editar
                   </Button>
                   <Button
-                    variant="danger"
+                    variant="contained"
+                    color="error"
                     onClick={() => handleDelete(cliente.id)}
                   >
                     Borrar
