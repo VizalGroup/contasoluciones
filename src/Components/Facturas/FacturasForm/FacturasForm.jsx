@@ -137,8 +137,8 @@ const FacturasForm = () => {
                 {/* FECHA */}
                 <div>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DemoContainer components={['DateField']}>
-                            <DateField 
+                        <DemoContainer components={['DatePicker']}>
+                            <DatePicker 
                                 label="Fecha" 
                                 name='fecha'
                                 value={facturaData.fecha}
