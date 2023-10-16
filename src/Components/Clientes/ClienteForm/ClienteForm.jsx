@@ -5,9 +5,15 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
-import styles from "./ClienteForm.module.css";
-import DatePicker  from "react-datepicker";
-import 'react-datepicker/dist/react-datepicker.module.css'
+import Styles from "./ClienteForm.module.css";
+
+// DatePiker
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateField } from '@mui/x-date-pickers/DateField';
+import dayjs from 'dayjs';
 
 
 export default function ClienteForm() {
@@ -30,6 +36,8 @@ export default function ClienteForm() {
       ...formData,
       [name]: value,
     });
+    console.log("FORM: ", formData);
+    return
   };
 
   const handleCUITKeyPress = (e) => {
@@ -38,15 +46,25 @@ export default function ClienteForm() {
     if (!pattern.test(inputChar)) {
       e.preventDefault();
     }
+    return
+  };
+
+  const handleFechaChange = (date) => {
+    if (date) {
+        const fecha = dayjs(date).format('DD-MM-YYYY'); // Asegúrate de que la fecha tenga el formato correcto
+        setFormData({
+          ...formData,
+          inicio_actividades: fecha,
+        });
+    }
+    console.log("FORM: ", formData);
+    return
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Envía los datos del cliente al servidor utilizando la acción PostCliente
     dispatch(PostCliente(formData));
-
-    // Puedes reiniciar el estado del formulario si lo deseas
+    console.log("SE HICE EL POST CORRECTAMENTE");
     setFormData({
       nombre: "",
       cuit: "",
@@ -58,22 +76,20 @@ export default function ClienteForm() {
     });
   };
 
-  return (
-    <div>
-      <h2 className={styles.title}>Agregar Cliente</h2>
+  return (<div>
+      <h3 className={Styles.title}>Agregar Cliente</h3>
+    <div className={Styles.formContariner}>
       <Link to="/clients">
-        <Button
-          component={Link}
-          variant="contained"
-          to="/clients"
-          color="primary"
-          style={{ marginTop: "3vh", marginLeft: "3vw", marginBottom: "3vh" }}
-        >
+        <Button component={Link} variant="contained" to="/clients" color="primary"
+          style={{ marginTop: "3vh", marginLeft: "3vw", marginBottom: "3vh" }}>
           Volver
         </Button>
       </Link>
+
       <form onSubmit={handleSubmit}>
         <Grid container spacing={2}>
+
+          {/* NOMBRE O RAZON SOCIAL */}
           <Grid item xs={6}>
             <TextField
               label="Nombre o razón social"
@@ -82,11 +98,11 @@ export default function ClienteForm() {
               value={formData.nombre}
               onChange={handleInputChange}
               required
-              inputProps={{
-                maxLength: 200,
-              }}
+              inputProps={{maxLength: 200}}
             />
           </Grid>
+
+          {/* CUIT */}
           <Grid item xs={6}>
             <TextField
               label="CUIT"
@@ -96,11 +112,11 @@ export default function ClienteForm() {
               onChange={handleInputChange}
               onKeyPress={handleCUITKeyPress}
               required
-              inputProps={{
-                maxLength: 20,
-              }}
+              inputProps={{maxLength: 20}}
             />
           </Grid>
+
+          {/* CAI */}
           <Grid item xs={6}>
             <TextField
               label="CAI"
@@ -110,20 +126,11 @@ export default function ClienteForm() {
               onChange={handleInputChange}
               onKeyPress={handleCUITKeyPress}
               required
-              inputProps={{
-                maxLength: 15,
-              }}
+              inputProps={{maxLength: 15}}
             />
           </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Inicio de Actividades"
-              fullWidth
-              name="inicio_actividades"
-              value={formData.inicio_actividades}
-              onChange={handleInputChange}
-            />
-          </Grid>
+          
+          {/* DIRECCION */}
           <Grid item xs={6}>
             <TextField
               label="Dirección"
@@ -137,6 +144,8 @@ export default function ClienteForm() {
               }}
             />
           </Grid>
+
+          {/* NUMERO DE INGRESOS BRUTOS */}
           <Grid item xs={6}>
             <TextField
               label="Nro Ingresos Brutos"
@@ -145,11 +154,28 @@ export default function ClienteForm() {
               value={formData.numero_ingresos_brutos}
               onChange={handleInputChange}
               required
-              inputProps={{
-                maxLength: 50,
-              }}
+              inputProps={{maxLength: 50}}
             />
           </Grid>
+
+          {/* INICIO DE ACTIVIDADES */}
+          <Grid item xs={6}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={['DateField']}>
+                    <DateField 
+                      fullWidth
+                      label="Inicio de Actividades" 
+                      name='inicio_actividades'
+                      value={formData.inicio_actividades}
+                      onChange={(date) => handleFechaChange(date)}
+                      required
+                      format="DD-MM-YYYY"
+                    />
+                </DemoContainer>
+              </LocalizationProvider>
+          </Grid>
+
+          {/* CONTROLADORA FISCAL */}
           <Grid item xs={6}>
             <TextField
               label="Nro Controladora Fiscal"
@@ -158,22 +184,16 @@ export default function ClienteForm() {
               value={formData.numero_controladora_fiscal}
               onChange={handleInputChange}
               required
-              inputProps={{
-                maxLength: 50,
-              }}
+              inputProps={{maxLength: 50}}
             />
           </Grid>
         </Grid>
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          fullWidth
-          style={{ marginTop: 16 }}
-        >
+
+        <Button type="submit" variant="contained" color="primary" fullWidth style={{ marginTop: 20 }}>
           Agregar
         </Button>
+
       </form>
     </div>
-  );
+  </div>);
 }
