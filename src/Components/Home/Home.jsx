@@ -16,14 +16,16 @@ export default function Home() {
 
   return (<div>
     <h1>Bienvenido a {nombreApp}</h1>
-    <Link to='/newFactura'><Button variant="primary">Nueva Factura</Button></Link>
-    <p></p>
+    <br />
+    {/* <a href="/clients">
+    <button >Clientes</button>
+    </a> */}
+    <Link to="/clients"><Button>Clientes</Button></Link>
+    <Link to="/newFactura"><Button>Nueva Factura</Button></Link>
     <h4>Tabla de Facturas</h4>
     <FacturasTable></FacturasTable>
     <p></p>
-    <Link to='/newCliente'><Button variant="primary">Nuevo Cliente</Button></Link>
-    <h4>Tabla de Clientes</h4>
-    <ClientesTable></ClientesTable>
+    
     
   </div>)
 }

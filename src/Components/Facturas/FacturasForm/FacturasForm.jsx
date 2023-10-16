@@ -4,233 +4,256 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { PostFactura, GetClientes } from '../../../Redux/actions';
 
-import { Form, Button } from 'react-bootstrap';
+import { Button, Grid } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+//import DateTimePicker from 'react-datetime-picker';
 
+// DatePiker
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateField } from '@mui/x-date-pickers/DateField';
+import dayjs from 'dayjs';
 
 const FacturasForm = () => {
-  const dispatch = useDispatch();
-  //const history = useHistory();
-  const clientes = useSelector((state) => state.clientes);
-
-  const [facturaData, setFacturaData] = useState({
-    fecha: '',
-    concepto: '',
-    cantidad: '',
-    precioUnitario: '',
-    iva: '',
-    importe: '',
-    cliente: null,
-  });
-
-  const [errors, setErrors] = useState({});
-  const [newCliente, setNewCliente] = useState(false)
-
-  useEffect(() => {
-    //dispatch(GetClientes());
-    console.log("Estado de clientes es: ", clientes);
-  }, [dispatch]);
-
-  const handleChange = async(e) => {
-    const { name, value } = e.target;
-    setFacturaData({
-      ...facturaData,
-      [name]: value,
-    });
-    if (name === 'cantidad' || name === 'precioUnitario' || name === 'iva') {
-        calculateImporte();
-    }
-    console.log("FORM: ", facturaData);
-  };
-
-  const handleClienteChange = (event, value) => {
-    setFacturaData({
-      ...facturaData,
-      cliente: value.id,
-    });
-  };
-
-  const handleFechaChange = (date) => {
-    // Convertir la fecha seleccionada a un formato de cadena (ddMMyyyy)
-    const formattedDate = date
-      ? `${date.getDate()}${date.getMonth() + 1}${date.getFullYear()}`
-      : '';
-    setFacturaData({
-      ...facturaData,
-      fecha: formattedDate,
-    });
-  };
-
-  const calculateImporte = () => {
-    const { cantidad, precioUnitario, iva } = facturaData;
-    if (cantidad && precioUnitario && iva) {
-      const cantidadXprecio = cantidad * precioUnitario;
-      const calculoIVA = (iva * cantidadXprecio) / 100;
-      setFacturaData({
-        ...facturaData,
-        importe: cantidadXprecio + calculoIVA,
-      });
-    } else {
-      // Si falta algún valor, el importe debe ser nulo
-      setFacturaData({
-        ...facturaData,
-        importe: null,
-      });
-    }
-  };
-
-  const handlePostFactura = async(e) => {
-    e.preventDefault();
-
-    // Realizar validaciones
-    const newErrors = {};
-    if (!facturaData.fecha) {
-      newErrors.fecha = 'Fecha es obligatoria';
-    }
-    if (!facturaData.concepto) {
-      newErrors.concepto = 'Concepto es obligatorio';
-    }
-    if (!facturaData.cantidad || facturaData.cantidad <= 0) {
-      newErrors.cantidad = 'Cantidad debe ser un número mayor a 0';
-    }
-    if (!facturaData.precioUnitario || facturaData.precioUnitario <= 0) {
-      newErrors.precioUnitario = 'Precio Unitario debe ser un número mayor a 0';
-    }
-    if (!facturaData.iva || facturaData.iva < 0) {
-      newErrors.iva = 'IVA debe ser un número mayor o igual a 0';
-    }
-    if (!facturaData.cliente) {
-      newErrors.cliente = 'Cliente es obligatorio';
-    }
-
-    if (Object.keys(newErrors).length === 0) {
-      // No hay errores, crear la factura
-      await dispatch(PostFactura(facturaData));
-      // Reiniciar el formulario
-      setFacturaData({
+    const dispatch = useDispatch();
+    const clientes = useSelector((state) => state.clientes);
+    const [facturaData, setFacturaData] = useState({
         fecha: '',
         concepto: '',
         cantidad: '',
-        precioUnitario: '',
+        precioxu: '',
         iva: '',
         importe: '',
-        cliente: null,
-      });
-      setErrors({});
-      //history.push("/home");
-    } else {
-      setErrors(newErrors);
-    }
-  };
+        id_cliente: '',
+    });
+    const [errors, setErrors] = useState({});
+    const [newCliente, setNewCliente] = useState(false);
+    const isNumeric = (str) => /^\d+$/.test(str);
 
-  return (<div>
-    <h4>Redactar Nueva Factura</h4>
-    <Form onSubmit={(e)=>handlePostFactura(e)}>
-      <Form.Group className="mb-3">
-        {/* <LocalizationProvider dateAdapter={DateAdapter}>
-            <DesktopDatePicker
-              label="Fecha"
-              inputFormat="dd/MM/yyyy"
-              value={facturaData.fecha}
-              onChange={handleFechaChange}
-              renderInput={(params) => <TextField {...params} fullWidth variant="outlined" />}
-            />
-        </LocalizationProvider>
-        {errors.fecha && <div style={{ color: 'red' }}>{errors.fecha}</div>} */}
-      </Form.Group>
+    useEffect(() => {
+        dispatch(GetClientes());
+        CalculateImporte();
+    }, [dispatch, facturaData.cantidad, facturaData.precioxu, facturaData.iva]);
 
-      <Form.Group className="mb-3">
-        <TextField
-          label="Concepto"
-          variant="outlined"
-          name="concepto"
-          value={facturaData.concepto}
-          onChange={handleChange}
-          error={!!errors.concepto}
-          helperText={errors.concepto}
-        />
-      </Form.Group>
 
-      <Form.Group className="mb-3">
-        <TextField
-          label="Cantidad"
-          variant="outlined"
-          type="number"
-          name="cantidad"
-          value={facturaData.cantidad}
-          onChange={handleChange}
-          error={!!errors.cantidad}
-          helperText={errors.cantidad}
-        />
-      </Form.Group>
+    const handleChange = async(e) => {
+        const { name, value } = e.target;
+        setFacturaData({
+            ...facturaData,
+            [name]: value,
+        });
+        console.log("FORM: ", facturaData);
+        return
+    };
 
-      <Form.Group className="mb-3">
-        <TextField
-          label="Precio Unitario"
-          variant="outlined"
-          type="number"
-          name="precioUnitario"
-          value={facturaData.precioUnitario}
-          onChange={handleChange}
-          error={!!errors.precioUnitario}
-          helperText={errors.precioUnitario}
-        />
-      </Form.Group>
 
-      <Form.Group className="mb-3">
-        <TextField
-          label="IVA"
-          variant="outlined"
-          type="number"
-          name="iva"
-          value={facturaData.iva}
-          onChange={handleChange}
-          error={!!errors.iva}
-          helperText={errors.iva}
-        />
-      </Form.Group>
+    const handleFechaChange = () => {
 
-      <Form.Group className="mb-3">
-        <TextField
-          label="Importe"
-          variant="outlined"
-          name="importe"
-          value={facturaData.importe !== null ? facturaData.importe : ''}
-          disabled
-        />
-      </Form.Group>
+    };
 
-      <Form.Group className="mb-3">
-        <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Cliente</InputLabel>
-            <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                name="cliente"
-                value={facturaData.cliente}
-                label="Cliente"
-                onChange={handleClienteChange}
-            >
-                <MenuItem>Aca Deberia haber un cliente</MenuItem>
-                {/* {clientes.map(c =>(<MenuItem key={c.id} value={c.nombreRazonSocial}>
-                    {c.nombreRazonSocial}
-                    </MenuItem>))} */}
-            </Select>
-        </FormControl>
-        <Button type='button' onClick={()=>setNewCliente(!newCliente)}>Agregar nuevo Cliente</Button>
-        <div>{newCliente? <p>Formulario de CLiente</p> : null}</div>
-      </Form.Group>
 
+    const CalculateImporte = async () => {
+        var cantidadXprecio = 0;
+        var calculoIVA = 0;
+        if (facturaData.cantidad !== '' && facturaData.precioxu !== '' && facturaData.iva !== '') {
+            cantidadXprecio = facturaData.cantidad * facturaData.precioxu;
+          if(facturaData.iva === 0){
+            calculoIVA = 0
+          } else {
+            calculoIVA = (facturaData.iva * cantidadXprecio) / 100;
+          }
+            let importeTotal = cantidadXprecio + calculoIVA
+            setFacturaData({
+                ...facturaData,
+                importe: importeTotal
+            });
+          console.log("El importe calculado es: ", facturaData.importe);
+        } 
+        return 
+    };
+
+
+    const handlePostFactura = async(e) => {
+        e.preventDefault();
+        setFacturaData({
+            ...facturaData,
+            fecha: "fecha random"
+        })
+        // Realizar validaciones
+        const newErrors = {};
+        // if (!facturaData.fecha) {
+        // newErrors.fecha = 'Fecha es obligatoria';
+        // }
+        if (!facturaData.concepto) {
+            newErrors.concepto = 'Concepto es obligatorio';
+        }
+        if (!facturaData.cantidad || !isNumeric(facturaData.cantidad)) {
+            newErrors.cantidad = 'Cantidad debe ser un número mayor a 0';
+        }
+        if (!facturaData.precioxu || !isNumeric(facturaData.precioxu)) {
+            newErrors.precioxu = 'Precio Unitario debe ser un número mayor a 0';
+        }
+        if (!facturaData.iva || !isNumeric(facturaData.iva)) {
+            newErrors.iva = 'IVA debe ser un número mayor o igual a 0';
+        }
+        if (!facturaData.id_cliente) {
+            newErrors.id_cliente = 'Cliente es obligatorio';
+        }
+        
+        if (Object.keys(newErrors).length === 0) { // No hay errores, crear la factura
+            await dispatch(PostFactura(facturaData));
+            console.log("SE HICE EL POST CORRECTAMENTE");
+            setFacturaData({
+                fecha: '',
+                concepto: '',
+                cantidad: '',
+                precioxu: '',
+                iva: '',
+                importe: '',
+                id_cliente: '',
+            });
+            setErrors({});
+            //window.location.href = "/home";
+        } else {
+            setErrors(newErrors);
+            console.log("HA ERRORES ", newErrors);
+        }
+    };
+
+
+    return (<div>
         <div>
-            <Link to='/home'><Button variant="primary">Go to Home</Button></Link>
-            <Button variant="primary" type='submit'>Crear Factura</Button>
+            <h4>Redactar Nueva Factura</h4>
+            <form onSubmit={(e)=>handlePostFactura(e)}>
+
+                {/* FECHA */}
+                <div>
+                    {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DemoContainer components={['DateField']}>
+                            <DateField 
+                                label="Fecha" 
+                                name="fecha"
+                                value={facturaData.fecha}
+                                onChange={handleChange}
+                                error={!!errors.fecha}
+                                helperText={errors.fecha}
+                            />
+                        </DemoContainer>
+                    </LocalizationProvider> */}
+                </div>
+
+                {/* CONCEPTO */}
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            label="Concepto"
+                            variant="outlined"
+                            name="concepto"
+                            value={facturaData.concepto}
+                            onChange={handleChange}
+                            error={!!errors.concepto}
+                            helperText={errors.concepto}
+                        />
+                    </Grid>
+                </Grid>
+
+                {/* CANTIDAD */}
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            label="Cantidad"
+                            variant="outlined"
+                            name="cantidad"
+                            type='number'
+                            value={facturaData.cantidad}
+                            onChange={handleChange}
+                            error={!!errors.cantidad}
+                            helperText={errors.cantidad}
+                        />
+                    </Grid>
+                </Grid>
+
+                {/* PRECIO X UNIDAD */}
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            label="Precio x Unidad"
+                            variant="outlined"
+                            name="precioxu"
+                            type='number'
+                            value={facturaData.precioxu}
+                            onChange={handleChange}
+                            error={!!errors.precioxu}
+                            helperText={errors.precioxu}
+                        />
+                    </Grid>
+                </Grid>
+
+                {/* IVA */}
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            label="IVA"
+                            variant="outlined"
+                            name="iva"
+                            type='number'
+                            value={facturaData.iva}
+                            onChange={handleChange}
+                            error={!!errors.iva}
+                            helperText={errors.iva}
+                        />
+                    </Grid>
+                </Grid>
+
+                {/* IMPORTE */}
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            label="Importe"
+                            variant="outlined"
+                            name="importe"
+                            disabled
+                            value={facturaData.importe}
+                            onChange={handleChange}
+                            error={!!errors.importe}
+                            helperText={errors.importe}
+                        />
+                    </Grid>
+                </Grid>
+
+                {/* CLIENTE */}
+                <div>
+                <FormControl fullWidth>
+                    <InputLabel>Cliente</InputLabel>
+                    <Select
+                        name="id_cliente"
+                        value={facturaData.id_cliente}
+                        label="Cliente"
+                        onChange={handleChange}
+                        error={!!errors.id_cliente}
+                        helperText={errors.id_cliente}
+                    >
+                        {clientes.map(c =>(<MenuItem key={c.id} value={c.id}>
+                            {c.nombre}
+                            </MenuItem>))}
+                    </Select>
+                </FormControl>
+                </div>
+            
+                {/* BOTONES */}
+                <div>
+                    <Link to='/home'><Button variant="primary">Go to Home</Button></Link>
+                    <Button variant="primary" type='submit'>Crear Factura</Button>
+                </div>
+            </form>
         </div>
-    </Form>
-</div>);
+    </div>);
 };
 
 export default FacturasForm;
