@@ -11,6 +11,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Button from 'react-bootstrap/Button';
+import Styles from './FacturasTable.module.css';
 
 import { GetClientes, GetFacturas, UpdateFactura, DeleteFactura } from '../../../Redux/actions';
 
@@ -21,42 +22,8 @@ const FacturasTable = () => {
 
   const [searchTerm, setSearchTerm] = useState('');
 
-  const facturasPRUEBA = [
-    {
-      id: 1,
-      fecha: "2023-10-10",
-      concepto: "Producto A",
-      cantidad: 5,
-      precioUnitario: 10,
-      iva: 0.16,
-      importe: 50,
-      cliente: "Cliente A",
-    },
-    {
-      id: 2,
-      fecha: "2023-10-11",
-      concepto: "Producto B",
-      cantidad: 3,
-      precioUnitario: 15,
-      iva: 0.16,
-      importe: 45,
-      cliente: "Cliente B",
-    },
-    {
-      id: 3,
-      fecha: "2023-10-12",
-      concepto: "Producto C",
-      cantidad: 8,
-      precioUnitario: 12,
-      iva: 0.16,
-      importe: 96,
-      cliente: "Cliente C",
-    },
-  ];
-
-
   // Filtrar las facturas basadas en el término de búsqueda
-  const filteredFacturas = facturas.filter((factura) => { // facturas.filter
+  const filteredFacturas = facturas.filter((factura) => { 
     // Filtra por todas las propiedades excepto 'fecha'
     return Object.values(factura).some(
       (value) =>
@@ -91,7 +58,8 @@ const FacturasTable = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
       />
 
-      <TableContainer component={Paper}>
+      <div>
+      <TableContainer component={Paper} className={Styles.customTable}>
         <Table>
           <TableHead>
             <TableRow>
@@ -136,6 +104,7 @@ const FacturasTable = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      </div>
     </div>
   );
 };

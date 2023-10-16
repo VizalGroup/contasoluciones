@@ -5,6 +5,7 @@ import FacturasTable from '../Facturas/FacturasTable/FacturasTable';
 import ClientesTable from '../Clientes/ClientesTable/ClientesTable';
 import { Button } from '@mui/material';
 import { Link } from 'react-router-dom';
+import Styles from './Home.module.css';
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -15,11 +16,15 @@ export default function Home() {
   },[dispatch]);
 
   return (<div>
-    <h1>Bienvenido a {nombreApp}</h1>
+    <h1 className={Styles.title}>Bienvenido a {nombreApp}</h1>
     <br />
-    <Link to="/clients"><Button>Clientes</Button></Link>
-    <Link to="/newFactura"><Button>Nueva Factura</Button></Link>
-    <h4>Tabla de Facturas</h4>
+    <div className={Styles.buttonContainer}>
+      <Link to="/clients"><Button variant="contained" color="primary" style={{ fontSize: "16px" }}>
+        Clientes</Button></Link>
+      <Link to="/newFactura"><Button variant="contained" color="primary" style={{ fontSize: "16px" }}>
+        Nueva Factura</Button></Link>
+    </div>
+    <h4 className={Styles.title}>Tabla de Facturas</h4>
     <FacturasTable></FacturasTable>
     <p></p>
     
