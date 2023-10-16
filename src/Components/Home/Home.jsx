@@ -17,9 +17,6 @@ export default function Home() {
   return (<div>
     <h1>Bienvenido a {nombreApp}</h1>
     <br />
-    {/* <a href="/clients">
-    <button >Clientes</button>
-    </a> */}
     <Link to="/clients"><Button>Clientes</Button></Link>
     <Link to="/newFactura"><Button>Nueva Factura</Button></Link>
     <h4>Tabla de Facturas</h4>
