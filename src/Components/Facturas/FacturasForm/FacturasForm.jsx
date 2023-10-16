@@ -9,7 +9,7 @@ import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 //import DateTimePicker from 'react-datetime-picker';
 
 // DatePiker
@@ -53,8 +53,14 @@ const FacturasForm = () => {
     };
 
 
-    const handleFechaChange = () => {
-
+    const handleFechaChange = (date) => {
+        if (date) {
+            const fecha = dayjs(date).format('YYYY-MM-DD'); // Asegúrate de que la fecha tenga el formato correcto
+            setFacturaData({
+                ...facturaData,
+                fecha: fecha,
+            });
+        }
     };
 
 
@@ -81,15 +87,11 @@ const FacturasForm = () => {
 
     const handlePostFactura = async(e) => {
         e.preventDefault();
-        setFacturaData({
-            ...facturaData,
-            fecha: "fecha random"
-        })
         // Realizar validaciones
         const newErrors = {};
-        // if (!facturaData.fecha) {
-        // newErrors.fecha = 'Fecha es obligatoria';
-        // }
+        if (!facturaData.fecha) {
+            newErrors.fecha = 'Fecha es obligatoria';
+        }
         if (!facturaData.concepto) {
             newErrors.concepto = 'Concepto es obligatorio';
         }
@@ -134,18 +136,18 @@ const FacturasForm = () => {
 
                 {/* FECHA */}
                 <div>
-                    {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DemoContainer components={['DateField']}>
                             <DateField 
                                 label="Fecha" 
-                                name="fecha"
+                                name='fecha'
                                 value={facturaData.fecha}
-                                onChange={handleChange}
+                                onChange={(date) => handleFechaChange(date)}
                                 error={!!errors.fecha}
                                 helperText={errors.fecha}
                             />
                         </DemoContainer>
-                    </LocalizationProvider> */}
+                    </LocalizationProvider>
                 </div>
 
                 {/* CONCEPTO */}
