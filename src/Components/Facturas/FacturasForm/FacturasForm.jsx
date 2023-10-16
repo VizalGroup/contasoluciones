@@ -13,18 +13,15 @@ import Select from '@mui/material/Select';
 import Styles from './FacturasForm.module.css';
 
 // DatePiker
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { DateField } from '@mui/x-date-pickers/DateField';
 import dayjs from 'dayjs';
 
 const FacturasForm = () => {
+    const date = new Date();
+    const fecha = dayjs(date).format('DD-MM-YYYY');
     const dispatch = useDispatch();
     const clientes = useSelector((state) => state.clientes);
     const [facturaData, setFacturaData] = useState({
-        fecha: '',
+        fecha: fecha,
         concepto: '',
         cantidad: '',
         precioxu: '',
@@ -33,53 +30,61 @@ const FacturasForm = () => {
         id_cliente: '',
     });
     const [errors, setErrors] = useState({});
-    const [newCliente, setNewCliente] = useState(false);
     const isNumeric = (str) => /^\d+$/.test(str);
 
     useEffect(() => {
         dispatch(GetClientes());
         CalculateImporte();
-    }, [dispatch, facturaData.cantidad, facturaData.precioxu, facturaData.iva]);
+        //FechaActual();
+    }, [dispatch, facturaData.cantidad, facturaData.precioxu, facturaData.iva, facturaData.fecha]);
 
 
     const handleChange = async(e) => {
         const { name, value } = e.target;
+        // let date = new Date();
+        // const fecha = dayjs(date).format('DD-MM-YYYY');
         setFacturaData({
             ...facturaData,
             [name]: value,
+            //fecha: fecha,
         });
         console.log("FORM: ", facturaData);
         return
     };
 
-
-    const handleFechaChange = (date) => {
-        if (date) {
-            const fecha = dayjs(date).format('YYYY-MM-DD'); // Asegúrate de que la fecha tenga el formato correcto
-            setFacturaData({
-                ...facturaData,
-                fecha: fecha,
-            });
-        }
-    };
-
+    const FechaActual = async () => {
+        let date = new Date();
+        const fecha = dayjs(date).format('DD-MM-YYYY');
+        setFacturaData({
+            ...facturaData,
+            fecha: fecha,
+        });
+        return
+    }
 
     const CalculateImporte = async () => {
         var cantidadXprecio = 0;
         var calculoIVA = 0;
         if (facturaData.cantidad !== '' && facturaData.precioxu !== '' && facturaData.iva !== '') {
             cantidadXprecio = facturaData.cantidad * facturaData.precioxu;
-          if(facturaData.iva === 0){
-            calculoIVA = 0
-          } else {
-            calculoIVA = (facturaData.iva * cantidadXprecio) / 100;
-          }
+            console.log("Cant X Precio: ", cantidadXprecio);
+            if(facturaData.iva === 0){
+                calculoIVA = 0
+            } else {
+                calculoIVA = (facturaData.iva * cantidadXprecio) / 100;
+                console.log("Iva Calculado: ", calculoIVA);
+            }
             let importeTotal = cantidadXprecio + calculoIVA
-            setFacturaData({
+            console.log("El Importe total es:: ", importeTotal);
+            await setFacturaData({
                 ...facturaData,
                 importe: importeTotal
             });
-          console.log("El importe calculado es: ", facturaData.importe);
+            if(facturaData.importe != ''){
+                console.log("El importe calculado es: ", facturaData.importe);
+            } else {
+                console.log("ALGO PASO que le importe NO se calculo ", facturaData.importe);
+            }
         } 
         return 
     };
@@ -103,6 +108,9 @@ const FacturasForm = () => {
         }
         if (!facturaData.iva || !isNumeric(facturaData.iva)) {
             newErrors.iva = 'IVA debe ser un número mayor o igual a 0';
+        }
+        if (!facturaData.importe) {
+            newErrors.importe = 'El Importe es obligatorio';
         }
         if (!facturaData.id_cliente) {
             newErrors.id_cliente = 'Cliente es obligatorio';
@@ -130,30 +138,20 @@ const FacturasForm = () => {
 
 
     return (<div>
-        <div>
-            <h4>Redactar Nueva Factura</h4>
+            <h3 className={Styles.title}>Redactar Nueva Factura</h3>
+        <div className={Styles.formContariner}>
+            <div className={Styles.buttonContainer} style={{ marginTop: 20 }}>
+                <Link to='/home'><Button variant="contained" color="primary" style={{ fontSize: "16px" }}>
+                    Volver
+                </Button></Link>
+            </div>
+
             <form onSubmit={(e)=>handlePostFactura(e)}>
-
-                {/* FECHA */}
-                <div>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DemoContainer components={['DatePicker']}>
-                            <DatePicker 
-                                label="Fecha" 
-                                name='fecha'
-                                value={facturaData.fecha}
-                                onChange={(date) => handleFechaChange(date)}
-                                error={!!errors.fecha}
-                                helperText={errors.fecha}
-                            />
-                        </DemoContainer>
-                    </LocalizationProvider>
-                </div>
-
-                {/* CONCEPTO */}
-                <Grid container spacing={2}>
+                <Grid container spacing={2} style={{ marginTop: 14 }}>
+                    {/* CONCEPTO */}
                     <Grid item xs={12} sm={6}>
                         <TextField
+                            fullWidth
                             label="Concepto"
                             variant="outlined"
                             name="concepto"
@@ -164,11 +162,12 @@ const FacturasForm = () => {
                         />
                     </Grid>
                 </Grid>
-
-                {/* CANTIDAD */}
-                <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
+                
+                <Grid container spacing={3} style={{ marginTop: 14 }}>
+                    {/* CANTIDAD */}
+                    <Grid item xs={6} sm={3}>
                         <TextField
+                            fullWidth
                             label="Cantidad"
                             variant="outlined"
                             name="cantidad"
@@ -179,12 +178,11 @@ const FacturasForm = () => {
                             helperText={errors.cantidad}
                         />
                     </Grid>
-                </Grid>
 
-                {/* PRECIO X UNIDAD */}
-                <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
+                    {/* PRECIO X UNIDAD */}
+                    <Grid item xs={6} sm={3}>
                         <TextField
+                            fullWidth
                             label="Precio x Unidad"
                             variant="outlined"
                             name="precioxu"
@@ -195,12 +193,11 @@ const FacturasForm = () => {
                             helperText={errors.precioxu}
                         />
                     </Grid>
-                </Grid>
 
-                {/* IVA */}
-                <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
+                    {/* IVA */}
+                    <Grid item xs={6} sm={3}>
                         <TextField
+                            fullWidth
                             label="IVA"
                             variant="outlined"
                             name="iva"
@@ -213,10 +210,11 @@ const FacturasForm = () => {
                     </Grid>
                 </Grid>
 
-                {/* IMPORTE */}
-                <Grid container spacing={2}>
+                <Grid container spacing={2} style={{ marginTop: 16 }}>
+                    {/* IMPORTE */}
                     <Grid item xs={12} sm={6}>
                         <TextField
+                            fullWidth
                             label="Importe"
                             variant="outlined"
                             name="importe"
@@ -227,11 +225,27 @@ const FacturasForm = () => {
                             helperText={errors.importe}
                         />
                     </Grid>
-                </Grid>
 
+                    {/* FECHA */}
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            fullWidth
+                            label="Fecha"
+                            variant="outlined"
+                            name="fecha"
+                            disabled
+                            value={facturaData.fecha}
+                            onChange={handleChange}
+                            error={!!errors.fecha}
+                            helperText={errors.fecha}
+                            placeholder={new Date()}
+                        />
+                    </Grid>
+                </Grid>
+                
                 {/* CLIENTE */}
                 <div>
-                <FormControl fullWidth>
+                <FormControl fullWidth style={{ marginTop: 20 }}>
                     <InputLabel>Cliente</InputLabel>
                     <Select
                         name="id_cliente"
@@ -241,17 +255,25 @@ const FacturasForm = () => {
                         error={!!errors.id_cliente}
                         helperText={errors.id_cliente}
                     >
-                        {clientes.map(c =>(<MenuItem key={c.id} value={c.id}>
+                        {clientes.map(c =>(<MenuItem key={c.id} value={c.id} fullWidth>
                             {c.nombre}
                             </MenuItem>))}
                     </Select>
                 </FormControl>
+                
+                    <div className={Styles.buttonContainer} style={{ marginTop: 20 }}>
+                        <Link to='/addclient'><Button variant="contained" color="primary" style={{ fontSize: "16px" }}>
+                            Agregar Nevo Cliente
+                        </Button></Link>
+                    </div>
                 </div>
+                
             
                 {/* BOTONES */}
-                <div>
-                    <Link to='/home'><Button variant="primary">Go to Home</Button></Link>
-                    <Button variant="primary" type='submit'>Crear Factura</Button>
+                <div className={Styles.buttonContainer} style={{ marginTop: 20 }}>
+                    <Button variant="contained" color="primary" style={{ fontSize: "16px" }} type='submit' fullWidth>
+                        Crear Factura
+                    </Button>
                 </div>
             </form>
         </div>
