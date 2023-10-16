@@ -4,6 +4,7 @@ import { Route, Routes, Navigate, BrowserRouter } from 'react-router-dom';
 import Login from './Components/Login/Login'
 import Home from "./Components/Home/Home";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import FacturasForm from "./Components/Facturas/FacturasForm/FacturasForm";
 import ClientesTable from "./Components/Clientes/ClientesTable/ClientesTable";
 import ClienteForm from "./Components/Clientes/ClienteForm/ClienteForm";
 
@@ -27,9 +28,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<PrivateRoute element={<Home />} />} />
+        <Route path="/newFactura" element={<PrivateRoute element={<FacturasForm />} />} />
         <Route path="/clients" element={<PrivateRoute element={<ClientesTable />} />} />
         <Route path="/addclient" element={<PrivateRoute element={<ClienteForm />} />} />
-
       </Routes>
     </div>
   </BrowserRouter> );

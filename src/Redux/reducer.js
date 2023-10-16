@@ -1,6 +1,4 @@
 
-import { combineReducers } from 'redux';
-
 const initialState = {
   nombreApp: "Conta Consulting",
   facturas: [],
@@ -67,9 +65,5 @@ const rootReducer = (state = initialState, action) => {
     default: return {...state};
   }
 };
-
-// const rootReducer = combineReducers({
-//   counter: counterReducer,
-// });
 
 export default rootReducer;
