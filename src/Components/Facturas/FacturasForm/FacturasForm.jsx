@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { PostFactura, GetClientes } from '../../../Redux/actions';
 
+// material y estilos
 import { Button, Grid } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
@@ -11,83 +12,170 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Styles from './FacturasForm.module.css';
+import ProductInput from '../../Productos/ProductoInput';
 
 // DatePiker
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateField } from '@mui/x-date-pickers/DateField';
 import dayjs from 'dayjs';
 
 const FacturasForm = () => {
-    const date = new Date();
-    const fecha = dayjs(date).format('DD-MM-YYYY');
+    // const date = new Date();
+    // const fecha = dayjs(date).format('DD-MM-YYYY');
     const dispatch = useDispatch();
     const clientes = useSelector((state) => state.clientes);
     const [facturaData, setFacturaData] = useState({
-        fecha: fecha,
-        concepto: '',
-        cantidad: '',
-        precioxu: '',
-        iva: '',
-        importe: '',
+        fecha: '',
         id_cliente: '',
+        nro_factura: ''
     });
+    const [products, setProducts] = useState([
+        { concepto: '', 
+        cantidad: '', 
+        precioxu: '', 
+        iva: 21, 
+        subtotal: '', 
+        importe: '', 
+        id_factura: facturaData.id },
+    ]);
+    const addProduct = () => {
+        setProducts([...products, 
+            { concepto: '', 
+            cantidad: '', 
+            precioxu: '', 
+            iva: 21, 
+            subtotal: '', 
+            importe: '', 
+            id_factura: facturaData.id }]);
+    };
     const [errors, setErrors] = useState({});
-    const isNumeric = (str) => /^\d+$/.test(str);
+    const isNumeric = (str) => /^\d+$/.test(str); // Exprecion regular que verifica que solo se escriban numeros
 
     useEffect(() => {
         dispatch(GetClientes());
-        CalculateImporte();
-        //FechaActual();
-    }, [dispatch, facturaData.cantidad, facturaData.precioxu, facturaData.iva, facturaData.fecha]);
+        //CalculateImporte();
+        handleNroChange();
+    }, [dispatch, facturaData.fecha, facturaData.nro_factura]);
 
 
+    // SETEO DE INPUTS GENERICO
     const handleChange = async(e) => {
         const { name, value } = e.target;
-        // let date = new Date();
-        // const fecha = dayjs(date).format('DD-MM-YYYY');
         setFacturaData({
             ...facturaData,
             [name]: value,
-            //fecha: fecha,
+            nro_factura: handleNroChange()
         });
         console.log("FORM: ", facturaData);
         return
     };
 
-    const FechaActual = async () => {
-        let date = new Date();
-        const fecha = dayjs(date).format('DD-MM-YYYY');
-        setFacturaData({
-            ...facturaData,
-            fecha: fecha,
-        });
-        return
-    }
-
-    const CalculateImporte = async () => {
-        var cantidadXprecio = 0;
-        var calculoIVA = 0;
-        if (facturaData.cantidad !== '' && facturaData.precioxu !== '' && facturaData.iva !== '') {
-            cantidadXprecio = facturaData.cantidad * facturaData.precioxu;
-            console.log("Cant X Precio: ", cantidadXprecio);
-            if(facturaData.iva === 0){
-                calculoIVA = 0
-            } else {
-                calculoIVA = (facturaData.iva * cantidadXprecio) / 100;
-                console.log("Iva Calculado: ", calculoIVA);
-            }
-            let importeTotal = cantidadXprecio + calculoIVA
-            console.log("El Importe total es:: ", importeTotal);
-            await setFacturaData({
+    // SETEO DE LA FECHA DE FACTURA
+    const handleFechaChange = (date) => {
+        if (date) {
+            const fecha = dayjs(date).format('DD-MM-YYYY'); // Asegúrate de que la fecha tenga el formato correcto
+            setFacturaData({
                 ...facturaData,
-                importe: importeTotal
+                fecha: fecha,
             });
-            if(facturaData.importe != ''){
-                console.log("El importe calculado es: ", facturaData.importe);
-            } else {
-                console.log("ALGO PASO que le importe NO se calculo ", facturaData.importe);
-            }
-        } 
-        return 
+        }
+        console.log("FORM: ", facturaData);
+        return
     };
+
+    // SETEO DEL NRO DE FACTURA
+    const handleNroChange = () => {
+        if(facturaData.id_cliente !== ''){
+            let cliente = clientes.find(c => c.id === facturaData.id_cliente);
+            let nroCliente = Number(cliente.ult_factura) + 1;
+            setFacturaData({
+                ...facturaData,
+                nro_factura: nroCliente
+            });
+        };
+    };
+
+    // BORRAR UN INPUT DE PRODUCTO 
+    const deleteProduct = (index) => {
+        if (products.length > 1) {
+          const updatedProducts = [...products];
+          updatedProducts.splice(index, 1);
+          setProducts(updatedProducts);
+        }
+    };
+
+    // SETEO DE CONCEPTO DE PRODUCTO
+    const handleConceptoChange = (value, index) => {
+        const updatedProducts = [...products];
+        updatedProducts[index].concepto = value;
+        setProducts(updatedProducts);
+    };
+    
+    // SETEO DE PRECIO DE PRODUCTO
+    const handlePrecioChange = (value, index) => {
+        const updatedProducts = [...products];
+        updatedProducts[index].precioxu = value;
+        setProducts(updatedProducts);
+    };
+    
+    // SETEO DE CANTIDAD DE PRODUCTO
+    const handleCantidadChange = (value, index) => {
+        const updatedProducts = [...products];
+        updatedProducts[index].cantidad = value;
+        setProducts(updatedProducts);
+    };
+
+    const handleSubtotalChange = (value, index) =>{
+        const updatedProducts = [...products];
+        updatedProducts[index].subtotal = updatedProducts[index].cantidad * updatedProducts[index].precioxu;
+        setProducts(updatedProducts);
+    };
+
+    const handleImporteChange = (value, index) =>{
+        const updatedProducts = [...products];
+        updatedProducts[index].importe= updatedProducts[index].subtotal + (updatedProducts[index].subtotal * 0.21);
+        setProducts(updatedProducts);
+    };
+
+    // const FechaActual = async () => {
+    //     let date = new Date();
+    //     const fecha = dayjs(date).format('DD-MM-YYYY');
+    //     setFacturaData({
+    //         ...facturaData,
+    //         fecha: fecha,
+    //     });
+    //     return
+    // };
+
+    // const CalculateImporte = async () => {
+    //     var cantidadXprecio = 0;
+    //     var calculoIVA = 0;
+    //     if (facturaData.cantidad !== '' && facturaData.precioxu !== '' && facturaData.iva !== '') {
+    //         cantidadXprecio = facturaData.cantidad * facturaData.precioxu;
+    //         console.log("Cant X Precio: ", cantidadXprecio);
+    //         if(facturaData.iva === 0){
+    //             calculoIVA = 0
+    //         } else {
+    //             calculoIVA = (facturaData.iva * cantidadXprecio) / 100;
+    //             console.log("Iva Calculado: ", calculoIVA);
+    //         }
+    //         let importeTotal = cantidadXprecio + calculoIVA
+    //         console.log("El Importe total es:: ", importeTotal);
+    //         await setFacturaData({
+    //             ...facturaData,
+    //             importe: importeTotal
+    //         });
+    //         if(facturaData.importe != ''){
+    //             console.log("El importe calculado es: ", facturaData.importe);
+    //         } else {
+    //             console.log("ALGO PASO que le importe NO se calculo ", facturaData.importe);
+    //         }
+    //     } 
+    //     return 
+    // };
 
 
     const handlePostFactura = async(e) => {
@@ -97,39 +185,33 @@ const FacturasForm = () => {
         if (!facturaData.fecha) {
             newErrors.fecha = 'Fecha es obligatoria';
         }
-        if (!facturaData.concepto) {
+        if (!products.concepto) {
             newErrors.concepto = 'Concepto es obligatorio';
         }
-        if (!facturaData.cantidad || !isNumeric(facturaData.cantidad)) {
+        if (!products.cantidad || !isNumeric(facturaData.cantidad)) {
             newErrors.cantidad = 'Cantidad debe ser un número mayor a 0';
         }
-        if (!facturaData.precioxu || !isNumeric(facturaData.precioxu)) {
+        if (!products.precioxu || !isNumeric(facturaData.precioxu)) {
             newErrors.precioxu = 'Precio Unitario debe ser un número mayor a 0';
-        }
-        if (!facturaData.iva || !isNumeric(facturaData.iva)) {
-            newErrors.iva = 'IVA debe ser un número mayor o igual a 0';
-        }
-        if (!facturaData.importe) {
-            newErrors.importe = 'El Importe es obligatorio';
         }
         if (!facturaData.id_cliente) {
             newErrors.id_cliente = 'Cliente es obligatorio';
         }
         
         if (Object.keys(newErrors).length === 0) { // No hay errores, crear la factura
-            await dispatch(PostFactura(facturaData));
-            console.log("SE HICE EL POST CORRECTAMENTE");
-            setFacturaData({
-                fecha: '',
-                concepto: '',
-                cantidad: '',
-                precioxu: '',
-                iva: '',
-                importe: '',
-                id_cliente: '',
-            });
-            setErrors({});
-            //window.location.href = "/home";
+            const FacturaCreada = await dispatch(PostFactura(facturaData));
+            if(FacturaCreada){
+                console.log("SE HICE EL POST CORRECTAMENTE");
+                setFacturaData({
+                    fecha: '',
+                    id_cliente: '',
+                    nro_factura: ''
+                });
+                setErrors({});
+                //window.location.href = "/home";
+            } else {
+                console.log("ALGO SALIO MAL EN EL POST DE FACTURA");
+            }
         } else {
             setErrors(newErrors);
             console.log("HA ERRORES ", newErrors);
@@ -138,7 +220,7 @@ const FacturasForm = () => {
 
 
     return (<div>
-            <h3 className={Styles.title}>Redactar Nueva Factura</h3>
+        <h3 className={Styles.title}>Redactar Nueva Factura</h3>
         <div className={Styles.formContariner}>
             <div className={Styles.buttonContainer} style={{ marginTop: 20 }}>
                 <Link to='/home'><Button variant="contained" color="primary" style={{ fontSize: "16px" }}>
@@ -147,125 +229,83 @@ const FacturasForm = () => {
             </div>
 
             <form onSubmit={(e)=>handlePostFactura(e)}>
-                <Grid container spacing={2} style={{ marginTop: 14 }}>
-                    {/* CONCEPTO */}
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            fullWidth
-                            label="Concepto"
-                            variant="outlined"
-                            name="concepto"
-                            value={facturaData.concepto}
-                            onChange={handleChange}
-                            error={!!errors.concepto}
-                            helperText={errors.concepto}
-                        />
-                    </Grid>
-                </Grid>
-                
-                <Grid container spacing={3} style={{ marginTop: 14 }}>
-                    {/* CANTIDAD */}
-                    <Grid item xs={6} sm={3}>
-                        <TextField
-                            fullWidth
-                            label="Cantidad"
-                            variant="outlined"
-                            name="cantidad"
-                            type='number'
-                            value={facturaData.cantidad}
-                            onChange={handleChange}
-                            error={!!errors.cantidad}
-                            helperText={errors.cantidad}
-                        />
-                    </Grid>
 
-                    {/* PRECIO X UNIDAD */}
-                    <Grid item xs={6} sm={3}>
-                        <TextField
-                            fullWidth
-                            label="Precio x Unidad"
-                            variant="outlined"
-                            name="precioxu"
-                            type='number'
-                            value={facturaData.precioxu}
-                            onChange={handleChange}
-                            error={!!errors.precioxu}
-                            helperText={errors.precioxu}
-                        />
-                    </Grid>
-
-                    {/* IVA */}
-                    <Grid item xs={6} sm={3}>
-                        <TextField
-                            fullWidth
-                            label="IVA"
-                            variant="outlined"
-                            name="iva"
-                            type='number'
-                            value={facturaData.iva}
-                            onChange={handleChange}
-                            error={!!errors.iva}
-                            helperText={errors.iva}
-                        />
-                    </Grid>
-                </Grid>
-
-                <Grid container spacing={2} style={{ marginTop: 16 }}>
-                    {/* IMPORTE */}
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            fullWidth
-                            label="Importe"
-                            variant="outlined"
-                            name="importe"
-                            disabled
-                            value={facturaData.importe}
-                            onChange={handleChange}
-                            error={!!errors.importe}
-                            helperText={errors.importe}
-                        />
-                    </Grid>
-
+                <Grid container spacing={2} style={{ marginTop: 16, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row' }}>
                     {/* FECHA */}
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            fullWidth
-                            label="Fecha"
-                            variant="outlined"
-                            name="fecha"
-                            disabled
-                            value={facturaData.fecha}
+                    <Grid item xs={12} sm={2.5} style={{marginTop:'-9px'}}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DemoContainer components={['DatePicker']}>
+                                <DatePicker 
+                                    label="Fecha"
+                                    variant="outlined"
+                                    name="fecha"
+                                    value={facturaData.fecha}
+                                    onChange={(date) => handleFechaChange(date)}
+                                    format="DD-MM-YYYY"
+                                    error={!!errors.fecha}
+                                    helperText={errors.fecha}
+                                />
+                            </DemoContainer>
+                        </LocalizationProvider>
+                    </Grid>
+
+                    {/* CLIENTE */}
+                    <Grid item xs={12} sm={2.5}>
+                    <FormControl fullWidth>
+                        <InputLabel>Cliente</InputLabel>
+                        <Select
+                            name="id_cliente"
+                            value={facturaData.id_cliente}
+                            label="Cliente"
                             onChange={handleChange}
-                            error={!!errors.fecha}
-                            helperText={errors.fecha}
-                            placeholder={new Date()}
+                            error={!!errors.id_cliente}
+                            helperText={errors.id_cliente}
+                        >
+                            {clientes.map(c =>(<MenuItem key={c.id} value={c.id}>
+                                {c.nombre}
+                                </MenuItem>))}
+                        </Select>
+                    </FormControl>
+                    </Grid>
+
+                    {/* NRO FACTURA */}
+                    <Grid item xs={12} sm={2.5}>
+                        <TextField
+                            type="text"
+                            label="Nro Factura"
+                            variant="outlined"
+                            name="nro_factura"
+                            value={facturaData.nro_factura}
+                            disabled
+                            onChange={handleNroChange}
                         />
                     </Grid>
-                </Grid>
-                
-                {/* CLIENTE */}
-                <div>
-                <FormControl fullWidth style={{ marginTop: 20 }}>
-                    <InputLabel>Cliente</InputLabel>
-                    <Select
-                        name="id_cliente"
-                        value={facturaData.id_cliente}
-                        label="Cliente"
-                        onChange={handleChange}
-                        error={!!errors.id_cliente}
-                        helperText={errors.id_cliente}
-                    >
-                        {clientes.map(c =>(<MenuItem key={c.id} value={c.id} fullWidth>
-                            {c.nombre}
-                            </MenuItem>))}
-                    </Select>
-                </FormControl>
-                
-                    <div className={Styles.buttonContainer} style={{ marginTop: 20 }}>
-                        <Link to='/addclient'><Button variant="contained" color="primary" style={{ fontSize: "16px" }}>
+
+                    <Grid item xs={12} sm={2.5}>
+                        <Link to='/addclient'><Button variant="contained" color="primary" style={{ fontSize: "14px", marginLeft:'-40px' }}>
                             Agregar Nevo Cliente
                         </Button></Link>
-                    </div>
+                    </Grid>
+                </Grid>
+                
+                {/* PRODUCTOS */}
+                <div>
+                    {products.map((product, index) => (
+                        <ProductInput
+                        key={index}
+                        product={product}
+                        onConceptoChange={(value) => handleConceptoChange(value, index)}
+                        onCantidadChange={(value) => handleCantidadChange(value, index)}
+                        onPrecioChange={(value) => handlePrecioChange(value, index)}
+                        //onIvaChange={(value) => handleChange(value, index)}
+                        onSubtotalChange={(value) => handleSubtotalChange(value, index)}
+                        onImporteChange={(value) => handleImporteChange(value, index)}
+                        onDelete={() => deleteProduct(index)}
+                        />
+                    ))}
+                    <Button variant="contained" color="primary" style={{ fontSize: "13px" }} onClick={addProduct}>
+                        Agregar otro producto
+                    </Button>
                 </div>
                 
             

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { PostCliente } from "../../../Redux/actions";
 import TextField from "@mui/material/TextField";
@@ -24,11 +24,13 @@ export default function ClienteForm() {
     nombre: "",
     cuit: "",
     cai: "",
-    inicio_actividades: "",
+    inicio_actividades: '',
     direccion: "",
     numero_ingresos_brutos: "",
     numero_controladora_fiscal: "",
   });
+
+  useEffect(() => {}, [dispatch, formData.inicio_actividades]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -161,8 +163,8 @@ export default function ClienteForm() {
           {/* INICIO DE ACTIVIDADES */}
           <Grid item xs={6}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['DateField']}>
-                    <DateField 
+                <DemoContainer components={['DatePicker']}>
+                    <DatePicker 
                       fullWidth
                       label="Inicio de Actividades" 
                       name='inicio_actividades'
