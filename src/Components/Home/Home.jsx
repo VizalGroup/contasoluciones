@@ -6,6 +6,7 @@ import ClientesTable from '../Clientes/ClientesTable/ClientesTable';
 import { Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 import Styles from './Home.module.css';
+import Logout from '../Logout/Logout';
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -23,6 +24,7 @@ export default function Home() {
         Clientes</Button></Link>
       <Link to="/newFactura"><Button variant="contained" color="primary" style={{ fontSize: "16px" }}>
         Nueva Factura</Button></Link>
+        <Logout/>
     </div>
     <h4 className={Styles.title}>Tabla de Facturas</h4>
     <FacturasTable></FacturasTable>
