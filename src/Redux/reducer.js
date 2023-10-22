@@ -3,8 +3,10 @@ const initialState = {
   nombreApp: "Conta Consulting",
   facturas: [],
   clientes: [],
+  productos: [],
   facturaDetail: [],
-  clienteDetail: []
+  clienteDetail: [],
+  productosDetail: []
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -56,10 +58,34 @@ const rootReducer = (state = initialState, action) => {
     }
 
 
+    case "GET_PRODUCTOS": return {
+      ...state,
+      productos: action.payload
+    }
+    case "GET_ID_PRODUCTO": return {
+      ...state,
+      productosDetail: action.payload
+    }
+    case "POST_PRODUCTO": return {
+      ...state
+    }
+    case "UPDATE_PRODUCTO": return {
+      ...state,
+      productos: state.productos.map((p) => {
+        return p.id === action.payload.id ? action.payload : p;
+      }),
+    }
+    case "DELETE_PRODUCTO": return {
+      ...state,
+      productos: state.productos.filter(p => p.id !== action.payload)
+    }
+
+
     case "CLEARID": return {
       ...state,
       facturaDetail: [],
-      clienteDetail: []
+      clienteDetail: [],
+      productosDetail: []
     }
 
     default: return {...state};

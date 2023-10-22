@@ -8,7 +8,7 @@
 .buttonContainer {
     display: flex; /* Para justificar los botones horizontalmente */
     justify-content: space-between; /* Para justificar los botones de forma justificada */
-    margin-bottom: 3vh; /* Añadir margen inferior de 20px entre los botones y la tabla */
+    margin-bottom: 3vh;
 }
 
 .formContariner {
@@ -17,3 +17,10 @@
     margin-left: 5%;
     margin-right: 5%;
 }
+
+.facturaPropsContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }

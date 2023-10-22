@@ -18,7 +18,6 @@
 }
 
 .customTable {
-    width: 96%; /* El 96% para permitir un 2% de relleno a cada lado */
     margin: 2%;
     border-collapse: collapse; /* Borra los bordes entre celdas */
 }
