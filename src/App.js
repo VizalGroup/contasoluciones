@@ -7,6 +7,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import FacturasForm from "./Components/Facturas/FacturasForm/FacturasForm";
 import ClientesTable from "./Components/Clientes/ClientesTable/ClientesTable";
 import ClienteForm from "./Components/Clientes/ClienteForm/ClienteForm";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
 const PrivateRoute = ({ element }) => {
