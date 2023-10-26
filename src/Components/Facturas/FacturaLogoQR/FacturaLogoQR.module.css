@@ -1,0 +1,43 @@
+.factura {
+  text-align: center;
+}
+
+.tipoFactura {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.pageContainer {
+    width: 210mm; /* Ancho de la página A4 */
+    height: 297mm; /* Altura de la página A4 */
+    margin: 10mm; /* Márgenes de 10mm en todos los lados (ajusta según sea necesario) */
+    background-color: white; /* Fondo blanco de la página */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Sombra ligera para simular una página impresa */
+    display: flex;
+    flex-direction: column; /* Para que el contenido se ajuste verticalmente en la página */
+    padding: 10mm; /* Espacio interno para el contenido */
+  }
+  
+
+.flexContainer {
+  font-size: 16px;
+  text-transform: uppercase;
+  font-family: "Courier New", Courier, monospace;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.smallText {
+  font-size: 10px;
+}
+
+.Columna{
+  display: block; 
+}
+
+hr { 
+  height: 2px; /* Establecer la altura deseada, ajusta según tus preferencias */
+  background-color: rgb(0, 0, 0); /* Establecer el color de la línea, en este caso, negro */
+  margin: 10px ;
+}
