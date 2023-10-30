@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
-import { PostFactura, GetClientes } from '../../../Redux/actions';
+import { PostFactura, GetClientes, PostProducto, UpdateCliente, GetFacturas } from '../../../Redux/actions';
 
 // material y estilos
 import { Button, Grid } from '@mui/material';
@@ -14,49 +14,43 @@ import Select from '@mui/material/Select';
 import Styles from './FacturasForm.module.css';
 import ProductInput from '../../Productos/ProductoInput';
 
-// DatePiker
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { DateField } from '@mui/x-date-pickers/DateField';
-import dayjs from 'dayjs';
 
 const FacturasForm = () => {
-    // const date = new Date();
-    // const fecha = dayjs(date).format('DD-MM-YYYY');
     const dispatch = useDispatch();
     const clientes = useSelector((state) => state.clientes);
+    const facturas = useSelector((state) => state.facturas);
     const [facturaData, setFacturaData] = useState({
         fecha: '',
         id_cliente: '',
         nro_factura: ''
     });
+    const [nroFacturaInput, setNroFacturaInput] = useState('');
     const [products, setProducts] = useState([
         { concepto: '', 
         cantidad: '', 
         precioxu: '', 
-        iva: 21, 
+        iva: '', 
         subtotal: '', 
         importe: '', 
-        id_factura: facturaData.id },
+        id_factura: '' },
     ]);
     const addProduct = () => {
         setProducts([...products, 
             { concepto: '', 
             cantidad: '', 
             precioxu: '', 
-            iva: 21, 
+            iva: '', 
             subtotal: '', 
             importe: '', 
-            id_factura: facturaData.id }]);
+            id_factura: '' }
+        ]);
     };
     const [errors, setErrors] = useState({});
     const isNumeric = (str) => /^\d+$/.test(str); // Exprecion regular que verifica que solo se escriban numeros
 
     useEffect(() => {
         dispatch(GetClientes());
-        //CalculateImporte();
+        dispatch(GetFacturas());
         handleNroChange();
     }, [dispatch, facturaData.fecha, facturaData.nro_factura]);
 
@@ -73,29 +67,26 @@ const FacturasForm = () => {
         return
     };
 
-    // SETEO DE LA FECHA DE FACTURA
-    const handleFechaChange = (date) => {
-        if (date) {
-            const fecha = dayjs(date).format('DD-MM-YYYY'); // Asegúrate de que la fecha tenga el formato correcto
+    // SETEO DEL NRO DE FACTURA
+    const handleNroChange = (e) => {
+        if(facturaData.id_cliente !== '' && facturaData.nro_factura === ''){
+            let cliente = clientes.find(c => c.id === facturaData.id_cliente);
+            let nroCliente = Number(cliente.ult_factura) + 1;
+            let nroClienteStr = nroCliente.toString().padStart(12, '0');
             setFacturaData({
                 ...facturaData,
-                fecha: fecha,
+                nro_factura: nroClienteStr
             });
+            setNroFacturaInput(nroCliente);
         }
-        console.log("FORM: ", facturaData);
         return
     };
 
-    // SETEO DEL NRO DE FACTURA
-    const handleNroChange = () => {
-        if(facturaData.id_cliente !== ''){
-            let cliente = clientes.find(c => c.id === facturaData.id_cliente);
-            let nroCliente = Number(cliente.ult_factura) + 1;
-            setFacturaData({
-                ...facturaData,
-                nro_factura: nroCliente
-            });
-        };
+    const SetearUltimoNroFctura = async() => {
+        let cliente = clientes.find(c => c.id === facturaData.id_cliente);
+        cliente.ult_factura = nroFacturaInput;
+        const ClienteActualizado = await dispatch(UpdateCliente(cliente.id, cliente));
+        return ClienteActualizado;
     };
 
     // BORRAR UN INPUT DE PRODUCTO 
@@ -128,98 +119,100 @@ const FacturasForm = () => {
         setProducts(updatedProducts);
     };
 
+    // SETEO DE IVA DE PRODUCTO
+    const handleIvaChange = (value, index) =>{
+        const updatedProducts = [...products];
+        updatedProducts[index].iva = ((updatedProducts[index].cantidad * updatedProducts[index].precioxu) * 21) / 100;
+        setProducts(updatedProducts);
+    };
+
+    // SETEO DE SUBTOTAL DE PRODUCTO
     const handleSubtotalChange = (value, index) =>{
         const updatedProducts = [...products];
         updatedProducts[index].subtotal = updatedProducts[index].cantidad * updatedProducts[index].precioxu;
         setProducts(updatedProducts);
     };
 
+    // SETEO DE IMPORTE DE PRODUCTO
     const handleImporteChange = (value, index) =>{
         const updatedProducts = [...products];
         updatedProducts[index].importe= updatedProducts[index].subtotal + (updatedProducts[index].subtotal * 0.21);
         setProducts(updatedProducts);
     };
 
-    // const FechaActual = async () => {
-    //     let date = new Date();
-    //     const fecha = dayjs(date).format('DD-MM-YYYY');
-    //     setFacturaData({
-    //         ...facturaData,
-    //         fecha: fecha,
-    //     });
-    //     return
-    // };
+    // FUNCION POSTEO DE PRODUCTOS
+    const PostearProductos = async(factura_id) => {
+        const Productos = products.map((product) => ({
+            ...product,
+            id_factura: factura_id, // Establece el id_factura de cada producto
+        }));
+        setProducts(Productos);
+        for(let producto of Productos){
+            await dispatch(PostProducto(producto))
+        };
+        setProducts([
+            { concepto: '', 
+            cantidad: '', 
+            precioxu: '', 
+            iva: '', 
+            subtotal: '', 
+            importe: '', 
+            id_factura: '' }
+        ]);
+    };
 
-    // const CalculateImporte = async () => {
-    //     var cantidadXprecio = 0;
-    //     var calculoIVA = 0;
-    //     if (facturaData.cantidad !== '' && facturaData.precioxu !== '' && facturaData.iva !== '') {
-    //         cantidadXprecio = facturaData.cantidad * facturaData.precioxu;
-    //         console.log("Cant X Precio: ", cantidadXprecio);
-    //         if(facturaData.iva === 0){
-    //             calculoIVA = 0
-    //         } else {
-    //             calculoIVA = (facturaData.iva * cantidadXprecio) / 100;
-    //             console.log("Iva Calculado: ", calculoIVA);
-    //         }
-    //         let importeTotal = cantidadXprecio + calculoIVA
-    //         console.log("El Importe total es:: ", importeTotal);
-    //         await setFacturaData({
-    //             ...facturaData,
-    //             importe: importeTotal
-    //         });
-    //         if(facturaData.importe != ''){
-    //             console.log("El importe calculado es: ", facturaData.importe);
-    //         } else {
-    //             console.log("ALGO PASO que le importe NO se calculo ", facturaData.importe);
-    //         }
-    //     } 
-    //     return 
-    // };
+    // FUNCION POSTEO DE FACTURA
+    const handlePostFactura = async() => {
+        const FacturaCreada = await dispatch(PostFactura(facturaData));
+        if(FacturaCreada){
+            console.log("SE hiso el POST de la factura su ID es: ", FacturaCreada.payload.id);
+            await PostearProductos(FacturaCreada.payload.id);
+            setFacturaData({
+                fecha: '',
+                id_cliente: '',
+                nro_factura: ''
+            });
+            setErrors({});
+            //window.location.href = "/home";
+        } else {
+            console.log("ALGO SALIO MAL EN EL POST DE FACTURA");
+        }
+    };
 
-
-    const handlePostFactura = async(e) => {
+    // FUNCION DE VALIDACION DE FORMULARIO
+    const handleValidateErrors = async(e) => {
         e.preventDefault();
         // Realizar validaciones
         const newErrors = {};
         if (!facturaData.fecha) {
             newErrors.fecha = 'Fecha es obligatoria';
         }
-        if (!products.concepto) {
-            newErrors.concepto = 'Concepto es obligatorio';
-        }
-        if (!products.cantidad || !isNumeric(facturaData.cantidad)) {
-            newErrors.cantidad = 'Cantidad debe ser un número mayor a 0';
-        }
-        if (!products.precioxu || !isNumeric(facturaData.precioxu)) {
-            newErrors.precioxu = 'Precio Unitario debe ser un número mayor a 0';
-        }
         if (!facturaData.id_cliente) {
             newErrors.id_cliente = 'Cliente es obligatorio';
         }
+        // if (!products.concepto) {
+        //     newErrors.concepto = 'Concepto es obligatorio';
+        //     return alert("El concepto del producto es obligatorio");
+        // }
+        // if (!products.cantidad || !isNumeric(facturaData.cantidad)) {
+        //     newErrors.cantidad = 'Cantidad debe ser un número mayor a 0';
+        //     return alert("La cantidad del producto es obligatorio");
+        // }
+        // if (!products.precioxu || !isNumeric(facturaData.precioxu)) {
+        //     newErrors.precioxu = 'Precio Unitario debe ser un número mayor a 0';
+        //     return alert("El precio unitario del producto es obligatorio");
+        // }
         
         if (Object.keys(newErrors).length === 0) { // No hay errores, crear la factura
-            const FacturaCreada = await dispatch(PostFactura(facturaData));
-            if(FacturaCreada){
-                console.log("SE HICE EL POST CORRECTAMENTE");
-                setFacturaData({
-                    fecha: '',
-                    id_cliente: '',
-                    nro_factura: ''
-                });
-                setErrors({});
-                //window.location.href = "/home";
-            } else {
-                console.log("ALGO SALIO MAL EN EL POST DE FACTURA");
-            }
+            await handlePostFactura();
         } else {
             setErrors(newErrors);
-            console.log("HA ERRORES ", newErrors);
-        }
+            console.log("HAY ERRORES ", newErrors);
+        };
     };
 
 
-    return (<div>
+    return (<div className={Styles.responsiveContainer}>
         <h3 className={Styles.title}>Redactar Nueva Factura</h3>
         <div className={Styles.formContariner}>
             <div className={Styles.buttonContainer} style={{ marginTop: 20 }}>
@@ -227,26 +220,20 @@ const FacturasForm = () => {
                     Volver
                 </Button></Link>
             </div>
-
-            <form onSubmit={(e)=>handlePostFactura(e)}>
+            
+            <form onSubmit={(e)=>handleValidateErrors(e)}>
 
                 <Grid container spacing={2} style={{ marginTop: 16, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row' }}>
                     {/* FECHA */}
-                    <Grid item xs={12} sm={2.5} style={{marginTop:'-9px'}}>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DemoContainer components={['DatePicker']}>
-                                <DatePicker 
-                                    label="Fecha"
-                                    variant="outlined"
-                                    name="fecha"
-                                    value={facturaData.fecha}
-                                    onChange={(date) => handleFechaChange(date)}
-                                    format="DD-MM-YYYY"
-                                    error={!!errors.fecha}
-                                    helperText={errors.fecha}
-                                />
-                            </DemoContainer>
-                        </LocalizationProvider>
+                    <Grid item xs={12} sm={2}>
+                        <TextField
+                            name='fecha'
+                            value={facturaData.fecha}
+                            onChange={handleChange}
+                            error={!!errors.fecha}
+                            helperText={errors.fecha}
+                            type='date'
+                        />
                     </Grid>
 
                     {/* CLIENTE */}
@@ -271,7 +258,7 @@ const FacturasForm = () => {
                     {/* NRO FACTURA */}
                     <Grid item xs={12} sm={2.5}>
                         <TextField
-                            type="text"
+                            type="number"
                             label="Nro Factura"
                             variant="outlined"
                             name="nro_factura"
@@ -282,7 +269,7 @@ const FacturasForm = () => {
                     </Grid>
 
                     <Grid item xs={12} sm={2.5}>
-                        <Link to='/addclient'><Button variant="contained" color="primary" style={{ fontSize: "14px", marginLeft:'-40px' }}>
+                        <Link to='/addclient'><Button variant="contained" color="primary" style={{ fontSize: "13px" }}>
                             Agregar Nevo Cliente
                         </Button></Link>
                     </Grid>
@@ -297,7 +284,7 @@ const FacturasForm = () => {
                         onConceptoChange={(value) => handleConceptoChange(value, index)}
                         onCantidadChange={(value) => handleCantidadChange(value, index)}
                         onPrecioChange={(value) => handlePrecioChange(value, index)}
-                        //onIvaChange={(value) => handleChange(value, index)}
+                        onIvaChange={(value) => handleIvaChange(value, index)}
                         onSubtotalChange={(value) => handleSubtotalChange(value, index)}
                         onImporteChange={(value) => handleImporteChange(value, index)}
                         onDelete={() => deleteProduct(index)}

@@ -46,8 +46,7 @@ const ClientesTable = () => {
     dispatch(GetClientes());
   }, [dispatch]);
 
-  return (
-    <div>
+  return (<div className={Styles.responsiveContainer}>
       <h2 className={Styles.title}>Registro Clientes</h2>
       <div className={Styles.buttonContainer}>
         <a href="/home">
@@ -78,7 +77,7 @@ const ClientesTable = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} className={Styles.customTable}>
         <Table>
           <TableHead>
             <TableRow>
@@ -126,8 +125,7 @@ const ClientesTable = () => {
           </TableBody>
         </Table>
       </TableContainer>
-    </div>
-  );
+    </div>);
 };
 
 export default ClientesTable;

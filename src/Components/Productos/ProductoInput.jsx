@@ -15,9 +15,11 @@ const ProductInput = (props) => {
         if (!isNaN(newCantidad) && !isNaN(newPrecioxu)) {
           // Realizar cálculos
           const newSubtotal = newCantidad * newPrecioxu;
+          const newIva = newSubtotal * 0.21;
           const newImporte = newSubtotal + (newSubtotal * 0.21);
     
           // Actualizar el producto
+          props.onIvaChange(newIva);
           props.onSubtotalChange(newSubtotal);
           props.onImporteChange(newImporte);
         }
@@ -72,7 +74,7 @@ const ProductInput = (props) => {
                 value={props.product.iva}
                 disabled
                 placeholder={props.product.iva}
-                //onChange={(e) => props.onIvaChange(e.target.value)}
+                onChange={(e) => props.onIvaChange(e.target.value)}
                 />
             </Grid>
 
