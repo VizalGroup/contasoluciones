@@ -15,7 +15,7 @@ export default function Home() {
     console.log("el nombre de la app es: ", nombreApp)
   },[dispatch]);
 
-  return (<div>
+  return (<div className={Styles.responsiveContainer}>
     <h1 className={Styles.title}>Bienvenido a {nombreApp}</h1>
     <br />
     <div className={Styles.buttonContainer}>
@@ -24,7 +24,6 @@ export default function Home() {
       <Link to="/newFactura"><Button variant="contained" color="primary" style={{ fontSize: "16px" }}>
         Nueva Factura</Button></Link>
     </div>
-    <h4 className={Styles.title}>Tabla de Facturas</h4>
     <FacturasTable></FacturasTable>
     <p></p>
     

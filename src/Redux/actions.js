@@ -80,6 +80,7 @@ export const PostFactura = (atributos) => {
             f.append("id_cliente", atributos.id_cliente)
             f.append("nro_factura", atributos.nro_factura)
             var response = await axios.post(facturaURL, f)
+            console.log("Factura creada en la ACTION: ", response.data);
             return dispatch({
                 type: POST_FACTURA,
                 payload: response.data
@@ -213,6 +214,7 @@ export const UpdateCliente = (id, atributos) => {
             f.append("qr_code", atributos.qr_code)
             f.append("ult_factura", atributos.ult_factura)
             var response = await axios.post(clienteURL, f, {params: {id: id}})
+            console.log("Cliente Updateado: ", response.data);
             return dispatch({
                 type: UPDATE_CLIENTE,
                 payload: response.data

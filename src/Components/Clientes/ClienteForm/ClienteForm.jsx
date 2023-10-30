@@ -78,7 +78,7 @@ export default function ClienteForm() {
     });
   };
 
-  return (<div>
+  return (<div className={Styles.responsiveContainer}>
       <h3 className={Styles.title}>Agregar Cliente</h3>
     <div className={Styles.formContariner}>
       <Link to="/clients">

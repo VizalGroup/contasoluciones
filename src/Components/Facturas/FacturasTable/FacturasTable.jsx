@@ -106,8 +106,8 @@ const FacturasTable = () => {
     dispatch(GetProductos());
   },[dispatch]);
 
-  return (
-    <div>
+  return (<div className={Styles.responsiveContainer}>
+    <h4 className={Styles.title}>Tabla de Facturas</h4>
       {/* FECHA */}
       <Grid item xs={12} sm={6}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -141,7 +141,7 @@ const FacturasTable = () => {
             {facturas.map((factura) => (
               <TableRow key={factura.id}>
                 <TableCell>{factura.id}</TableCell>
-                <TableCell>{factura.fecha}</TableCell>
+                <TableCell>{factura.fecha.split('-').reverse().join('-')}</TableCell>
                 <TableCell>{factura.nro_factura}</TableCell>
                 <TableCell>{ClienteFactura(factura.id_cliente)}</TableCell>
                 <TableCell>{CalcularSubtotal(factura.id)}</TableCell>
@@ -166,8 +166,7 @@ const FacturasTable = () => {
         </Table>
       </TableContainer>
       </div>
-    </div>
-  );
+  </div>);
 };
 
 export default FacturasTable;

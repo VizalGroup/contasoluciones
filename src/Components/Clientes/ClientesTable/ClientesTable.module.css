@@ -1,3 +1,12 @@
+
+.responsiveContainer {
+    width: 100%; /* El ancho ocupará el 100% del espacio disponible */
+    max-width: 1350px; 
+    margin: 0 auto; /* Centra el contenido horizontalmente en el contenedor */
+    padding: 16px; /* Añade un espacio de relleno */
+}
+
+
 .title{
     text-align: center;
     margin-top: 2vh ;
@@ -8,4 +17,40 @@
     display: flex; /* Para justificar los botones horizontalmente */
     justify-content: space-around; /* Para justificar los botones de forma justificada */
     margin-bottom: 3vh; /* Añadir margen inferior de 20px entre los botones y la tabla */
+}
+
+.table {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.customTable {
+    margin-top: 2%;
+    border-collapse: collapse; /* Borra los bordes entre celdas */
+}
+  
+  /* Estilo para las filas en la tabla (excluyendo las filas de encabezado) */
+.customTable tbody tr {
+    text-align: center; /* Centra el contenido de las celdas */
+    align-items: center;
+}
+  
+  /* Estilo para las filas de encabezado */
+.customTable thead th {
+    text-align: center; /* Centra el contenido de las celdas de encabezado */
+    align-items: center;
+}
+  
+  /* Agregar margen superior e inferior a las celdas */
+.customTable th, .custom-table td {
+    padding: 10px;
+    border: 1px solid #7aa2b7; /* Borde de 1 píxel con un color suave */
+    align-items: center;
+}
+  
+  /* Estilizar las celdas pares e impares */
+.customTable tbody tr:nth-child(odd) {
+    background-color: #ffffff; /* Fondo de fila alternado */
+    align-items: center;
 }
