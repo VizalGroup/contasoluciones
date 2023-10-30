@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import loginConfig from "./credentials";
 import { useNavigate } from "react-router-dom";
+import LoginImg from "../Img/Login.jpg"
 
 function Login() {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ function Login() {
       }}
     >
       <img
-        src="null"
+        src={LoginImg} 
         className="img-fluid"
         alt="logo"
         style={{ width: "30vh" }}

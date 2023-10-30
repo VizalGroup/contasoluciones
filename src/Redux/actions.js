@@ -48,28 +48,51 @@ export const GetFacturas = () => {
     };
 };
 
+// export const GetFacturaDetaill = (id) => {
+//     return async function (dispatch) {
+//         try {
+//             var f = new FormData();
+//             f.append("METHOD", "GET");
+//             var response = await axios.post(facturaURL, f, {params: {id: id}})
+//             if(response.data !== null){
+//                 return dispatch({
+//                     type: GET_ID_FACTURA,
+//                     payload: response.data
+//                 })
+//             } else {
+//                 return dispatch({
+//                     type: GET_ID_FACTURA,
+//                     payload: []
+//                 })
+//             }
+//         }catch(err){
+//             console.log(err)
+//         }
+//     };
+// };
+
 export const GetFacturaDetaill = (id) => {
     return async function (dispatch) {
-        try {
-            var f = new FormData();
-            f.append("METHOD", "GET");
-            var response = await axios.post(facturaURL, f, {params: {id: id}})
-            if(response.data !== null){
-                return dispatch({
-                    type: GET_ID_FACTURA,
-                    payload: response.data
-                })
-            } else {
-                return dispatch({
-                    type: GET_ID_FACTURA,
-                    payload: []
-                })
-            }
-        }catch(err){
-            console.log(err)
+      try {
+        // Realiza una solicitud GET al servidor con el ID de la factura como parámetro
+        const response = await axios.get(`${facturaURL}?id=${id}`);
+        if (response.data) {
+          return dispatch({
+            type: GET_ID_FACTURA,
+            payload: response.data,
+          });
+        } else {
+          return dispatch({
+            type: GET_ID_FACTURA,
+            payload: [],
+          });
         }
+      } catch (err) {
+        console.log(err);
+      }
     };
 };
+  
 
 export const PostFactura = (atributos) => {
     return async function (dispatch) {
@@ -351,7 +374,7 @@ export const DeleteProducto = (id) => {
 
 // ACTION DE BORRAR REGISTRO DE DETALLES
 export const ClearID  =()=>{
-    return {
+    return  {
         type: CLEARID
     };
 };
