@@ -6,14 +6,7 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
 import Styles from "./ClienteForm.module.css";
-
-// DatePiker
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { DateField } from '@mui/x-date-pickers/DateField';
-import dayjs from 'dayjs';
+import InputLabel from '@mui/material/InputLabel';
 
 
 export default function ClienteForm() {
@@ -21,18 +14,23 @@ export default function ClienteForm() {
 
   // Estado local para los campos del formulario
   const [formData, setFormData] = useState({
-    nombre: "",
-    cuit: "",
-    cai: "",
+    nombre: '',
+    cuit: '',
+    cai: '',
     inicio_actividades: '',
-    direccion: "",
-    numero_ingresos_brutos: "",
-    numero_controladora_fiscal: "",
+    direccion: '',
+    numero_ingresos_brutos: '',
+    numero_controladora_fiscal: '',
+    img_logo: '',
+    qr_code: '',
+    ult_factura: ''
   });
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {}, [dispatch, formData.inicio_actividades]);
 
-  const handleInputChange = (e) => {
+  // SETEO DE INPUTS GENERICO
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -42,40 +40,77 @@ export default function ClienteForm() {
     return
   };
 
-  const handleCUITKeyPress = (e) => {
-    const pattern = /[0-9-]/;
-    const inputChar = String.fromCharCode(e.charCode);
-    if (!pattern.test(inputChar)) {
-      e.preventDefault();
-    }
-    return
-  };
-
-  const handleFechaChange = (date) => {
-    if (date) {
-        const fecha = dayjs(date).format('DD-MM-YYYY'); // Asegúrate de que la fecha tenga el formato correcto
-        setFormData({
-          ...formData,
-          inicio_actividades: fecha,
-        });
-    }
+  // FUNCION PARA SUBIR IMAGENES A CLODINARI
+  const SubirImagenesClodinari = async (e) => {
+    //console.log(e.target.id)
+    const files = e.target.files;
+    const data = new FormData();
+    data.append("file", files[0]);
+    data.append("upload_preset", "k484vqmp"); //k484vqmp codigo carpeta clodinari
+    const res = await fetch(
+      "https://api.cloudinary.com/v1_1/dqrirzlrv/image/upload",
+      { method: "POST", body: data }
+    );
+    const file = await res.json();
+    setFormData({...formData, [e.target.id]:file.secure_url });
     console.log("FORM: ", formData);
-    return
+};
+
+  // FUNCION POSTEO DE CLIENTE
+  const handlePostClient = async() => {
+    const NuevoCLiente = await dispatch(PostCliente(formData));
+    if(NuevoCLiente){
+      console.log("SE HICE EL POST CORRECTAMENTE");
+      setFormData({
+        nombre: '',
+        cuit: '',
+        cai: '',
+        inicio_actividades: '',
+        direccion: '',
+        numero_ingresos_brutos: '',
+        numero_controladora_fiscal: '',
+        img_logo: '',
+        qr_code: '',
+        ult_factura: ''
+      });
+      setErrors({});
+    };
   };
 
-  const handleSubmit = (e) => {
+  // FUNCION DE VALIDACION DE FORMULARIO
+  const handleValidateErrors = async(e) => {
     e.preventDefault();
-    dispatch(PostCliente(formData));
-    console.log("SE HICE EL POST CORRECTAMENTE");
-    setFormData({
-      nombre: "",
-      cuit: "",
-      cai: "",
-      inicio_actividades: "",
-      direccion: "",
-      numero_ingresos_brutos: "",
-      numero_controladora_fiscal: "",
-    });
+    const newErrors = {};
+    if (!formData.cai) {
+      newErrors.cai = 'El CAI es requerido';
+    }
+    if (!formData.cuit) {
+      newErrors.cuit = 'El CUIT es requerido';
+    }
+    if (!formData.direccion) {
+      newErrors.direccion = 'La Direcció es requerida';
+    }
+    if (!formData.inicio_actividades) {
+      newErrors.inicio_actividades = 'La Fecha de inicio de actividades es requerida';
+    }
+    if (!formData.nombre) {
+      newErrors.nombre = 'El Nombre o Razon Social es requerido';
+    }
+    if (!formData.numero_controladora_fiscal) {
+      newErrors.numero_controladora_fiscal = 'El Numero de Controladora Fiscal es requerido';
+    }
+    if (!formData.numero_ingresos_brutos) {
+      newErrors.numero_ingresos_brutos = 'El Numero de Ingresos Brutos es requerido';
+    }
+    if (!formData.ult_factura) {
+      newErrors.ult_factura = 'El Numero de Facturación es requerido';
+    }
+    if (Object.keys(newErrors).length === 0) { // No hay errores, crear la factura
+      await handlePostClient();
+    } else {
+      setErrors(newErrors);
+      console.log("HAY ERRORES ", newErrors);
+    };
   };
 
   return (<div className={Styles.responsiveContainer}>
@@ -88,19 +123,20 @@ export default function ClienteForm() {
         </Button>
       </Link>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleValidateErrors}>
         <Grid container spacing={2}>
-
           {/* NOMBRE O RAZON SOCIAL */}
           <Grid item xs={6}>
             <TextField
               label="Nombre o razón social"
+              type="text"
               fullWidth
               name="nombre"
               value={formData.nombre}
-              onChange={handleInputChange}
-              required
+              onChange={handleChange}
               inputProps={{maxLength: 200}}
+              error={!!errors.nombre}
+              helperText={errors.nombre}
             />
           </Grid>
 
@@ -108,13 +144,14 @@ export default function ClienteForm() {
           <Grid item xs={6}>
             <TextField
               label="CUIT"
+              type="text"
               fullWidth
               name="cuit"
               value={formData.cuit}
-              onChange={handleInputChange}
-              onKeyPress={handleCUITKeyPress}
-              required
-              inputProps={{maxLength: 20}}
+              onChange={handleChange}
+              inputProps={{ pattern: '^[0-9-]*$', maxLength: 15 }}
+              error={!!errors.cuit}
+              helperText={errors.cuit}
             />
           </Grid>
 
@@ -122,13 +159,14 @@ export default function ClienteForm() {
           <Grid item xs={6}>
             <TextField
               label="CAI"
+              type="text"
               fullWidth
               name="cai"
               value={formData.cai}
-              onChange={handleInputChange}
-              onKeyPress={handleCUITKeyPress}
-              required
-              inputProps={{maxLength: 15}}
+              onChange={handleChange}
+              inputProps={{ pattern: '^[0-9-]*$', maxLength: 15 }}
+              error={!!errors.cai}
+              helperText={errors.cai}
             />
           </Grid>
           
@@ -136,14 +174,14 @@ export default function ClienteForm() {
           <Grid item xs={6}>
             <TextField
               label="Dirección"
+              type="text"
               fullWidth
               name="direccion"
               value={formData.direccion}
-              onChange={handleInputChange}
-              required
-              inputProps={{
-                maxLength: 100,
-              }}
+              onChange={handleChange}
+              inputProps={{ maxLength: 100 }}
+              error={!!errors.direccion}
+              helperText={errors.direccion}
             />
           </Grid>
 
@@ -151,43 +189,86 @@ export default function ClienteForm() {
           <Grid item xs={6}>
             <TextField
               label="Nro Ingresos Brutos"
+              type="text"
               fullWidth
               name="numero_ingresos_brutos"
               value={formData.numero_ingresos_brutos}
-              onChange={handleInputChange}
-              required
-              inputProps={{maxLength: 50}}
+              onChange={handleChange}
+              inputProps={{ inputMode:'numeric', pattern: '[0-9]*', maxLength: 50}}
+              error={!!errors.numero_ingresos_brutos}
+              helperText={errors.numero_ingresos_brutos}
             />
-          </Grid>
-
-          {/* INICIO DE ACTIVIDADES */}
-          <Grid item xs={6}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['DatePicker']}>
-                    <DatePicker 
-                      fullWidth
-                      label="Inicio de Actividades" 
-                      name='inicio_actividades'
-                      value={formData.inicio_actividades}
-                      onChange={(date) => handleFechaChange(date)}
-                      required
-                      format="DD-MM-YYYY"
-                    />
-                </DemoContainer>
-              </LocalizationProvider>
           </Grid>
 
           {/* CONTROLADORA FISCAL */}
           <Grid item xs={6}>
             <TextField
               label="Nro Controladora Fiscal"
+              type="text"
               fullWidth
               name="numero_controladora_fiscal"
               value={formData.numero_controladora_fiscal}
-              onChange={handleInputChange}
-              required
-              inputProps={{maxLength: 50}}
+              onChange={handleChange}
+              inputProps={{ inputMode:'numeric', pattern: '[0-9]*', maxLength: 50}}
+              error={!!errors.numero_controladora_fiscal}
+              helperText={errors.numero_controladora_fiscal}
             />
+          </Grid>
+
+          <Grid item xs={6}>
+            <TextField
+              label="Numero de Facturación"
+              type="text"
+              fullWidth
+              name="ult_factura"
+              value={formData.ult_factura}
+              onChange={handleChange}
+              inputProps={{ inputMode:'numeric', pattern: '[0-9]*', maxLength: 12}}
+              error={!!errors.ult_factura}
+              helperText={errors.ult_factura}
+            />
+          </Grid>
+
+          {/* INICIO DE ACTIVIDADES */}
+          <Grid item xs={6}>
+            <TextField
+              type='date'
+              name='inicio_actividades'
+              value={formData.inicio_actividades}
+              onChange={handleChange}
+              error={!!errors.inicio_actividades}
+              helperText={errors.inicio_actividades}
+            />
+          </Grid>
+        </Grid>
+
+        <Grid container spacing={2} style={{ marginTop: 20, display: 'flex', justifyContent: 'flex-start', alignItems: 'center',flexDirection: 'row' }}>
+          {/* IMAGEN LOGO */}
+          <Grid item xs={12}>
+            <InputLabel>Logo</InputLabel>
+              <TextField
+                type='file'
+                id='img_logo'
+                name='file'
+                onChange={(e)=> SubirImagenesClodinari(e)}
+              />
+            <div>{formData.img_logo ? <div>
+              <img className={Styles.imageRender} src={formData.img_logo}/></div> : null}
+            </div>
+          </Grid>
+
+          {/* CODIGO QR */}
+          <Grid item xs={12}>
+            <InputLabel>Codigo QR</InputLabel>
+              <TextField
+                type='file'
+                id='qr_code'
+                name='file'
+                onChange={(e)=> SubirImagenesClodinari(e)}
+              />
+            <div>{formData.qr_code ? <div>
+              <img className={Styles.imageRender} src={formData.qr_code}/></div> : null}
+            </div>
           </Grid>
         </Grid>
 
