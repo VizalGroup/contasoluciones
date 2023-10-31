@@ -5,19 +5,16 @@
 .tipoFactura {
   font-size: 18px;
   font-weight: bold;
+  align-items: center;
 }
 
 .pageContainer {
-    width: 210mm; /* Ancho de la página A4 */
-    height: 297mm; /* Altura de la página A4 */
-    margin: 10mm; /* Márgenes de 10mm en todos los lados (ajusta según sea necesario) */
-    background-color: white; /* Fondo blanco de la página */
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Sombra ligera para simular una página impresa */
-    display: flex;
-    flex-direction: column; /* Para que el contenido se ajuste verticalmente en la página */
-    padding: 10mm; /* Espacio interno para el contenido */
-  }
-  
+  width: 210mm; /* Ancho de la página A4 */
+  height: 297mm;
+  display: flex;
+  flex-direction: column; /* Para que el contenido se ajuste verticalmente en la página */
+  padding: 10mm; /* Espacio interno para el contenido */
+}
 
 .flexContainer {
   font-size: 16px;
@@ -25,19 +22,58 @@
   font-family: "Courier New", Courier, monospace;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  width: 100%;
 }
 
 .smallText {
   font-size: 10px;
 }
 
-.Columna{
-  display: block; 
+.Columna {
+  display: block;
 }
 
-hr { 
-  height: 2px; /* Establecer la altura deseada, ajusta según tus preferencias */
-  background-color: rgb(0, 0, 0); /* Establecer el color de la línea, en este caso, negro */
-  margin: 10px ;
+.secondData {
+  font-size: 16px;
+  text-transform: uppercase;
+  font-family: "Courier New", Courier, monospace;
+}
+
+.EndContainer {
+  font-size: 16px;
+  text-transform: uppercase;
+  font-family: "Courier New", Courier, monospace;
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  width: 100%;
+}
+
+.Concepto {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis; /* Esto mostrará "..." si el texto se desborda */
+}
+
+.LimitedWidthDiv {
+  max-width: 300px; /* Establece el ancho máximo según tus preferencias */
+  /* word-wrap: break-word; Divide las palabras para ajustarse al ancho del div */
+}
+
+.secondData p {
+  font-size: 16px;
+  text-transform: uppercase;
+  font-family: "Courier New", Courier, monospace;
+  margin-bottom: 0; /* Establece el margen inferior en 0 para eliminar el espacio entre párrafos */
+}
+
+.firstContainer {
+  font-size: 16px;
+  text-transform: uppercase;
+  font-family: "Courier New", Courier, monospace;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
