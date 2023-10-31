@@ -26,3 +26,9 @@
   margin-right: 5%;
 }
 
+.imageRender{
+  width: 15vw;
+  height: 15vh;
+  object-fit: contain;
+}
+

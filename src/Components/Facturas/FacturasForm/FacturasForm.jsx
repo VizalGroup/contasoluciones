@@ -18,13 +18,15 @@ import ProductInput from '../../Productos/ProductoInput';
 const FacturasForm = () => {
     const dispatch = useDispatch();
     const clientes = useSelector((state) => state.clientes);
-    const facturas = useSelector((state) => state.facturas);
     const [facturaData, setFacturaData] = useState({
         fecha: '',
         id_cliente: '',
-        nro_factura: ''
+        nro_factura: '',
+        destinatario: '',
+        direccion: '',
+        cuit: '',
+        cond_vta: ''
     });
-    const [nroFacturaInput, setNroFacturaInput] = useState('');
     const [products, setProducts] = useState([
         { concepto: '', 
         cantidad: '', 
@@ -50,9 +52,10 @@ const FacturasForm = () => {
 
     useEffect(() => {
         dispatch(GetClientes());
-        dispatch(GetFacturas());
-        handleNroChange();
-    }, [dispatch, facturaData.fecha, facturaData.nro_factura]);
+        if(facturaData.id_cliente !== '' && facturaData.nro_factura === ''){   
+            handleNroChange();
+        };  
+    }, [dispatch, facturaData.fecha, facturaData.id_cliente, facturaData.nro_factura]);
 
 
     // SETEO DE INPUTS GENERICO
@@ -60,31 +63,28 @@ const FacturasForm = () => {
         const { name, value } = e.target;
         setFacturaData({
             ...facturaData,
-            [name]: value,
-            nro_factura: handleNroChange()
+            [name]: value
         });
         console.log("FORM: ", facturaData);
         return
     };
 
     // SETEO DEL NRO DE FACTURA
-    const handleNroChange = (e) => {
-        if(facturaData.id_cliente !== '' && facturaData.nro_factura === ''){
-            let cliente = clientes.find(c => c.id === facturaData.id_cliente);
-            let nroCliente = Number(cliente.ult_factura) + 1;
-            let nroClienteStr = nroCliente.toString().padStart(12, '0');
-            setFacturaData({
-                ...facturaData,
-                nro_factura: nroClienteStr
-            });
-            setNroFacturaInput(nroCliente);
-        }
+    const handleNroChange = () => {
+        let cliente = clientes.find(c => c.id === facturaData.id_cliente);
+        let nroCliente = Number(cliente.ult_factura) + 1;
+        let nroClienteStr = nroCliente.toString().padStart(12, '0');
+        setFacturaData({
+            ...facturaData,
+            nro_factura: nroClienteStr
+        });
         return
     };
 
     const SetearUltimoNroFctura = async() => {
+        let nroFactura = Number(facturaData.nro_factura).toString();
         let cliente = clientes.find(c => c.id === facturaData.id_cliente);
-        cliente.ult_factura = nroFacturaInput;
+        cliente.ult_factura = nroFactura
         const ClienteActualizado = await dispatch(UpdateCliente(cliente.id, cliente));
         return ClienteActualizado;
     };
@@ -163,26 +163,33 @@ const FacturasForm = () => {
 
     // FUNCION POSTEO DE FACTURA
     const handlePostFactura = async() => {
-        const FacturaCreada = await dispatch(PostFactura(facturaData));
-        if(FacturaCreada){
-            console.log("SE hiso el POST de la factura su ID es: ", FacturaCreada.payload.id);
-            await PostearProductos(FacturaCreada.payload.id);
-            setFacturaData({
-                fecha: '',
-                id_cliente: '',
-                nro_factura: ''
-            });
-            setErrors({});
-            //window.location.href = "/home";
-        } else {
-            console.log("ALGO SALIO MAL EN EL POST DE FACTURA");
-        }
+        const ActualizarNroFactura = await SetearUltimoNroFctura();
+        if(ActualizarNroFactura){
+            console.log("Cliente ACtualizado: ", ActualizarNroFactura.payload);
+            const FacturaCreada = await dispatch(PostFactura(facturaData));
+            if(FacturaCreada){
+                console.log("SE hiso el POST de la factura su ID es: ", FacturaCreada.payload.id);
+                await PostearProductos(FacturaCreada.payload.id);
+                setFacturaData({
+                    fecha: '',
+                    id_cliente: '',
+                    nro_factura: '',
+                    destinatario: '',
+                    direccion: '',
+                    cuit: '',
+                    cond_vta: ''
+                });
+                setErrors({});
+                //window.location.href = "/home";
+            } else {
+                console.log("ALGO SALIO MAL EN EL POST DE FACTURA");
+            }
+        };
     };
 
     // FUNCION DE VALIDACION DE FORMULARIO
     const handleValidateErrors = async(e) => {
         e.preventDefault();
-        // Realizar validaciones
         const newErrors = {};
         if (!facturaData.fecha) {
             newErrors.fecha = 'Fecha es obligatoria';
@@ -190,19 +197,6 @@ const FacturasForm = () => {
         if (!facturaData.id_cliente) {
             newErrors.id_cliente = 'Cliente es obligatorio';
         }
-        // if (!products.concepto) {
-        //     newErrors.concepto = 'Concepto es obligatorio';
-        //     return alert("El concepto del producto es obligatorio");
-        // }
-        // if (!products.cantidad || !isNumeric(facturaData.cantidad)) {
-        //     newErrors.cantidad = 'Cantidad debe ser un número mayor a 0';
-        //     return alert("La cantidad del producto es obligatorio");
-        // }
-        // if (!products.precioxu || !isNumeric(facturaData.precioxu)) {
-        //     newErrors.precioxu = 'Precio Unitario debe ser un número mayor a 0';
-        //     return alert("El precio unitario del producto es obligatorio");
-        // }
-        
         if (Object.keys(newErrors).length === 0) { // No hay errores, crear la factura
             await handlePostFactura();
         } else {
@@ -216,8 +210,11 @@ const FacturasForm = () => {
         <h3 className={Styles.title}>Redactar Nueva Factura</h3>
         <div className={Styles.formContariner}>
             <div className={Styles.buttonContainer} style={{ marginTop: 20 }}>
-                <Link to='/home'><Button variant="contained" color="primary" style={{ fontSize: "16px" }}>
+                <Link to='/home'><Button variant="contained" color="primary" style={{ fontSize: "15px" }}>
                     Volver
+                </Button></Link>
+                <Link to='/newFactura'><Button variant="contained" color="primary" style={{ fontSize: "15px", marginLeft:"15px" }}>
+                    Recargar Formulario
                 </Button></Link>
             </div>
             
@@ -238,33 +235,33 @@ const FacturasForm = () => {
 
                     {/* CLIENTE */}
                     <Grid item xs={12} sm={2.5}>
-                    <FormControl fullWidth>
-                        <InputLabel>Cliente</InputLabel>
-                        <Select
-                            name="id_cliente"
-                            value={facturaData.id_cliente}
-                            label="Cliente"
-                            onChange={handleChange}
-                            error={!!errors.id_cliente}
-                            helperText={errors.id_cliente}
-                        >
-                            {clientes.map(c =>(<MenuItem key={c.id} value={c.id}>
-                                {c.nombre}
-                                </MenuItem>))}
-                        </Select>
-                    </FormControl>
+                        <FormControl fullWidth>
+                            <InputLabel>Cliente</InputLabel>
+                            <Select
+                                name="id_cliente"
+                                value={facturaData.id_cliente}
+                                label="Cliente"
+                                onChange={handleChange}
+                                error={!!errors.id_cliente}
+                                helperText={errors.id_cliente}
+                            >
+                                {clientes.map(c =>(<MenuItem key={c.id} value={c.id}>
+                                    {c.nombre}
+                                    </MenuItem>))}
+                            </Select>
+                        </FormControl>
                     </Grid>
 
                     {/* NRO FACTURA */}
                     <Grid item xs={12} sm={2.5}>
                         <TextField
-                            type="number"
+                            type="text"
                             label="Nro Factura"
                             variant="outlined"
                             name="nro_factura"
                             value={facturaData.nro_factura}
-                            disabled
-                            onChange={handleNroChange}
+                            inputProps={{ inputMode:'numeric', pattern: '[0-9]*', maxLength: 12 }}
+                            onChange={handleChange}
                         />
                     </Grid>
 
@@ -272,6 +269,63 @@ const FacturasForm = () => {
                         <Link to='/addclient'><Button variant="contained" color="primary" style={{ fontSize: "13px" }}>
                             Agregar Nevo Cliente
                         </Button></Link>
+                    </Grid>
+                </Grid>
+
+                <Grid container spacing={2} style={{ marginTop: 16, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row' }}>
+                    {/* DESTINATARIO */}
+                    <Grid item xs={12} sm={2.5}>
+                        <TextField
+                            type="text"
+                            label="Destinatario"
+                            variant="outlined"
+                            name="destinatario"
+                            value={facturaData.destinatario}
+                            inputProps={{ maxLength: 200 }}
+                            onChange={handleChange}
+                        />
+                    </Grid>
+
+                    {/* DIRECCION */}
+                    <Grid item xs={12} sm={2.5}>
+                        <TextField
+                            type="text"
+                            label="Direccion"
+                            variant="outlined"
+                            name="direccion"
+                            value={facturaData.direccion}
+                            inputProps={{ maxLength: 200 }}
+                            onChange={handleChange}
+                        />
+                    </Grid>
+
+                    {/* CUIT */}
+                    <Grid item xs={12} sm={2.5}>
+                        <TextField
+                            type="text"
+                            label="CUIT"
+                            variant="outlined"
+                            name="cuit"
+                            value={facturaData.cuit}
+                            inputProps={{ pattern: '^[0-9-]*$', maxLength: 15 }}
+                            onChange={handleChange}
+                        />
+                    </Grid>
+
+                    {/* COND_VTA */}
+                    <Grid item xs={12} sm={2.5}>
+                        <FormControl fullWidth>
+                            <InputLabel>Condicion de Venta</InputLabel>
+                            <Select
+                                name="cond_vta"
+                                value={facturaData.cond_vta}
+                                label="Condicion de Venta"
+                                onChange={handleChange}
+                            >
+                                <MenuItem value={'Efectivo'}>Efectivo</MenuItem>
+                                <MenuItem value={'Cuenta Corriente'}>Cuenta Corriente</MenuItem>
+                            </Select>
+                        </FormControl>
                     </Grid>
                 </Grid>
                 
@@ -294,7 +348,6 @@ const FacturasForm = () => {
                         Agregar otro producto
                     </Button>
                 </div>
-                
             
                 {/* BOTONES */}
                 <div className={Styles.buttonContainer} style={{ marginTop: 20 }}>

@@ -14,7 +14,7 @@
 
 .buttonContainer {
     display: flex; /* Para justificar los botones horizontalmente */
-    justify-content: space-between; /* Para justificar los botones de forma justificada */
+    justify-content: flex-start; /* Para justificar los botones de forma justificada */
     margin-bottom: 3vh;
 }
 

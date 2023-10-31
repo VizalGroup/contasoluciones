@@ -36,6 +36,7 @@ const ProductInput = (props) => {
                 //variant="outlined"
                 name="concepto"
                 value={props.product.concepto}
+                inputProps={{ maxLength: 30 }}
                 onChange={(e) => props.onConceptoChange(e.target.value)}
                 />
             </Grid>
