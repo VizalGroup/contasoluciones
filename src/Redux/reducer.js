@@ -1,6 +1,6 @@
 
 const initialState = {
-  nombreApp: "Conta Consulting",
+  nombreApp: "ContaConsulting",
   facturas: [],
   clientes: [],
   productos: [],

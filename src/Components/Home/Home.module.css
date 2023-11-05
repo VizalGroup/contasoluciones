@@ -14,6 +14,6 @@
 
 .buttonContainer {
     display: flex; /* Para justificar los botones horizontalmente */
-    justify-content: space-around; /* Para justificar los botones de forma justificada */
+    justify-content:space-evenly;
     margin-bottom: 3vh; /* Añadir margen inferior de 20px entre los botones y la tabla */
 }

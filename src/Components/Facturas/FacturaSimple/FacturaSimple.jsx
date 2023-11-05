@@ -5,8 +5,6 @@ import Styles from "./FacturaSimple.module.css";
 import {
   GetFacturaDetaill,
   ClearID,
-  GetClienteDetail,
-  GetFacturas,
   GetProductos,
   GetClientes,
 } from "../../../Redux/actions";
@@ -18,18 +16,6 @@ export default function FacturaSimple() {
   const productos = useSelector((state) => state.productos);
   const clientes = useSelector((state) => state.clientes);
   const { facturaDetail } = useSelector((state) => state);
-
-  // const [clientes, setclientes] = useState();
-  // const [productosFactura, setProductosFactura] = useState();
-
-  // const EncontrarClienteProductos = () => {
-  //   let cliente = clientes.find((c) => c.id === facturaDetail.id_cliente);
-  //   let listaProductos = productos.filter(
-  //     (p) => p.id_factura === facturaDetail.id
-  //   );
-  //   setclientes(cliente);
-  //   setProductosFactura(listaProductos);
-  // };
 
   useEffect(() => {
     dispatch(ClearID());
@@ -83,16 +69,15 @@ export default function FacturaSimple() {
     }, 0);
   }
 
-  console.log(clienteDeFactura);
-  console.log(productosFactura);
-  console.log(facturaDetail);
-
-
+  const printPage = () => {
+    window.print();
+  };
 
   return (
     <div className={Styles.pageContainer}>
       {facturaDetail && clienteDeFactura && productosFactura ? (
         <div className={Styles.Columna}>
+          
           <div className={Styles.firstContainer}>
             <div>
               <p>{clienteDeFactura.nombre}</p>
@@ -220,6 +205,9 @@ export default function FacturaSimple() {
             </div>
             <div>Original blanco duplicado color</div>
           </div>
+          <button className={Styles.printButton} onClick={printPage}>
+            Imprimir
+          </button>
         </div>
       ) : (
         <h4>Loading...</h4>
