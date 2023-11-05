@@ -13,7 +13,7 @@ import TextField from "@mui/material/TextField";
 import { Grid } from "@mui/material";
 import Button from "react-bootstrap/Button";
 import Styles from "./FacturasTable.module.css";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 // Date Pikers
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
@@ -109,9 +109,10 @@ const FacturasTable = () => {
     dispatch(GetProductos());
   }, [dispatch]);
 
-  return (<div className={Styles.responsiveContainer}>
+  return (
+    <div className={Styles.responsiveContainer}>
     <h4 className={Styles.title}>Tabla de Facturas</h4>
-      {/* FECHA */}
+    <Grid container>
       <Grid item xs={12} sm={6}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DemoContainer components={["DatePicker"]}>
@@ -125,16 +126,22 @@ const FacturasTable = () => {
           </DemoContainer>
         </LocalizationProvider>
       </Grid>
-
-      <select value={selectedOption} onChange={handleSelectChange}>
-        <option value="facturasimple">Simple</option>
-        <option value="facturalogo">Con Logo</option>
-        <option value="facturaqr">Con QR</option>
-        <option value="facturalogoyqr">Logo y QR</option>
-        <option value="facturamoderna">Moderna</option>
-      </select>
-
-
+      <Grid item xs={12} sm={6}>
+        <div className="mb-3" style={{marginTop: '15px'}}> 
+          <select
+            value={selectedOption}
+            onChange={handleSelectChange}
+            className="form-select" 
+          >
+            <option value="facturasimple">Simple</option>
+            <option value="facturalogo">Con Logo</option>
+            <option value="facturaqr">Con QR</option>
+            <option value="facturalogoyqr">Logo y QR</option>
+            <option value="facturamoderna">Moderna</option>
+          </select>
+        </div>
+      </Grid>
+    </Grid>
       <div>
         <TableContainer component={Paper} className={Styles.customTable}>
           <Table>
@@ -152,12 +159,24 @@ const FacturasTable = () => {
             <TableBody>
               {facturas.map((factura) => (
                 <TableRow key={factura.id}>
-                  <TableCell>{factura.id}</TableCell>
-                  <TableCell>{factura.fecha.split('-').reverse().join('-')}</TableCell>
-                  <TableCell>{factura.nro_factura}</TableCell>
-                  <TableCell>{ClienteFactura(factura.id_cliente)}</TableCell>
-                  <TableCell>{CalcularSubtotal(factura.id)}</TableCell>
-                  <TableCell>{CalcularImporte(factura.id)}</TableCell>
+                  <TableCell style={{ textAlign: "center" }}>
+                    {factura.id}
+                  </TableCell>
+                  <TableCell style={{ textAlign: "center" }}>
+                    {factura.fecha.split("-").reverse().join("-")}
+                  </TableCell>
+                  <TableCell style={{ textAlign: "center" }}>
+                    {factura.nro_factura}
+                  </TableCell>
+                  <TableCell style={{ textAlign: "center" }}>
+                    {ClienteFactura(factura.id_cliente)}
+                  </TableCell>
+                  <TableCell style={{ textAlign: "center" }}>
+                    {CalcularSubtotal(factura.id)}
+                  </TableCell>
+                  <TableCell style={{ textAlign: "center" }}>
+                    {CalcularImporte(factura.id)}
+                  </TableCell>
                   <TableCell style={{ textAlign: "center" }}>
                     <Button
                       variant="primary"
@@ -181,7 +200,8 @@ const FacturasTable = () => {
           </Table>
         </TableContainer>
       </div>
-  </div>);
+    </div>
+  );
 };
 
 export default FacturasTable;
