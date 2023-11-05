@@ -15,7 +15,7 @@ export default function Logout() {
           className="btn btn-danger"
           style={{ marginLeft: "10px", marginBottom: "10px" }}
           onClick={handleLogout}
-        >
+        > 
           <FontAwesomeIcon icon={faSignOutAlt} /> {/* Aquí se agrega el ícono */}
         </button>
       </Link>

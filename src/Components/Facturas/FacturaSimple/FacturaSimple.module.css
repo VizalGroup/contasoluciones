@@ -77,3 +77,28 @@
   align-items: center;
   width: 100%;
 }
+
+
+.printButton {
+  display: block; 
+  background-color: #000000; 
+  color: #fff; 
+  border: none; 
+  padding: 10px 20px; 
+  border-radius: 5px; 
+  cursor: pointer; 
+  font-size: 16px; 
+  margin: 10px 0; 
+  transition: background-color 0.3s; 
+}
+
+.printButton:hover {
+  background-color: rgb(255, 255, 255); /* Cambiar color de fondo al pasar el mouse */
+  color: black;
+}
+
+@media print {
+  .printButton {
+    display: none; /* Ocultar el botón en la impresión */
+  }
+}
