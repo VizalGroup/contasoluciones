@@ -27,8 +27,9 @@
 }
 
 .imageRender{
-  width: 15vw;
-  height: 15vh;
+  margin-top: 2%;
+  width: 20vw;
+  height: 20vh;
   object-fit: contain;
 }
 

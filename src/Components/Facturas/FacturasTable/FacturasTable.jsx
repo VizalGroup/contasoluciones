@@ -45,10 +45,6 @@ const FacturasTable = () => {
     dispatch(GetProductos());
   };
 
-  const handleEdit = (facturaId) => {
-    dispatch(UpdateFactura(facturaId));
-  };
-
   const CalcularSubtotal = (id_factura) => {
     if (productos.length > 0) {
       let productosFactura = productos.filter(
@@ -215,12 +211,11 @@ const FacturasTable = () => {
                     {CalcularImporte(factura.id)}
                   </TableCell>
                   <TableCell style={{ textAlign: "center" }}>
-                    <Button
-                      variant="primary"
-                      onClick={() => handleEdit(factura.id)}
-                    >
-                      Editar
-                    </Button>
+                    <Link to={`/facturaEditar/${factura.id}`}>
+                      <Button variant="primary">
+                        Ver
+                      </Button>
+                    </Link>
                     <Button
                       variant="danger"
                       onClick={() => handleDelete(factura.id)}

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -15,9 +16,7 @@ import Styles from "./ClientesTable.module.css";
 import {
   DeleteCliente,
   GetClientes,
-  UpdateCliente,
 } from "../../../Redux/actions";
-import { Link } from "react-router-dom";
 
 const ClientesTable = () => {
   const clientes = useSelector((state) => state.clientes);
@@ -37,10 +36,6 @@ const ClientesTable = () => {
   const handleDelete = (clienteId) => {
     dispatch(DeleteCliente(clienteId));
     dispatch(GetClientes());
-  };
-
-  const handleEdit = (clienteId) => {
-    dispatch(UpdateCliente(clienteId));
   };
 
   useEffect(() => {
@@ -69,7 +64,7 @@ const ClientesTable = () => {
           </Button>
         </a>
       </div>
-      <div>
+      {/* <div>
         <TextField
           label="Buscar Cliente"
           variant="outlined"
@@ -77,7 +72,7 @@ const ClientesTable = () => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-      </div>
+      </div> */}
       <TableContainer component={Paper} className={Styles.customTable}>
         <Table>
           <TableHead>
@@ -105,14 +100,11 @@ const ClientesTable = () => {
                 <TableCell style={{ textAlign: "center" }}>{cliente.numero_ingresos_brutos}</TableCell>
                 <TableCell style={{ textAlign: "center" }}>CF-{cliente.numero_controladora_fiscal}</TableCell>
                 <TableCell style={{ textAlign: "center" }}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => handleEdit(cliente.id)}
-                    style={{marginRight: '5px'}}
-                  >
-                    Editar
-                  </Button>
+                  <Link to={`/clienteEditar/${cliente.id}`}>
+                    <Button variant="contained" color="primary" style={{marginRight: '5px'}}>
+                      Ver
+                    </Button>
+                  </Link>
                   <Button
                     variant="contained"
                     color="error"

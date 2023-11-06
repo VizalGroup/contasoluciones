@@ -47,28 +47,6 @@ export const GetFacturas = () => {
   };
 };
 
-// export const GetFacturaDetaill = (id) => {
-//     return async function (dispatch) {
-//         try {
-//             var f = new FormData();
-//             f.append("METHOD", "GET");
-//             var response = await axios.post(facturaURL, f, {params: {id: id}})
-//             if(response.data !== null){
-//                 return dispatch({
-//                     type: GET_ID_FACTURA,
-//                     payload: response.data
-//                 })
-//             } else {
-//                 return dispatch({
-//                     type: GET_ID_FACTURA,
-//                     payload: []
-//                 })
-//             }
-//         }catch(err){
-//             console.log(err)
-//         }
-//     };
-// };
 
 export const GetFacturaDetaill = (id) => {
   return async function (dispatch) {
@@ -178,24 +156,24 @@ export const GetClientes = () => {
 };
 
 export const GetClienteDetail = (id) => {
-  return async function (dispatch) {
-    try {
-      const response = await axios.get(`${clienteURL}?id=${id}`);
-      if (response.data) {
-        return dispatch({
-          type: GET_ID_CLIENTE,
-          payload: response.data,
-        });
-      } else {
-        return dispatch({
-          type: GET_ID_CLIENTE,
-          payload: [],
-        });
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
+    return async function (dispatch) {
+        try {
+            const response = await axios.get(`${clienteURL}?id=${id}`);
+            if(response.data !== null){
+                return dispatch({
+                    type: GET_ID_CLIENTE,
+                    payload: response.data
+                })
+            } else {
+                return dispatch({
+                    type: GET_ID_CLIENTE,
+                    payload: []
+                })
+            }
+        }catch(err){
+            console.log(err)
+        }
+    };
 };
 
 export const PostCliente = (atributos) => {

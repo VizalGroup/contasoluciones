@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
-import { PostFactura, GetClientes, PostProducto, UpdateCliente, GetFacturas } from '../../../Redux/actions';
+import { PostFactura, GetClientes, PostProducto, UpdateCliente } from '../../../Redux/actions';
 
 // material y estilos
 import { Button, Grid } from '@mui/material';
@@ -13,6 +13,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Styles from './FacturasForm.module.css';
 import ProductInput from '../../Productos/ProductoInput';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 
 const FacturasForm = () => {
@@ -205,17 +206,24 @@ const FacturasForm = () => {
         };
     };
 
+    // RECARGAR PAGINA ACTUAL
+    const RecargarPagina = () => {
+        window.location.reload();
+    };
 
     return (<div className={Styles.responsiveContainer}>
         <h3 className={Styles.title}>Redactar Nueva Factura</h3>
         <div className={Styles.formContariner}>
             <div className={Styles.buttonContainer} style={{ marginTop: 20 }}>
-                <Link to='/home'><Button variant="contained" color="primary" style={{ fontSize: "15px" }}>
-                    Volver
+                <Link to='/home'><Button variant="contained" color="primary" 
+                    style={{ marginTop: "2px", marginLeft: "3vw", marginBottom: "1vh" }}>
+                        Volver
                 </Button></Link>
-                <Link to='/newFactura'><Button variant="contained" color="primary" style={{ fontSize: "15px", marginLeft:"15px" }}>
-                    Recargar Formulario
-                </Button></Link>
+                <Button onClick={RecargarPagina} color="primary"
+                    style={{ marginTop: "2px", marginLeft: "3vw", marginBottom: "1vh" }}>
+                    <RefreshIcon />
+                        Recargar Página
+                </Button>
             </div>
             
             <form onSubmit={(e)=>handleValidateErrors(e)}>
