@@ -10,17 +10,13 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
-import { Grid } from "@mui/material";
 import Button from "react-bootstrap/Button";
 import Styles from "./FacturasTable.module.css";
-import { Link } from 'react-router-dom';
-
-// Date Pikers
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import dayjs from "dayjs";
+import { Link } from "react-router-dom";
+import SearchIcon from "@mui/icons-material/Search";
+import InputAdornment from "@mui/material/InputAdornment";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 
 // Acciones
 import {
@@ -35,9 +31,12 @@ const FacturasTable = () => {
   const facturas = useSelector((state) => state.facturas);
   const clientes = useSelector((state) => state.clientes);
   const productos = useSelector((state) => state.productos);
-  const [fecha, setFecha] = useState("");
   const dispatch = useDispatch();
   const [selectedOption, setSelectedOption] = useState("facturasimple");
+
+  const [fechaDesde, setFechaDesde] = useState("");
+  const [fechaHasta, setFechaHasta] = useState("");
+  const [clienteFiltrado, setClienteFiltrado] = useState("");
 
   const handleDelete = (facturaId) => {
     dispatch(DeleteFactura(facturaId));
@@ -87,12 +86,28 @@ const FacturasTable = () => {
   };
 
   // SETEO DE LA FECHA para buscar
-  const handleFechaChange = (date) => {
-    if (date) {
-      const fechaSeleccionada = dayjs(date).format("DD-MM-YYYY"); // Asegúrate de que la fecha tenga el formato correcto
-      setFecha(fechaSeleccionada);
+
+  const facturasFiltradas = facturas.filter((factura) => {
+    const clienteNombre = ClienteFactura(factura.id_cliente);
+
+    const fechaFactura = new Date(factura.fecha);
+    const fechaDesdeDate = fechaDesde ? new Date(fechaDesde) : null;
+    const fechaHastaDate = fechaHasta ? new Date(fechaHasta) : null;
+
+    if (
+      (!clienteFiltrado ||
+        clienteNombre.toLowerCase().includes(clienteFiltrado.toLowerCase())) && // Filtrar por cliente
+      (!fechaDesdeDate ||
+        !fechaHastaDate ||
+        (fechaFactura >= fechaDesdeDate && fechaFactura <= fechaHastaDate))
+    ) {
+      return true;
     }
-    return;
+    return false;
+  });
+
+  const handleClienteFilterChange = (event) => {
+    setClienteFiltrado(event.target.value);
   };
 
   const handleSelectChange = (event) => {
@@ -105,55 +120,96 @@ const FacturasTable = () => {
     dispatch(GetProductos());
   }, [dispatch]);
 
-  return (<div className={Styles.responsiveContainer}>
-    <h4 className={Styles.title}>Tabla de Facturas</h4>
-      {/* FECHA */}
-      <Grid item xs={12} sm={6}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DemoContainer components={["DatePicker"]}>
-            <DatePicker
-              label="Fecha"
-              variant="outlined"
-              value={fecha}
-              onChange={(date) => handleFechaChange(date)}
-              format="DD-MM-YYYY"
-            />
-          </DemoContainer>
-        </LocalizationProvider>
-      </Grid>
-
-      <select value={selectedOption} onChange={handleSelectChange}>
-        <option value="facturasimple">Simple</option>
-        <option value="facturalogo">Con Logo</option>
-        <option value="facturaqr">Con QR</option>
-        <option value="facturalogoyqr">Logo y QR</option>
-        <option value="facturamoderna">Moderna</option>
-      </select>
-
+  return (
+    <div className={Styles.responsiveContainer}>
+      <h1 className={Styles.title}>Facturas por Empresa</h1>
+      <div className={Styles.filters}>
+        <div>
+          <TextField
+            label="Desde"
+            type="date"
+            style={{ marginRight: "5px" }}
+            value={fechaDesde}
+            onChange={(e) => setFechaDesde(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+          <TextField
+            label="Hasta"
+            type="date"
+            value={fechaHasta}
+            onChange={(e) => setFechaHasta(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </div>
+        <div>
+          <TextField
+            label="Buscar por Cliente"
+            value={clienteFiltrado}
+            onChange={handleClienteFilterChange}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </div>
+        <div style={{ marginTop: "10px" }}>
+          <label className={Styles.bold}>Estilo de Impresión: </label>
+          <Select value={selectedOption} onChange={handleSelectChange}>
+            <MenuItem value="facturasimple">Simple</MenuItem>
+            <MenuItem value="facturalogo">Con Logo</MenuItem>
+            <MenuItem value="facturaqr">Con QR</MenuItem>
+            <MenuItem value="facturalogoyqr">Logo y QR</MenuItem>
+            <MenuItem value="facturamoderna">Moderna</MenuItem>
+          </Select>
+        </div>
+      </div>
 
       <div>
         <TableContainer component={Paper} className={Styles.customTable}>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>ID</TableCell>
                 <TableCell>Fecha</TableCell>
                 <TableCell>Nro Factura</TableCell>
-                <TableCell>Cliente</TableCell>
+                <TableCell>Razón social</TableCell>
                 <TableCell>Subtotal</TableCell>
                 <TableCell>Importe</TableCell>
                 <TableCell>Acciones</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {facturas.map((factura) => (
+              {facturasFiltradas.map((factura) => (
                 <TableRow key={factura.id}>
-                  <TableCell>{factura.id}</TableCell>
-                  <TableCell>{factura.fecha.split('-').reverse().join('-')}</TableCell>
-                  <TableCell>{factura.nro_factura}</TableCell>
-                  <TableCell>{ClienteFactura(factura.id_cliente)}</TableCell>
-                  <TableCell>{CalcularSubtotal(factura.id)}</TableCell>
-                  <TableCell>{CalcularImporte(factura.id)}</TableCell>
+                  <TableCell style={{ textAlign: "center" }}>
+                    {factura.fecha.split("-").reverse().join("-")}
+                  </TableCell>
+                  <TableCell style={{ textAlign: "center" }}>
+                    {factura.nro_factura}
+                  </TableCell>
+                  <TableCell style={{ textAlign: "center" }}>
+                    {ClienteFactura(factura.id_cliente)}
+                  </TableCell>
+                  <TableCell style={{ textAlign: "center" }}>
+                    {CalcularSubtotal(factura.id)}
+                  </TableCell>
+                  <TableCell style={{ textAlign: "center" }}>
+                    {CalcularImporte(factura.id)}
+                  </TableCell>
                   <TableCell style={{ textAlign: "center" }}>
                     <Link to={`/facturaEditar/${factura.id}`}>
                       <Button variant="primary">
@@ -176,7 +232,8 @@ const FacturasTable = () => {
           </Table>
         </TableContainer>
       </div>
-  </div>);
+    </div>
+  );
 };
 
 export default FacturasTable;

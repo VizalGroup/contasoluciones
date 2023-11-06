@@ -7,9 +7,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import FacturasForm from "./Components/Facturas/FacturasForm/FacturasForm";
 import ClientesTable from "./Components/Clientes/ClientesTable/ClientesTable";
 import ClienteForm from "./Components/Clientes/ClienteForm/ClienteForm";
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FacturaSimple from "./Components/Facturas/FacturaSimple/FacturaSimple";
 import FacturaLogo from "./Components/Facturas/FacturaLogo/FacturaLogo";
 import FacturaQR from "./Components/Facturas/FacturaQR/FacturaQR";
@@ -17,6 +14,7 @@ import FacturaModerna from "./Components/Facturas/FacturaModerna/FacturaModerna"
 import FacturaLogoQR from "./Components/Facturas/FacturaLogoQR/FacturaLogoQR";
 import ClientesEditar from "./Components/Clientes/ClientesEditar/ClientesEditar";
 import FacturasEditar from "./Components/Facturas/FacturasEditar/FacturasEditar";
+import Informe from "./Components/Clientes/Informe/Informe";
 
 
 const PrivateRoute = ({ element }) => {
@@ -48,6 +46,7 @@ function App() {
         <Route path="/facturamoderna/:id" element={<PrivateRoute element={<FacturaModerna />} />} />
         <Route path="/facturaEditar/:id" element={<PrivateRoute element={<FacturasEditar />} />} />
         <Route path="/clienteEditar/:id" element={<PrivateRoute element={<ClientesEditar />} />} />
+        <Route path="/informe/:id" element={<PrivateRoute element={<Informe />} />} />
       </Routes>
     </div>
   </BrowserRouter> );

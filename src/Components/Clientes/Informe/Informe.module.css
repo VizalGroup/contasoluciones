@@ -1,0 +1,80 @@
+.bold {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.responsiveContainer {
+  width: 100%;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.title {
+  text-align: center;
+
+}
+
+.hr{
+  background-color: red;
+  border-color: red;
+  height: 10px;
+}
+
+.resume {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.resume p {
+  margin-right: 10px; /* Esto agrega margen entre los elementos p */
+}
+
+.resume p::after {
+  content: "";
+  display: inline-block;
+  width: 100%;
+  text-align: right;
+  font-size: 1em;
+}
+
+.resume p::after::before {
+  content: ",";
+  display: inline;
+  position: relative;
+  right: 5px;
+}
+
+.resume p::after::before::before {
+  content: ".";
+  display: inline;
+  position: relative;
+  right: 5px;
+}
+
+.printButton {
+  display: block; 
+  background-color: #000000; 
+  color: #fff; 
+  border: none; 
+  padding: 10px 20px; 
+  border-radius: 5px; 
+  cursor: pointer; 
+  font-size: 16px; 
+  margin: 10px 0; 
+  transition: background-color 0.3s; 
+}
+
+.printButton:hover {
+  background-color: rgb(255, 255, 255); /* Cambiar color de fondo al pasar el mouse */
+  color: black;
+}
+
+@media print {
+  .printButton {
+    display: none; /* Ocultar el botón en la impresión */
+  }
+}
+
+
+

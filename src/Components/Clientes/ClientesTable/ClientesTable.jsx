@@ -17,6 +17,7 @@ import {
   DeleteCliente,
   GetClientes,
 } from "../../../Redux/actions";
+import { Link } from "react-router-dom";
 
 const ClientesTable = () => {
   const clientes = useSelector((state) => state.clientes);
@@ -41,7 +42,7 @@ const ClientesTable = () => {
   useEffect(() => {
     dispatch(GetClientes());
   }, [dispatch]);
-
+  
   return (<div className={Styles.responsiveContainer}>
       <h2 className={Styles.title}>Registro Clientes</h2>
       <div className={Styles.buttonContainer}>
@@ -91,15 +92,15 @@ const ClientesTable = () => {
           <TableBody>
             {filteredClientes.map((cliente) => (
               <TableRow key={cliente.id}>
-                <TableCell>{cliente.id}</TableCell>
+                <TableCell style={{ textAlign: "center" }}>{cliente.id}</TableCell>
                 <TableCell>{cliente.cai}</TableCell>
-                <TableCell>{cliente.cuit}</TableCell>
-                <TableCell>{cliente.nombre}</TableCell>
-                <TableCell>{cliente.inicio_actividades}</TableCell>
-                <TableCell>{cliente.direccion}</TableCell>
-                <TableCell>{cliente.numero_ingresos_brutos}</TableCell>
-                <TableCell>{cliente.numero_controladora_fiscal}</TableCell>
-                <TableCell>
+                <TableCell >{cliente.cuit}</TableCell>
+                <TableCell style={{ textAlign: "center" }}>{cliente.nombre}</TableCell>
+                <TableCell style={{ textAlign: "center" }}>{cliente.inicio_actividades}</TableCell>
+                <TableCell style={{ textAlign: "center" }}>{cliente.direccion}</TableCell>
+                <TableCell style={{ textAlign: "center" }}>{cliente.numero_ingresos_brutos}</TableCell>
+                <TableCell style={{ textAlign: "center" }}>CF-{cliente.numero_controladora_fiscal}</TableCell>
+                <TableCell style={{ textAlign: "center" }}>
                   <Link to={`/clienteEditar/${cliente.id}`}>
                     <Button variant="contained" color="primary" style={{marginRight: '5px'}}>
                       Ver
@@ -112,6 +113,9 @@ const ClientesTable = () => {
                   >
                     Borrar
                   </Button>
+                  <Link to={`/informe/${cliente.id}`}>
+                      <Button variant="dark">Ver Informe</Button>
+                    </Link>
                 </TableCell>
               </TableRow>
             ))}
