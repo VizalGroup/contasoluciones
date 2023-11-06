@@ -171,7 +171,7 @@ const FacturasEditar = () => {
                     <Grid item xs={6}>
                         <Paper elevation={3}>
                             <Typography variant="subtitle1">
-                                Empresa: {ClienteFactura(facturaDetail.id_cliente)}
+                                Nombre o Razón social: {ClienteFactura(facturaDetail.id_cliente)}
                             </Typography>
                             <Typography variant="subtitle1">
                                 Destinatario: {facturaDetail.destinatario}

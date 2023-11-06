@@ -359,7 +359,7 @@ const ClientesEditar = () => {
             <Grid item xs={6}>
               <Paper elevation={3}>
                 <Typography variant="h6">
-                  Empresa: {clienteDetail.nombre}
+                  Nombre o Razón social: {clienteDetail.nombre}
                 </Typography>
                 <Typography variant="subtitle1">
                   CUIT: {clienteDetail.cuit}

@@ -17,7 +17,6 @@ import {
   DeleteCliente,
   GetClientes,
 } from "../../../Redux/actions";
-import { Link } from "react-router-dom";
 
 const ClientesTable = () => {
   const clientes = useSelector((state) => state.clientes);
@@ -65,7 +64,7 @@ const ClientesTable = () => {
           </Button>
         </a>
       </div>
-      <div>
+      {/* <div>
         <TextField
           label="Buscar Cliente"
           variant="outlined"
@@ -73,7 +72,7 @@ const ClientesTable = () => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-      </div>
+      </div> */}
       <TableContainer component={Paper} className={Styles.customTable}>
         <Table>
           <TableHead>
