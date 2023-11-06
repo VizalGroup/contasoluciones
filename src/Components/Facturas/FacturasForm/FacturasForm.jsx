@@ -181,7 +181,8 @@ const FacturasForm = () => {
                     cond_vta: ''
                 });
                 setErrors({});
-                //window.location.href = "/home";
+                alert("Factura creada exitosamente");
+                window.location.href = "/home";
             } else {
                 console.log("ALGO SALIO MAL EN EL POST DE FACTURA");
             }
@@ -208,7 +209,25 @@ const FacturasForm = () => {
 
     // RECARGAR PAGINA ACTUAL
     const RecargarPagina = () => {
-        window.location.reload();
+        //window.location.reload();
+        setFacturaData({
+            fecha: '',
+            id_cliente: '',
+            nro_factura: '',
+            destinatario: '',
+            direccion: '',
+            cuit: '',
+            cond_vta: ''
+        });
+        setProducts([
+            { concepto: '', 
+            cantidad: '', 
+            precioxu: '', 
+            iva: '', 
+            subtotal: '', 
+            importe: '', 
+            id_factura: '' }
+        ]);
     };
 
     return (<div className={Styles.responsiveContainer}>
