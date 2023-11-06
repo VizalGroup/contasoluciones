@@ -74,6 +74,8 @@ export default function ClienteForm() {
           ult_factura: ''
         });
         setErrors({});
+        alert("Cliente añadido exitosamente");
+        window.location.href = "/clients";
       };
   };
 
@@ -115,7 +117,19 @@ export default function ClienteForm() {
 
   // RECARGAR PAGINA ACTUAL
   const RecargarPagina = () => {
-    window.location.reload();
+    //window.location.reload();
+    setFormData({
+      nombre: '',
+      cuit: '',
+      cai: '',
+      inicio_actividades: '',
+      direccion: '',
+      numero_ingresos_brutos: '',
+      numero_controladora_fiscal: '',
+      img_logo: '',
+      qr_code: '',
+      ult_factura: ''
+    });
   };
 
   return (<div className={Styles.responsiveContainer}>

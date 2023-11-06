@@ -82,14 +82,14 @@ const FacturasEditar = () => {
         console.log("Detalle de procutsos: ", productosFactura);
     }, [dispatch, id]);
 
-    const BuscarDetallesProductos = async() => {
-        //await EncontrarProductos();
-        for(let i = 0; i < productos.length; i++) {
-            if(productos[i].id_factura === facturaDetail.id){
-                await dispatch(GetProductoDetaill(productos[i].id));
-            };
-        };
-    };
+    // const BuscarDetallesProductos = async() => {
+    //     //await EncontrarProductos();
+    //     for(let i = 0; i < productos.length; i++) {
+    //         if(productos[i].id_factura === facturaDetail.id){
+    //             await dispatch(GetProductoDetaill(productos[i].id));
+    //         };
+    //     };
+    // };
 
     const ClienteFactura = (id_cliente) => {
         if (clientes.length > 0) {
@@ -114,6 +114,71 @@ const FacturasEditar = () => {
         });
         console.log("FORM: ", facturaData);
         return
+    };
+
+    // SETEO DEL NRO DE FACTURA
+    const handleNroChange = () => {
+        let cliente = clientes.find(c => c.id === facturaData.id_cliente);
+        let nroCliente = Number(cliente.ult_factura) + 1;
+        let nroClienteStr = nroCliente.toString().padStart(12, '0');
+        setFacturaData({
+            ...facturaData,
+            nro_factura: nroClienteStr
+        });
+        return
+    };
+    const SetearUltimoNroFctura = async() => {
+        let nroFactura = Number(facturaData.nro_factura).toString();
+        let cliente = clientes.find(c => c.id === facturaData.id_cliente);
+        cliente.ult_factura = nroFactura
+        const ClienteActualizado = await dispatch(UpdateCliente(cliente.id, cliente));
+        return ClienteActualizado;
+    };
+
+    // FUNCION UPDATE DE FACTURA
+    const handleUpdateFactura = async() => {
+        const ActualizarNroFactura = await SetearUltimoNroFctura();
+        if(ActualizarNroFactura){
+            console.log("Cliente ACtualizado: ", ActualizarNroFactura.payload);
+            const FacturaCreada = await dispatch(UpdateFactura(facturaDetail.id ,facturaData));
+            if(FacturaCreada){
+                console.log("SE hiso el POST de la factura su ID es: ", FacturaCreada.payload.id);
+                //await PostearProductos(FacturaCreada.payload.id);
+                setFacturaData({
+                    fecha: '',
+                    id_cliente: '',
+                    nro_factura: '',
+                    destinatario: '',
+                    direccion: '',
+                    cuit: '',
+                    cond_vta: ''
+                });
+                setErrors({});
+                //window.location.href = "/home";
+                await dispatch(GetFacturaDetaill(facturaDetail.id));
+                closeModal();
+            } else {
+                console.log("ALGO SALIO MAL EN EL POST DE FACTURA");
+            }
+        };
+    };
+
+    // FUNCION DE VALIDACION DE FORMULARIO
+    const handleValidateErrors = async(e) => {
+        e.preventDefault();
+        const newErrors = {};
+        if (!facturaData.fecha) {
+            newErrors.fecha = 'Fecha es obligatoria';
+        }
+        if (!facturaData.id_cliente) {
+            newErrors.id_cliente = 'Cliente es obligatorio';
+        }
+        if (Object.keys(newErrors).length === 0) { // No hay errores, crear la factura
+            await handleUpdateFactura();
+        } else {
+            setErrors(newErrors);
+            console.log("HAY ERRORES ", newErrors);
+        };
     };
 
     // CERRAR MODAL
@@ -145,7 +210,130 @@ const FacturasEditar = () => {
     };
 
     const bodyModal = (<Box className={Styles.modalContent}>
+        <h4 className={Styles.title}>Modificar datos de Factura</h4>
+        <div className={Styles.formContariner}>
+            <Button onClick={closeModal} color="primary"
+                style={{ marginTop: "2px", marginLeft: "3vw", marginBottom: "5vh" }}>
+                Cancelar Editor
+            </Button>
+            <form onSubmit={(e)=>handleValidateErrors(e)}>
+                <Grid container spacing={2} 
+                style={{ marginTop: 16, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row' }}>
+                    {/* FECHA */}
+                    <Grid item xs={12} sm={2}>
+                        <TextField
+                            name='fecha'
+                            value={facturaData.fecha}
+                            onChange={handleChange}
+                            error={!!errors.fecha}
+                            helperText={errors.fecha}
+                            type='date'
+                        />
+                    </Grid>
 
+                    {/* CLIENTE */}
+                    <Grid item xs={12} sm={2.5}>
+                        <FormControl fullWidth>
+                            <InputLabel>Cliente</InputLabel>
+                            <Select
+                                name="id_cliente"
+                                value={facturaData.id_cliente}
+                                label="Cliente"
+                                onChange={handleChange}
+                                error={!!errors.id_cliente}
+                                helperText={errors.id_cliente}
+                            >
+                                {clientes.map(c =>(<MenuItem key={c.id} value={c.id}>
+                                    {c.nombre}
+                                    </MenuItem>))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+
+                    {/* NRO FACTURA */}
+                    <Grid item xs={12} sm={2.5}>
+                        <TextField
+                            type="text"
+                            label="Nro Factura"
+                            variant="outlined"
+                            name="nro_factura"
+                            value={facturaData.nro_factura}
+                            inputProps={{ inputMode:'numeric', pattern: '[0-9]*', maxLength: 12 }}
+                            onChange={handleChange}
+                        />
+                    </Grid>
+
+                    {/* <Grid item xs={12} sm={2.5}>
+                        <Link to='/addclient'><Button variant="contained" color="primary" style={{ fontSize: "13px" }}>
+                            Agregar Nevo Cliente
+                        </Button></Link>
+                    </Grid> */}
+                </Grid>
+
+                <Grid container spacing={2} style={{ marginTop: 16, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row' }}>
+                    {/* DESTINATARIO */}
+                    <Grid item xs={12} sm={2.5}>
+                        <TextField
+                            type="text"
+                            label="Destinatario"
+                            variant="outlined"
+                            name="destinatario"
+                            value={facturaData.destinatario}
+                            inputProps={{ maxLength: 200 }}
+                            onChange={handleChange}
+                        />
+                    </Grid>
+
+                    {/* DIRECCION */}
+                    <Grid item xs={12} sm={2.5}>
+                        <TextField
+                            type="text"
+                            label="Direccion"
+                            variant="outlined"
+                            name="direccion"
+                            value={facturaData.direccion}
+                            inputProps={{ maxLength: 200 }}
+                            onChange={handleChange}
+                        />
+                    </Grid>
+
+                    {/* CUIT */}
+                    <Grid item xs={12} sm={2.5}>
+                        <TextField
+                            type="text"
+                            label="CUIT"
+                            variant="outlined"
+                            name="cuit"
+                            value={facturaData.cuit}
+                            inputProps={{ pattern: '^[0-9-]*$', maxLength: 15 }}
+                            onChange={handleChange}
+                        />
+                    </Grid>
+
+                    {/* COND_VTA */}
+                    <Grid item xs={12} sm={2.5}>
+                        <FormControl fullWidth>
+                            <InputLabel>Condicion de Venta</InputLabel>
+                            <Select
+                                name="cond_vta"
+                                value={facturaData.cond_vta}
+                                label="Condicion de Venta"
+                                onChange={handleChange}
+                            >
+                                <MenuItem value={'Efectivo'}>Efectivo</MenuItem>
+                                <MenuItem value={'Cuenta Corriente'}>Cuenta Corriente</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                </Grid>
+                {/* BOTONES */}
+                <div className={Styles.buttonContainer} style={{ marginTop: 20 }}>
+                    <Button variant="contained" color="primary" style={{ fontSize: "16px" }} type='submit' fullWidth>
+                        Guardar cambios
+                    </Button>
+                </div>
+            </form>
+        </div>
     </Box>);
 
 
