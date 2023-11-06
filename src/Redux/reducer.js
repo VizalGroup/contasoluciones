@@ -4,8 +4,8 @@ const initialState = {
   facturas: [],
   clientes: [],
   productos: [],
-  facturaDetail: [],
-  clienteDetail: [],
+  facturaDetail: {},
+  clienteDetail: {},
   productosDetail: []
 };
 
@@ -64,7 +64,7 @@ const rootReducer = (state = initialState, action) => {
     }
     case "GET_ID_PRODUCTO": return {
       ...state,
-      productosDetail: action.payload
+      productosDetail: [...action.payload]
     }
     case "POST_PRODUCTO": return {
       ...state
@@ -83,8 +83,8 @@ const rootReducer = (state = initialState, action) => {
 
     case "CLEARID": return {
       ...state,
-      facturaDetail: [],
-      clienteDetail: [],
+      facturaDetail: {},
+      clienteDetail: {},
       productosDetail: []
     }
 

@@ -1,0 +1,60 @@
+
+.responsiveContainer {
+    width: 100%; /* El ancho ocupará el 100% del espacio disponible */
+    /* max-width: 1200px; Un ancho máximo para evitar que el contenido se vuelva demasiado ancho en pantallas grandes */
+    margin: 0 auto; /* Centra el contenido horizontalmente en el contenedor */
+    padding: 16px; /* Añade un espacio de relleno */
+}
+
+.title{
+    text-align: center;
+    margin-top: 3% ;
+    margin-bottom: 2vh;
+}
+
+.buttonContainer {
+    display: flex; /* Para justificar los botones horizontalmente */
+    justify-content: flex-start; /* Para justificar los botones de forma justificada */
+    margin-bottom: 3vh;
+}
+
+.formContariner {
+    margin-top: 3%;
+    margin-bottom: 5%;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.facturaPropsContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.facturaDetalle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-self: center;
+}
+
+.modalContent {
+    background-color: white;
+    padding: 2%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 90%; /* Ocupa el 90% del ancho de la pantalla */
+    max-width: 80%; /* Establece un ancho máximo del 80% del ancho de la pantalla */
+    margin: 0 auto; /* Centra horizontalmente en la pantalla */
+    max-height: 80%; /* Establece una altura máxima del 80% del alto de la pantalla */
+    overflow-y: auto; /* Agrega desplazamiento vertical si el contenido es demasiado largo */
+  
+    /* Estilos para pantallas más pequeñas (menos de 600px) */
+    @media (max-width: 600px) {
+      width: 100%; /* Ocupa todo el ancho de la pantalla */
+      max-width: 100%; /* No se necesita un ancho máximo en pantallas pequeñas */
+    }
+  
+    /* Otras reglas de estilo según sea necesario */
+}

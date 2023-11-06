@@ -15,6 +15,8 @@ import FacturaLogo from "./Components/Facturas/FacturaLogo/FacturaLogo";
 import FacturaQR from "./Components/Facturas/FacturaQR/FacturaQR";
 import FacturaModerna from "./Components/Facturas/FacturaModerna/FacturaModerna";
 import FacturaLogoQR from "./Components/Facturas/FacturaLogoQR/FacturaLogoQR";
+import ClientesEditar from "./Components/Clientes/ClientesEditar/ClientesEditar";
+import FacturasEditar from "./Components/Facturas/FacturasEditar/FacturasEditar";
 
 
 const PrivateRoute = ({ element }) => {
@@ -44,6 +46,8 @@ function App() {
         <Route path="/facturaqr/:id" element={<PrivateRoute element={<FacturaQR />} />} />
         <Route path="/facturalogoyqr/:id" element={<PrivateRoute element={<FacturaLogoQR />} />} />
         <Route path="/facturamoderna/:id" element={<PrivateRoute element={<FacturaModerna />} />} />
+        <Route path="/facturaEditar/:id" element={<PrivateRoute element={<FacturasEditar />} />} />
+        <Route path="/clienteEditar/:id" element={<PrivateRoute element={<ClientesEditar />} />} />
       </Routes>
     </div>
   </BrowserRouter> );

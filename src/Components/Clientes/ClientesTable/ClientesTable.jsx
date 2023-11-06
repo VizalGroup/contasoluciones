@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -15,7 +16,6 @@ import Styles from "./ClientesTable.module.css";
 import {
   DeleteCliente,
   GetClientes,
-  UpdateCliente,
 } from "../../../Redux/actions";
 
 const ClientesTable = () => {
@@ -36,10 +36,6 @@ const ClientesTable = () => {
   const handleDelete = (clienteId) => {
     dispatch(DeleteCliente(clienteId));
     dispatch(GetClientes());
-  };
-
-  const handleEdit = (clienteId) => {
-    dispatch(UpdateCliente(clienteId));
   };
 
   useEffect(() => {
@@ -104,14 +100,11 @@ const ClientesTable = () => {
                 <TableCell>{cliente.numero_ingresos_brutos}</TableCell>
                 <TableCell>{cliente.numero_controladora_fiscal}</TableCell>
                 <TableCell>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => handleEdit(cliente.id)}
-                    style={{marginRight: '5px'}}
-                  >
-                    Editar
-                  </Button>
+                  <Link to={`/clienteEditar/${cliente.id}`}>
+                    <Button variant="contained" color="primary" style={{marginRight: '5px'}}>
+                      Ver
+                    </Button>
+                  </Link>
                   <Button
                     variant="contained"
                     color="error"
