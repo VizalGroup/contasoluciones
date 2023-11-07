@@ -175,6 +175,7 @@ const FacturasTable = () => {
             <MenuItem value="facturaqr">Con QR</MenuItem>
             <MenuItem value="facturalogoyqr">Logo y QR</MenuItem>
             <MenuItem value="facturamoderna">Moderna</MenuItem>
+            <MenuItem value="facturalogobackground">Marca de Agua</MenuItem>
           </Select>
         </div>
       </div>
