@@ -39,6 +39,18 @@
     align-self: center;
 }
 
+.bold {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.divBotones {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Ajusta el valor según el margen deseado */
+}
+
+
 .modalContent {
     background-color: white;
     padding: 2%;
