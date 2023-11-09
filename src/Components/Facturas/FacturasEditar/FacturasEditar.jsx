@@ -26,7 +26,7 @@ const FacturasEditar = () => {
     const productos = useSelector((state) => state.productos);
     const facturaDetail = useSelector((state) => state.facturaDetail);
     const productosDetail = useSelector((state) => state.productosDetail);
-    //const [productosFactura, setProductosFactura] = useState([]);
+    const [selectedOption, setSelectedOption] = useState("facturasimple");
     const productosFactura = productos.filter((p) => p.id_factura === facturaDetail.id);
 
     const [modalEdit, setModalEdit] = useState(false);
@@ -63,11 +63,6 @@ const FacturasEditar = () => {
     };
     const [errors, setErrors] = useState({});
 
-    // const EncontrarProductos = () => {
-    //     let listaProductos = productos.filter((p) => p.id_factura === facturaDetail.id);
-    //     setProductosFactura(listaProductos);
-    // };
-
     useEffect(() => {
         console.log("el ID es: ", id);
         dispatch(GetClientes());
@@ -75,21 +70,11 @@ const FacturasEditar = () => {
         dispatch(ClearID());
         if(id){
             dispatch(GetFacturaDetaill(id));
-            //BuscarDetallesProductos();
-            //EncontrarProductos();
         };
         console.log("Detalle de factura: ", facturaDetail);
         console.log("Detalle de procutsos: ", productosFactura);
     }, [dispatch, id]);
 
-    // const BuscarDetallesProductos = async() => {
-    //     //await EncontrarProductos();
-    //     for(let i = 0; i < productos.length; i++) {
-    //         if(productos[i].id_factura === facturaDetail.id){
-    //             await dispatch(GetProductoDetaill(productos[i].id));
-    //         };
-    //     };
-    // };
 
     const ClienteFactura = (id_cliente) => {
         if (clientes.length > 0) {
@@ -262,12 +247,6 @@ const FacturasEditar = () => {
                             onChange={handleChange}
                         />
                     </Grid>
-
-                    {/* <Grid item xs={12} sm={2.5}>
-                        <Link to='/addclient'><Button variant="contained" color="primary" style={{ fontSize: "13px" }}>
-                            Agregar Nevo Cliente
-                        </Button></Link>
-                    </Grid> */}
                 </Grid>
 
                 <Grid container spacing={2} style={{ marginTop: 16, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row' }}>
@@ -336,11 +315,15 @@ const FacturasEditar = () => {
         </div>
     </Box>);
 
+    // SELECTOR DE IMPRIMIR
+    const handleSelectChange = (event) => {
+        setSelectedOption(event.target.value);
+    };
 
     return (<div className={Styles.responsiveContainer}>
         <h3 className={Styles.title}>Detalle de Factura</h3>
         <div className={Styles.formContariner}>
-        <div>
+        <div className={Styles.divBotones}>
             <Link to='/home'>
             <Button variant="contained" color="primary"
                 style={{ marginTop: "2px", marginLeft: "3vw", marginBottom: "5vh" }}>
@@ -351,6 +334,21 @@ const FacturasEditar = () => {
                 style={{ marginTop: "2px", marginLeft: "3vw", marginBottom: "5vh" }}>
                 Editar Datos
             </Button>
+            <div style={{ marginTop: "2px", marginLeft: "30vw", marginBottom: "5vh" }}>
+                <label className={Styles.bold}>Estilo de Impresión: </label>
+                <Select value={selectedOption} onChange={handleSelectChange}>
+                    <MenuItem value="facturasimple">Simple</MenuItem>
+                    <MenuItem value="facturalogo">Con Logo</MenuItem>
+                    <MenuItem value="facturaqr">Con QR</MenuItem>
+                    <MenuItem value="facturalogoyqr">Logo y QR</MenuItem>
+                    <MenuItem value="facturamoderna">Moderna</MenuItem>
+                    <MenuItem value="facturalogobackground">Marca de Agua</MenuItem>
+                </Select>
+            </div>
+            <Link to={`/${selectedOption}/${facturaDetail.id}`} 
+              style={{ marginTop: "2px", marginLeft: "1vw", marginBottom: "5vh" }}>
+                <Button variant="dark">Imprimir</Button>
+            </Link>
         </div>
 
         <div className={Styles.facturaDetalle}>
@@ -386,24 +384,13 @@ const FacturasEditar = () => {
                         {productosFactura.map((producto, index) => (<div>
                             <span>Producto asociado N°{index+1} </span>
                             <p key={index}>
-                                <tr> -Concepto: {producto.concepto}</tr>
-                                <tr> -Cantidad: {producto.cantidad} - Precio x unidad: {producto.precioxu}</tr>
-                                <tr> -IVA: {producto.iva} - Subtotal: {producto.subtotal} - Importe: {producto.importe}</tr>
+                                <span> -Concepto: {producto.concepto}</span>
+                                <span> -Cantidad: {producto.cantidad} - Precio x unidad: {producto.precioxu}</span>
+                                <span> -IVA: {producto.iva} - Subtotal: {producto.subtotal} - Importe: {producto.importe}</span>
                             </p>
                         </div>))}
                         </Paper>
                     </Grid>
-                </Grid>
-                <Grid container spacing={2}>
-                    {/* <Grid item xs={6}>
-                        {productosFactura.map((producto, index) => (<div>
-                            <p>Producto asociado N°{index+1} </p>
-                            <p key={index}>
-                                Concepto: {producto.concepto} - Cantidad: {producto.cantidad} - Precio x unidad: {producto.precioxu}
-                                - IVA: {producto.iva} - Subtotal: {producto.subtotal} - Importe: {producto.importe}
-                            </p>
-                        </div>))}
-                    </Grid> */}
                 </Grid>
             </div> : <h4>Loading...</h4>}
         </div>
