@@ -3,41 +3,239 @@
 }
 
 .tipoFactura {
-  font-size: 18px;
+  font-size: 32px;
   font-weight: bold;
+  background-color: rgb(255, 255, 255);
+  color: #000000;
+  padding: 10px;
+  border: 1px solid black;
 }
-
-.pageContainer {
-    width: 210mm; /* Ancho de la página A4 */
-    height: 297mm; /* Altura de la página A4 */
-    margin: 10mm; /* Márgenes de 10mm en todos los lados (ajusta según sea necesario) */
-    background-color: white; /* Fondo blanco de la página */
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Sombra ligera para simular una página impresa */
-    display: flex;
-    flex-direction: column; /* Para que el contenido se ajuste verticalmente en la página */
-    padding: 10mm; /* Espacio interno para el contenido */
-  }
-  
 
 .flexContainer {
   font-size: 16px;
-  text-transform: uppercase;
-  font-family: "Courier New", Courier, monospace;
+  border: 1px solid black;
+  padding: 1px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  width: 100%;
 }
 
 .smallText {
   font-size: 10px;
 }
 
-.Columna{
-  display: block; 
+.Columna {
+  display: block;
 }
 
-hr { 
-  height: 2px; /* Establecer la altura deseada, ajusta según tus preferencias */
-  background-color: rgb(0, 0, 0); /* Establecer el color de la línea, en este caso, negro */
-  margin: 10px ;
+.secondData {
+  font-size: 16px;
+  border: 1px solid black;
+  padding: 10px;
+}
+
+.EndContainer {
+  font-size: 12px;
+  font-family: "Courier New", Courier, monospace;
+  display: flex;
+  margin-left: 15px;
+  align-items: end;
+  line-height: 0.3; /* Establece el espaciado de línea en 1, lo que significa sin espacio adicional entre líneas */
+}
+
+.Concepto {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis; /* Esto mostrará "..." si el texto se desborda */
+  text-transform: uppercase;
+}
+
+.LimitedWidthDiv {
+  max-width: 300px; /* Establece el ancho máximo según tus preferencias */
+  /* word-wrap: break-word; Divide las palabras para ajustarse al ancho del div */
+}
+
+.secondData p {
+  font-size: 16px;
+  margin-bottom: 0; /* Establece el margen inferior en 0 para eliminar el espacio entre párrafos */
+}
+
+.firstContainer {
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  border: 1px solid black;
+  padding: 5px;
+}
+
+.printButton {
+  display: block;
+  background-color: #000000;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 10px 0;
+  transition: background-color 0.3s;
+}
+
+.printButton:hover {
+  background-color: rgb(
+    255,
+    255,
+    255
+  ); /* Cambiar color de fondo al pasar el mouse */
+  color: black;
+}
+
+@media print {
+  .printButton {
+    display: none; /* Ocultar el botón en la impresión */
+  }
+}
+
+.fixImgSize {
+  max-width: 200px;
+  height: auto;
+}
+
+.clientName {
+  font-weight: bold;
+}
+
+.pageContainer {
+  width: 210mm;
+  height: 297mm;
+  display: flex;
+  flex-direction: column;
+  padding: 10mm;
+  
+}
+
+.facturaData {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;
+}
+
+.enterpriseData {
+  line-height: 0.5; /* Establece el espaciado de línea en 1, lo que significa sin espacio adicional entre líneas */
+  font-size: 14px; /* Tamaño de fuente normal (ajusta según tu preferencia) */
+}
+
+.bold {
+  font-weight: bold;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+
+.justifyData {
+  display: flex;
+  justify-content: space-between;
+}
+
+.mainTable {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.rightContainer {
+  text-align: right;
+  margin-right: 5px;
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 10px;
+  width: 50mm;
+}
+
+.caba {
+  font-size: 14px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  
+}
+
+.noSpace {
+  line-height: 0.5; /* Opcionalmente, puedes usar 'normal' en lugar de 1 */
+}
+
+.onlyFactura {
+  font-size: 26px;
+}
+
+.headTable {
+  font-size: 18px;
+  font-weight: bold;
+  border: 1px solid black;
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+  width: 100%;
+}
+
+.flexContainerDetail {
+  font-size: 16px;
+  padding: 1px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  height: 80mm;
+  font-family: "Courier New", Courier, monospace;
+}
+
+.Detail {
+  font-size: 16px;
+  border: 1px solid black;
+  width: 100%;
+  font-family: "Courier New", Courier, monospace;
+}
+
+.leftContainer {
+  text-align: left;
+  margin-right: 5px;
+  border: 1px solid black;
+  border-radius: 10px;
+  margin-left: 10px;
+  padding: 10px;
+  width: 130mm;
+}
+
+.anuncios {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.tittleImport {
+  text-decoration: underline;
+  font-weight: bold;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  font-size: 15px;
+  text-align: center;
+}
+
+.textAnuncio {
+  font-size: 12px;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+.justifyResume {
+  display: flex;
+  justify-content: space-between;
+}
+
+.emitir{
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.contact {
+  display: flex;
+  justify-content: space-around;
 }
