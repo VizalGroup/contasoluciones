@@ -3,41 +3,222 @@
 }
 
 .tipoFactura {
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 28px;
+  align-items: center;
+  background-color: grey;
+  color: #fff;
+  padding: 10px;
 }
-
-.pageContainer {
-    width: 210mm; /* Ancho de la página A4 */
-    height: 297mm; /* Altura de la página A4 */
-    margin: 10mm; /* Márgenes de 10mm en todos los lados (ajusta según sea necesario) */
-    background-color: white; /* Fondo blanco de la página */
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Sombra ligera para simular una página impresa */
-    display: flex;
-    flex-direction: column; /* Para que el contenido se ajuste verticalmente en la página */
-    padding: 10mm; /* Espacio interno para el contenido */
-  }
-  
 
 .flexContainer {
   font-size: 16px;
-  text-transform: uppercase;
-  font-family: "Courier New", Courier, monospace;
+
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  width: 100%;
 }
 
 .smallText {
   font-size: 10px;
 }
 
-.Columna{
-  display: block; 
+.Columna {
+  display: block;
 }
 
-hr { 
-  height: 2px; /* Establecer la altura deseada, ajusta según tus preferencias */
-  background-color: rgb(0, 0, 0); /* Establecer el color de la línea, en este caso, negro */
-  margin: 10px ;
+.EndContainer {
+  font-size: 12px;
+  font-family: "Courier New", Courier, monospace;
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  line-height: 0.5; /* Establece el espaciado de línea en 1, lo que significa sin espacio adicional entre líneas */
+}
+
+.Concepto {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis; /* Esto mostrará "..." si el texto se desborda */
+}
+
+.LimitedWidthDiv {
+  max-width: 300px; /* Establece el ancho máximo según tus preferencias */
+  /* word-wrap: break-word; Divide las palabras para ajustarse al ancho del div */
+}
+
+.firstContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  width: 100%;
+  background-color: rgba(161, 234, 251, 0.293);
+  padding-right: 20px; /* Padding en el lado derecho */
+  padding-left: 20px; /* Padding en el lado izquierdo */
+  padding-top: 0; /* Padding en la parte superior */
+  padding-bottom: 0; /* Sin padding en la parte inferior */
+}
+
+.printButton {
+  display: block;
+  background-color: #000000;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 10px 0;
+  transition: background-color 0.3s;
+}
+
+.printButton:hover {
+  background-color: rgb(
+    255,
+    255,
+    255
+  ); /* Cambiar color de fondo al pasar el mouse */
+  color: black;
+}
+
+@media print {
+  .printButton {
+    display: none; /* Ocultar el botón en la impresión */
+  }
+}
+
+.fixImgSize {
+  max-width: 500px;
+  max-height: 150px;
+}
+
+.clientName {
+  font-weight: bold;
+  margin-bottom: 1px;
+}
+
+.pageContainer {
+  width: 210mm;
+  height: 297mm;
+  display: flex;
+  flex-direction: column;
+  padding: 10mm;
+}
+
+.facturaData {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;
+}
+
+.enterpriseData {
+  line-height: 1; /* Establece el espaciado de línea en 1, lo que significa sin espacio adicional entre líneas */
+  font-size: 14px; /* Tamaño de fuente normal (ajusta según tu preferencia) */
+  text-align: right;
+}
+
+.bold {
+  font-weight: bold;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+
+.justifyData {
+  display: flex;
+  justify-content: space-between;
+  text-transform: uppercase;
+}
+
+.mainTable {
+  font-size: 16px;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  background-color: rgb(157, 157, 157);
+}
+
+.rightContainer {
+  text-align: right;
+}
+
+.caba {
+  font-size: 12px;
+ background-color: rgba(163, 221, 221, 0.24);
+ padding: 20px;
+}
+
+.facturaA {
+  text-align: right;
+  font-size: 16px;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  line-height: 1;
+  margin-bottom: 1px;
+}
+
+.original {
+  font-size: 12px;
+  text-align: right;
+  line-height: 1;
+}
+
+.number {
+  text-align: right;
+  font-weight: bold;
+  margin-bottom: 0px;
+}
+
+.brownContainer {
+  background-color: rgb(207, 178, 144, 0.6);
+  line-height: 1;
+  padding-right: 20px; /* Padding en el lado derecho */
+  padding-left: 20px; /* Padding en el lado izquierdo */
+  padding-top: 10px; /* Padding en la parte superior */
+  padding-bottom: 0; /* Sin padding en la parte inferior */
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+}
+
+.detalle {
+  text-align: center;
+  background-color: grey;
+  color: white;
+  padding-top: 5px;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+}
+
+.fixTableSize {
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.fixTableSize td {
+  border-right: 1px solid rgb(193, 193, 193);
+  text-align: left;
+  padding: 1px;
+}
+
+.subTable {
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+  color: #000000;
+  background-color: rgba(173, 173, 173, 0.712);
+}
+
+.results {
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  color: #000000;
+  padding: 5px;
+  border-right: 1px solid rgb(193, 193, 193);
+}
+
+.lastData {
+  text-align: right;
+  font-size: 10px;
+  font-weight: bold;
+  margin-bottom: 1px;
+  line-height: 0.5;
 }
