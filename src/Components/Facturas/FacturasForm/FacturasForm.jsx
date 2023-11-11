@@ -49,7 +49,6 @@ const FacturasForm = () => {
         ]);
     };
     const [errors, setErrors] = useState({});
-    const isNumeric = (str) => /^\d+$/.test(str); // Exprecion regular que verifica que solo se escriban numeros
 
     useEffect(() => {
         dispatch(GetClientes());
@@ -66,7 +65,6 @@ const FacturasForm = () => {
             ...facturaData,
             [name]: value
         });
-        console.log("FORM: ", facturaData);
         return
     };
 
@@ -166,10 +164,8 @@ const FacturasForm = () => {
     const handlePostFactura = async() => {
         const ActualizarNroFactura = await SetearUltimoNroFctura();
         if(ActualizarNroFactura){
-            console.log("Cliente ACtualizado: ", ActualizarNroFactura.payload);
             const FacturaCreada = await dispatch(PostFactura(facturaData));
             if(FacturaCreada){
-                console.log("SE hiso el POST de la factura su ID es: ", FacturaCreada.payload.id);
                 await PostearProductos(FacturaCreada.payload.id);
                 setFacturaData({
                     fecha: '',
@@ -184,7 +180,7 @@ const FacturasForm = () => {
                 alert("Factura creada exitosamente");
                 window.location.href = "/home";
             } else {
-                console.log("ALGO SALIO MAL EN EL POST DE FACTURA");
+                console.error("ALGO SALIO MAL EN EL POST DE FACTURA");
             }
         };
     };
@@ -203,13 +199,12 @@ const FacturasForm = () => {
             await handlePostFactura();
         } else {
             setErrors(newErrors);
-            console.log("HAY ERRORES ", newErrors);
+            console.error("HAY ERRORES ", newErrors);
         };
     };
 
     // RECARGAR PAGINA ACTUAL
     const RecargarPagina = () => {
-        //window.location.reload();
         setFacturaData({
             fecha: '',
             id_cliente: '',

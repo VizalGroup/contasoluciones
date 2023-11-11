@@ -9,7 +9,6 @@ import {
   GetClientes,
 } from "../../../Redux/actions";
 import afipImg from "../../Img/Afip.png";
-import { Style } from "@mui/icons-material";
 
 // Esta Factura Posee tanto LOGO y QR el cliente con id 1 tiene uno de cada uno, hay un ejemplo en lo que nos paso el cliente
 
@@ -85,6 +84,7 @@ export default function FacturaLogoQR() {
             <div>
               <img
                 src={clienteDeFactura.img_logo}
+                alt="Logo no encontrado"
                 className={Styles.fixImgSize}
               />
               <div className={Styles.noSpace}>
@@ -144,11 +144,6 @@ export default function FacturaLogoQR() {
               <span className={Styles.bold}> C.U.I.T. :</span>
               <p className={Styles.facturaData}>{facturaDetail.cuit}</p>
             </div>
-
-            {/* <p className={Styles.facturaData}>
-              <span className={Styles.bold}>Condición de venta: </span>{" "}
-              {facturaDetail.cond_vta}
-            </p> */}
           </div>
 
           <div className={Styles.headTable}>

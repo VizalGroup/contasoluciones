@@ -101,8 +101,9 @@
 }
 
 .fixImgSize {
-  max-width: 200px;
-  height: auto;
+  width: auto;
+  height: 150px;
+  margin-bottom: 5px;
 }
 
 .clientName {
@@ -114,7 +115,7 @@
   height: 297mm;
   display: flex;
   flex-direction: column;
-  padding: 10mm;
+  padding: 5mm;
   
 }
 

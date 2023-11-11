@@ -100,6 +100,7 @@ export default function FacturaLogoBackground() {
             <div>
               <img
                 src={clienteDeFactura.img_logo}
+                alt="Logo no encontrado"
                 className={Styles.fixImgSize}
               />
               <p className={Styles.clientName}>{clienteDeFactura.nombre}</p>
@@ -114,7 +115,7 @@ export default function FacturaLogoBackground() {
               </p>
               <br />
               <p className={Styles.enterpriseData}>
-                Fecha: {facturaDetail.fecha.split("-").reverse().join("-")}
+                Fecha: {facturaDetail.fecha.split("-").reverse().join("/")}
               </p>
               <p className={Styles.enterpriseData}>
                 C.U.I.T : {clienteDeFactura.cuit}

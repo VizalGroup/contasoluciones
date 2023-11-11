@@ -121,7 +121,7 @@ export default function FacturaQR() {
               </p>
               <p>
                 <span className={Styles.negrita}>Fecha: </span>
-                <span>{facturaDetail.fecha}</span>
+                <span>{facturaDetail.fecha.split("-").reverse().join("/")}</span>
               </p>
               <p className={Styles.smallText}>
                 <span className={Styles.negrita}>C.U.I.T Nº: </span>
