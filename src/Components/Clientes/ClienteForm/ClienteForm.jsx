@@ -70,7 +70,7 @@ export default function ClienteForm() {
         });
         setErrors({});
         alert("Cliente añadido exitosamente");
-        window.location.href = "/clients";
+        //window.location.href = "/clients";
       };
   };
 

@@ -178,7 +178,7 @@ const FacturasForm = () => {
                 });
                 setErrors({});
                 alert("Factura creada exitosamente");
-                window.location.href = "/home";
+                //window.location.href = "/home";
             } else {
                 console.error("ALGO SALIO MAL EN EL POST DE FACTURA");
             }

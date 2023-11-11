@@ -54,3 +54,42 @@
     background-color: #ffffff; /* Fondo de fila alternado */
     align-items: center;
 }
+
+.modalContent {
+    background-color: white;
+    padding: 2%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 90%; /* Ocupa el 90% del ancho de la pantalla */
+    max-width: 80%; /* Establece un ancho máximo del 80% del ancho de la pantalla */
+    margin: 0 auto; /* Centra horizontalmente en la pantalla */
+    max-height: 80%; /* Establece una altura máxima del 80% del alto de la pantalla */
+    overflow-y: auto; /* Agrega desplazamiento vertical si el contenido es demasiado largo */
+  
+    /* Estilos para pantallas más pequeñas (menos de 600px) */
+    @media (max-width: 600px) {
+      width: 100%; /* Ocupa todo el ancho de la pantalla */
+      max-width: 100%; /* No se necesita un ancho máximo en pantallas pequeñas */
+    }
+  
+    /* Otras reglas de estilo según sea necesario */
+  }
+
+  .contenidoModal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .contenidoModal h3 {
+    margin-bottom: 20px;
+  }
+  
+  .contenidoModal div {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }

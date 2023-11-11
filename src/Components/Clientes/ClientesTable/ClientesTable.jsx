@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
@@ -10,26 +10,79 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button"; 
+import { Modal } from '@mui/material';
+import Box from '@mui/material/Box';
 import Styles from "./ClientesTable.module.css";
 
 import {
   DeleteCliente,
+  DeleteFactura,
+  DeleteProducto,
   GetClientes,
+  GetFacturas,
+  GetProductos,
 } from "../../../Redux/actions";
 
 const ClientesTable = () => {
   const clientes = useSelector((state) => state.clientes);
+  const facturas = useSelector((state) => state.facturas);
+  const productos = useSelector((state) => state.productos);
+  const [modalConfirm, setModaConfirm] = useState(false);
+  const [clienteParaBorrar, setClienteParaBorrar] = useState({});
   const dispatch = useDispatch();
 
-  const handleDelete = (clienteId) => {
-    dispatch(DeleteCliente(clienteId));
-    dispatch(GetClientes());
+  const handleDelete = async (clienteId) => {
+    try {
+      const facturasCliente = facturas.filter((f) => f.id_cliente === clienteId);
+      await Promise.all(
+        facturasCliente.map(async (factura) => {
+          const productosFactura = productos.filter((p) => p.id_factura === factura.id);
+          await Promise.all(
+            productosFactura.map(async (producto) => {
+              await dispatch(DeleteProducto(producto.id));
+            })
+          );
+          await dispatch(DeleteFactura(factura.id));
+        })
+      );
+      await dispatch(DeleteCliente(clienteId));
+      await dispatch(GetClientes());
+      closeModal();
+    } catch (error) {
+      console.error("Error al eliminar el cliente:", error);
+    }
+  };
+
+  const openModal = (cliente) => {
+    setClienteParaBorrar(cliente);
+    setModaConfirm(true);
+  };
+
+  const closeModal = () => {
+    setClienteParaBorrar();
+    setModaConfirm(false);
   };
 
   useEffect(() => {
     dispatch(GetClientes());
+    dispatch(GetFacturas());
+    dispatch(GetProductos());
   }, [dispatch]);
   
+  const bodyModal = (<Box className={Styles.modalContent}>
+    <div className={Styles.contenidoModal}>
+      <h3>Esta seguro que quiere borrar al cliente ? </h3>
+      <div>
+        <Button variant="contained" color="error" onClick={()=> handleDelete(clienteParaBorrar.id)}>
+          BORRAR
+        </Button>
+        <Button variant="contained" onClick={closeModal}>
+          CANCELAR
+        </Button>
+      </div>
+    </div>
+  </Box>)
+
   return (<div className={Styles.responsiveContainer}>
       <h2 className={Styles.title}>Registro Clientes</h2>
       <div className={Styles.buttonContainer}>
@@ -85,11 +138,7 @@ const ClientesTable = () => {
                       Ver
                     </Button>
                   </Link>
-                  <Button
-                    variant="contained"
-                    color="error"
-                    onClick={() => handleDelete(cliente.id)}
-                  >
+                  <Button variant="contained" color="error" onClick={() => openModal(cliente)}>
                     Borrar
                   </Button>
                   <Link to={`/informe/${cliente.id}`}>
@@ -101,6 +150,11 @@ const ClientesTable = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Modal open={modalConfirm} onClose={closeModal}>
+        {bodyModal}
+      </Modal>
+
     </div>);
 };
 
