@@ -1,43 +1,151 @@
-.factura {
-  text-align: center;
-}
 
 .tipoFactura {
-  font-size: 18px;
+  font-size: 30px;
   font-weight: bold;
+  border: 1px solid;
+  padding: 8px;
+  color: rgb(56, 54, 54);
+  width: fit-content;
+  height: fit-content;
+}
+
+.negrita {
+  font-weight: bold;
+  font-family: 'Roboto Mono', sans-serif;
+}
+
+.divCliente {
+  margin-top: 20px;
 }
 
 .pageContainer {
-    width: 210mm; /* Ancho de la página A4 */
-    height: 297mm; /* Altura de la página A4 */
-    margin: 10mm; /* Márgenes de 10mm en todos los lados (ajusta según sea necesario) */
-    background-color: white; /* Fondo blanco de la página */
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Sombra ligera para simular una página impresa */
-    display: flex;
-    flex-direction: column; /* Para que el contenido se ajuste verticalmente en la página */
-    padding: 10mm; /* Espacio interno para el contenido */
+  width: 210mm;
+  height: 297mm;
+  
+  
+  padding: 10mm;
+  overflow: hidden;
   }
   
 
 .flexContainer {
-  font-size: 16px;
+  font-size: 13px;
   text-transform: uppercase;
-  font-family: "Courier New", Courier, monospace;
+  /* font-family: "Courier New", Courier, monospace; */
+  font-family: 'Roboto Mono', monospace;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+}
+
+.head{
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  text-align: left;
+  border: 1px solid;
+  padding-top: 0px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 30px;
+
+  
+}
+
+.textoTop {
+  line-height: 0.5;
+  margin-top: 20px;
+}
+
+.TopContainer {
+  font-size: 13px;
+  text-transform: uppercase;
+  /* font-family: "Courier New", Courier, monospace; */
+  font-family: 'Roboto Mono', monospace;
+  display: flex;
+  justify-content: space-around;
+  align-items:end;
+  text-align: left;
+  padding: 10px;
+}
+
+.MidContainer {
+  font-size: 13px;
+  /* font-family: "Courier New", Courier, monospace; */
+  font-family: 'Roboto Mono', monospace;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  min-height: 120mm;
+  border: 1px solid;
+  padding: 20px;
+  
+}
+
+.BottomContainer {
+  font-size: 12px;
+  font-family: 'Roboto Mono', monospace;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  text-align: left;
+  border: 1px solid;
+  padding: 8px;
 }
 
-.smallText {
+/* .smallText {
+  font-size: 10.5px;
+}
+
+.mediumText {
+  font-size: 12px;
+} */
+
+.fixImgSize {
+  width: 150px;
+  height: auto;
+  margin-left: 10px;
+}
+
+.printButton {
+  display: block;
+  background-color: #000000;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 10px 0;
+  transition: background-color 0.3s;
+}
+@media print {
+  .printButton {
+    display: none; /* Ocultar el botón en la impresión */
+  }
+}
+
+
+.LimitedWidthDiv {
+  max-width: 300px; /* Establece el ancho máximo según tus preferencias */
+  /* word-wrap: break-word; Divide las palabras para ajustarse al ancho del div */
+}
+
+.mainTable {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.Concepto {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis; /* Esto mostrará "..." si el texto se desborda */
+}
+
+.caba {
   font-size: 10px;
+  margin-bottom: 0;
+  text-align: left;
 }
 
-.Columna{
-  display: block; 
-}
-
-hr { 
-  height: 2px; /* Establecer la altura deseada, ajusta según tus preferencias */
-  background-color: rgb(0, 0, 0); /* Establecer el color de la línea, en este caso, negro */
-  margin: 10px ;
-}

@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { useParams } from "react-router";
 import { useSelector, useDispatch } from 'react-redux';
-import { GetClientes, UpdateCliente, ClearID, PostProducto, 
-    GetFacturaDetaill, UpdateFactura, UpdateProducto, GetProductoDetaill, GetProductos } from '../../../Redux/actions';
+import { GetClientes, UpdateCliente, ClearID,  
+    GetFacturaDetaill, UpdateFactura, GetProductos } from '../../../Redux/actions';
 
 // material y estilos
 import Styles from './FacturasEditar.module.css';
@@ -14,8 +14,6 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import ProductInput from '../../Productos/ProductoInput';
-import RefreshIcon from '@mui/icons-material/Refresh';
 import { Paper, Typography, Modal } from '@mui/material';
 import Box from '@mui/material/Box';
 
@@ -25,7 +23,6 @@ const FacturasEditar = () => {
     const clientes = useSelector((state) => state.clientes);
     const productos = useSelector((state) => state.productos);
     const facturaDetail = useSelector((state) => state.facturaDetail);
-    const productosDetail = useSelector((state) => state.productosDetail);
     const [selectedOption, setSelectedOption] = useState("facturasimple");
     const productosFactura = productos.filter((p) => p.id_factura === facturaDetail.id);
 
@@ -39,40 +36,15 @@ const FacturasEditar = () => {
         cuit: '',
         cond_vta: ''
     });
-    const [products, setProducts] = useState([
-        { id:'',
-        concepto: '', 
-        cantidad: '', 
-        precioxu: '', 
-        iva: '', 
-        subtotal: '', 
-        importe: '', 
-        id_factura: '' },
-    ]);
-    const addProduct = () => {
-        setProducts([...products, 
-            { id:'',
-            concepto: '', 
-            cantidad: '', 
-            precioxu: '', 
-            iva: '', 
-            subtotal: '', 
-            importe: '', 
-            id_factura: '' }
-        ]);
-    };
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
-        console.log("el ID es: ", id);
         dispatch(GetClientes());
         dispatch(GetProductos());
         dispatch(ClearID());
         if(id){
             dispatch(GetFacturaDetaill(id));
         };
-        console.log("Detalle de factura: ", facturaDetail);
-        console.log("Detalle de procutsos: ", productosFactura);
     }, [dispatch, id]);
 
 
@@ -97,21 +69,10 @@ const FacturasEditar = () => {
             ...facturaData,
             [name]: value
         });
-        console.log("FORM: ", facturaData);
         return
     };
 
     // SETEO DEL NRO DE FACTURA
-    const handleNroChange = () => {
-        let cliente = clientes.find(c => c.id === facturaData.id_cliente);
-        let nroCliente = Number(cliente.ult_factura) + 1;
-        let nroClienteStr = nroCliente.toString().padStart(12, '0');
-        setFacturaData({
-            ...facturaData,
-            nro_factura: nroClienteStr
-        });
-        return
-    };
     const SetearUltimoNroFctura = async() => {
         let nroFactura = Number(facturaData.nro_factura).toString();
         let cliente = clientes.find(c => c.id === facturaData.id_cliente);
@@ -124,11 +85,8 @@ const FacturasEditar = () => {
     const handleUpdateFactura = async() => {
         const ActualizarNroFactura = await SetearUltimoNroFctura();
         if(ActualizarNroFactura){
-            console.log("Cliente ACtualizado: ", ActualizarNroFactura.payload);
             const FacturaCreada = await dispatch(UpdateFactura(facturaDetail.id ,facturaData));
             if(FacturaCreada){
-                console.log("SE hiso el POST de la factura su ID es: ", FacturaCreada.payload.id);
-                //await PostearProductos(FacturaCreada.payload.id);
                 setFacturaData({
                     fecha: '',
                     id_cliente: '',
@@ -139,11 +97,10 @@ const FacturasEditar = () => {
                     cond_vta: ''
                 });
                 setErrors({});
-                //window.location.href = "/home";
                 await dispatch(GetFacturaDetaill(facturaDetail.id));
                 closeModal();
             } else {
-                console.log("ALGO SALIO MAL EN EL POST DE FACTURA");
+                console.error("ALGO SALIO MAL EN EL POST DE FACTURA");
             }
         };
     };
@@ -162,7 +119,7 @@ const FacturasEditar = () => {
             await handleUpdateFactura();
         } else {
             setErrors(newErrors);
-            console.log("HAY ERRORES ", newErrors);
+            console.error("HAY ERRORES ", newErrors);
         };
     };
 

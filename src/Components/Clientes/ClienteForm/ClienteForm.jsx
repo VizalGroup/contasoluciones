@@ -35,14 +35,11 @@ export default function ClienteForm() {
       ...formData,
       [name]: value,
     });
-    console.log("FORM: ", formData);
     return
   };
 
   // FUNCION PARA SUBIR IMAGENES A CLODINARI
   const SubirImagenesClodinari = async (e) => {
-    const UploadPrestName = process.env.CLUDINARY_UPLOAD_PRESETS_NAME;
-    const CloudName = process.env.COLUDINARY_NAME;
     const files = e.target.files;
     const data = new FormData();
     data.append("file", files[0]);
@@ -53,14 +50,12 @@ export default function ClienteForm() {
     );
     const file = await response.json();
     setFormData({...formData, [e.target.id]:file.secure_url });
-    console.log("FORM: ", formData);
 };
 
   // FUNCION POSTEO DE CLIENTE
   const handlePostClient = async() => {
       const NuevoCLiente = await dispatch(PostCliente(formData));
       if(NuevoCLiente){
-        console.log("SE HICE EL POST CORRECTAMENTE");
         setFormData({
           nombre: '',
           cuit: '',
@@ -117,7 +112,6 @@ export default function ClienteForm() {
 
   // RECARGAR PAGINA ACTUAL
   const RecargarPagina = () => {
-    //window.location.reload();
     setFormData({
       nombre: '',
       cuit: '',
@@ -305,34 +299,6 @@ export default function ClienteForm() {
             </div>
           </Grid>
         </Grid>
-
-        {/* <Grid container spacing={2} style={{ marginTop: 20, display: 'flex', justifyContent: 'flex-start', alignItems: 'center',flexDirection: 'row' }}>
-          <Grid item xs={12}>
-            <InputLabel>Logo</InputLabel>
-              <TextField
-                type='file'
-                id='img_logo'
-                name='file'
-                onChange={(e)=> SubirImagenesClodinari(e)}
-              />
-            <div>{formData.img_logo ? <div>
-              <img className={Styles.imageRender} src={formData.img_logo}/></div> : null}
-            </div>
-          </Grid>
-
-          <Grid item xs={12}>
-            <InputLabel>Codigo QR</InputLabel>
-              <TextField
-                type='file'
-                id='qr_code'
-                name='file'
-                onChange={(e)=> SubirImagenesClodinari(e)}
-              />
-            <div>{formData.qr_code ? <div>
-              <img className={Styles.imageRender} src={formData.qr_code}/></div> : null}
-            </div>
-          </Grid>
-        </Grid> */}
 
         <Button type="submit" variant="contained" color="primary" fullWidth style={{ marginTop: 20 }}>
           Agregar
