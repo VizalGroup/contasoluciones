@@ -20,7 +20,6 @@ export const DELETE_PRODUCTO = "DELETE_PRODUCTO";
 
 export const CLEARID = "CLEARID";
 
-//const localHostURL = "http://localhost:3001/products";
 const clienteURL = "http://localhost/cc_clientescrud/";
 const facturaURL = "http://localhost/cc_facturascrud/";
 const productosURL = "http://localhost/cc_productoscrud/";

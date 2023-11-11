@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
@@ -9,7 +9,6 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button"; 
 import Styles from "./ClientesTable.module.css";
 
@@ -21,17 +20,6 @@ import {
 const ClientesTable = () => {
   const clientes = useSelector((state) => state.clientes);
   const dispatch = useDispatch();
-
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const filteredClientes = clientes.filter((cliente) => {
-    return Object.values(cliente).some(
-      (value) =>
-        (typeof value === "string" &&
-          value.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        typeof value === "number"
-    );
-  });
 
   const handleDelete = (clienteId) => {
     dispatch(DeleteCliente(clienteId));
@@ -64,15 +52,7 @@ const ClientesTable = () => {
           </Button>
         </a>
       </div>
-      {/* <div>
-        <TextField
-          label="Buscar Cliente"
-          variant="outlined"
-          fullWidth
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div> */}
+
       <TableContainer component={Paper} className={Styles.customTable}>
         <Table>
           <TableHead>
@@ -89,7 +69,7 @@ const ClientesTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredClientes.map((cliente) => (
+            {clientes.map((cliente) => (
               <TableRow key={cliente.id}>
                 <TableCell style={{ textAlign: "center" }}>{cliente.id}</TableCell>
                 <TableCell>{cliente.cai}</TableCell>

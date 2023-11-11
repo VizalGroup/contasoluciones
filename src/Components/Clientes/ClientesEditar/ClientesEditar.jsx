@@ -11,7 +11,6 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import InputLabel from '@mui/material/InputLabel';
-import RefreshIcon from '@mui/icons-material/Refresh';
 import { Paper, Typography, Modal } from '@mui/material';
 import Box from '@mui/material/Box';
 
@@ -46,7 +45,6 @@ const ClientesEditar = () => {
       ...formData,
       [name]: value,
     });
-    console.log("FORM: ", formData);
     return
   };
   
@@ -62,14 +60,12 @@ const ClientesEditar = () => {
     );
     const file = await response.json();
     setFormData({...formData, [e.target.id]:file.secure_url });
-    console.log("FORM: ", formData);
   };
 
   // FUNCION UPDATE DE CLIENTE
   const handleUpdateClient = async() => {
       const UpdatedClienteEdit = await dispatch(UpdateCliente(clienteDetail.id, formData));
       if(UpdatedClienteEdit){
-        console.log("SE HICE EL UPDATE CORRECTAMENTE");
         setFormData({
           nombre: '',
           cuit: '',
@@ -121,13 +117,8 @@ const ClientesEditar = () => {
       await handleUpdateClient();
     } else {
       setErrors(newErrors);
-      console.log("HAY ERRORES ", newErrors);
+      console.error("HAY ERRORES ", newErrors);
     };
-  };
-
-  // RECARGAR PAGINA ACTUAL
-  const RecargarPagina = () => {
-    window.location.reload();
   };
 
   // CERRAR MODAL
