@@ -17,14 +17,16 @@ import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import { Modal } from '@mui/material';
+import Box from '@mui/material/Box';
 
 // Acciones
 import {
   GetClientes,
   GetFacturas,
-  UpdateFactura,
   DeleteFactura,
   GetProductos,
+  DeleteProducto
 } from "../../../Redux/actions";
 
 const FacturasTable = () => {
@@ -38,12 +40,9 @@ const FacturasTable = () => {
   const [fechaHasta, setFechaHasta] = useState("");
   const [clienteFiltrado, setClienteFiltrado] = useState("");
 
-  const handleDelete = (facturaId) => {
-    dispatch(DeleteFactura(facturaId));
-    dispatch(GetFacturas());
-    dispatch(GetClientes());
-    dispatch(GetProductos());
-  };
+  const [modalConfirm, setModaConfirm] = useState(false);
+  const [facturaParaBorrar, setFacturaParaBorrar] = useState({});
+
 
   const CalcularSubtotal = (id_factura) => {
     if (productos.length > 0) {
@@ -86,7 +85,6 @@ const FacturasTable = () => {
   };
 
   // SETEO DE LA FECHA para buscar
-
   const facturasFiltradas = facturas.filter((factura) => {
     const clienteNombre = ClienteFactura(factura.id_cliente);
 
@@ -119,6 +117,48 @@ const FacturasTable = () => {
     dispatch(GetClientes());
     dispatch(GetProductos());
   }, [dispatch]);
+
+  const openModal = (factura) => {
+    setFacturaParaBorrar(factura);
+    setModaConfirm(true);
+  };
+
+  const closeModal = () => {
+    setFacturaParaBorrar();
+    setModaConfirm(false);
+  };
+
+  const handleDelete = async(facturaId) => {
+    try{
+      const productosFactura = productos.filter((p) => p.id_factura === facturaId);
+      await Promise.all(
+        productosFactura.map(async (producto) => {
+          await dispatch(DeleteProducto(producto.id));
+        })
+      );
+      await dispatch(DeleteFactura(facturaId));
+      await dispatch(GetFacturas());
+      await dispatch(GetClientes());
+      await dispatch(GetProductos());
+      closeModal();
+    } catch (error){
+      console.error("Error al eliminar la Factura:", error);
+    }
+  };
+
+  const bodyModal = (<Box className={Styles.modalContent}>
+    <div className={Styles.contenidoModal}>
+      <h3>Esta seguro que quiere borrar esta Factura ? </h3>
+      <div>
+        <Button variant="danger" onClick={()=> handleDelete(facturaParaBorrar.id)}>
+          BORRAR
+        </Button>
+        <Button variant="primary" onClick={closeModal}>
+          CANCELAR
+        </Button>
+      </div>
+    </div>
+  </Box>)
 
   return (
     <div className={Styles.responsiveContainer}>
@@ -219,7 +259,7 @@ const FacturasTable = () => {
                     </Link>
                     <Button
                       variant="danger"
-                      onClick={() => handleDelete(factura.id)}
+                      onClick={() => openModal(factura)}
                     >
                       Borrar
                     </Button>
@@ -233,6 +273,11 @@ const FacturasTable = () => {
           </Table>
         </TableContainer>
       </div>
+
+      <Modal open={modalConfirm} onClose={closeModal}>
+        {bodyModal}
+      </Modal>
+
     </div>
   );
 };
