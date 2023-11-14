@@ -217,7 +217,7 @@ export default function ClienteForm() {
               name="numero_ingresos_brutos"
               value={formData.numero_ingresos_brutos}
               onChange={handleChange}
-              inputProps={{ inputMode:'numeric', pattern: '[0-9]*', maxLength: 50}}
+              inputProps={{ maxLength: 50}}
               error={!!errors.numero_ingresos_brutos}
               helperText={errors.numero_ingresos_brutos}
             />
@@ -232,7 +232,6 @@ export default function ClienteForm() {
               name="numero_controladora_fiscal"
               value={formData.numero_controladora_fiscal}
               onChange={handleChange}
-              inputProps={{ inputMode:'numeric', pattern: '[0-9]*', maxLength: 50}}
               error={!!errors.numero_controladora_fiscal}
               helperText={errors.numero_controladora_fiscal}
             />
@@ -246,7 +245,7 @@ export default function ClienteForm() {
               name="ult_factura"
               value={formData.ult_factura}
               onChange={handleChange}
-              inputProps={{ inputMode:'numeric', pattern: '[0-9]*', maxLength: 12}}
+              inputProps={{ maxLength: 15}}
               error={!!errors.ult_factura}
               helperText={errors.ult_factura}
             />

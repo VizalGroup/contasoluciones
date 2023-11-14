@@ -90,12 +90,13 @@ export default function FacturaModerna() {
               <p>{clienteDeFactura.direccion}</p>
               <p style={{ marginBottom: "0px" }}>IVA Responsable Inscripto</p>
             </div>
-            <p className={Styles.tipoFactura}>A</p>
+            <p className={Styles.tipoFactura} style={{ position: 'absolute', top: '18.4mm', left: '50%', transform: 'translate(-50%, -50%)' }}>A</p>
             <div>
               <br />
               <p className={Styles.facturaA}>Factura A</p>
               <p className={Styles.original}>Original</p>
               <p className={Styles.number}>Nº: {facturaDetail.nro_factura}</p>
+              <p className={Styles.code01}>CODIGO 01</p>
               <br />
               <p className={Styles.enterpriseData}>
                 Fecha: {facturaDetail.fecha.split("-").reverse().join("/")}
@@ -145,7 +146,7 @@ export default function FacturaModerna() {
             <tbody style={{ height: "90mm" }}>
               {productosFactura.map((producto, index) => (
                 <tr key={index}>
-                  <td>{producto.cantidad.toFixed(2)}</td>
+                  <td>{parseFloat(producto.cantidad).toFixed(2)}</td>
                   <td>{producto.concepto}</td>
                   <td style={{ textAlign: "right" }}>{producto.precioxu}</td>
                   <td style={{ textAlign: "right" }}>{producto.subtotal}</td>

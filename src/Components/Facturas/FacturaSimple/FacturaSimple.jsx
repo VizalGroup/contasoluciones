@@ -84,11 +84,14 @@ export default function FacturaSimple() {
               <p>{clienteDeFactura.direccion}</p>
               <p className={Styles.smallText}>IVA RESPONSABLE INSCRIPTO</p>
             </div>
-            <p className={Styles.tipoFactura}>A</p>
+            <p className={Styles.tipoFactura} style={{ position: 'absolute', top: '10%', left: '50%', transform: 'translate(-50%, -50%)' }}>A</p>
             <div>
               <p>Factura</p>
               <p className={Styles.smallText}>
                 Nro de Factura: {facturaDetail.nro_factura}
+              </p>
+              <p className={Styles.smallText}>
+                Codigo 01
               </p>
               <p>Fecha: {facturaDetail.fecha.split("-").reverse().join("-")}</p>
               <p className={Styles.smallText}>
@@ -98,7 +101,7 @@ export default function FacturaSimple() {
                 ING. BRUTOS: {clienteDeFactura.numero_ingresos_brutos}
               </p>
               <p className={Styles.smallText}>
-                INICIO DE ACTIVIDADES: {clienteDeFactura.inicio_actividades}
+                INICIO DE ACTIVIDADES: {clienteDeFactura.inicio_actividades.split("-").reverse().join("/")}
               </p>
             </div>
           </div>

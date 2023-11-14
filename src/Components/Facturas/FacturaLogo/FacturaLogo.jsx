@@ -138,6 +138,9 @@ export default function FacturaLogo() {
               <p className={Styles.smallText}>
                 <span className={Styles.negrita}>Nro de Factura: </span>
                 <span>{facturaDetail.nro_factura}</span>
+                <br />
+                <span>Codigo 01</span>
+
               </p>
               <p>
                 <span className={Styles.negrita}>Fecha: </span>
@@ -153,7 +156,7 @@ export default function FacturaLogo() {
               </p>
               <p className={Styles.smallText}>
                 <span className={Styles.negrita}>INICIO DE ACTIVIDADES: </span>
-                <spa>{clienteFactura.inicio_actividades}</spa>
+                <spa>{clienteFactura.inicio_actividades.split("-").reverse().join("/")}</spa>
               </p>
             </div>
           </div>

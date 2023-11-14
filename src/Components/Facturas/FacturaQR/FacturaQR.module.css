@@ -1,9 +1,9 @@
 .tipoFactura {
   font-size: 30px;
   font-weight: bold;
-  border: 1px solid;
+  border: 1px solid black;
   padding: 8px;
-  color: rgb(56, 54, 54);
+  color: rgb(0, 0, 0);
   width: fit-content;
   height: fit-content;
 }
@@ -15,7 +15,7 @@
 
 .divCliente {
   margin-top: 20px;
-  max-width: 350px;
+  max-width: 320px;
 }
 
 .pageContainer {
@@ -45,6 +45,7 @@
   padding-left: 10px;
   padding-right: 10px;
   padding-bottom: 30px;
+  
 }
 
 .textoTop {

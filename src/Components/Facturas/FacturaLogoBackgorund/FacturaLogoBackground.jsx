@@ -107,12 +107,13 @@ export default function FacturaLogoBackground() {
               <p>{clienteDeFactura.direccion}</p>
               <p>IVA RESPONSABLE INSCRIPTO</p>
             </div>
-            <p className={Styles.tipoFactura}>A</p>
+            <p className={Styles.tipoFactura} style={{ position: 'absolute', top: '30mm', left: '50%', transform: 'translate(-50%, -50%)' }}>A</p>
             <div>
               <p className={Styles.facturaData}>Factura</p>
               <p className={Styles.facturaData}>
                 Nro de Factura: {facturaDetail.nro_factura}
               </p>
+              <p className={Styles.facturaData} >CODIGO 01</p>
               <br />
               <p className={Styles.enterpriseData}>
                 Fecha: {facturaDetail.fecha.split("-").reverse().join("/")}
@@ -124,7 +125,7 @@ export default function FacturaLogoBackground() {
                 Ing. Brutos: {clienteDeFactura.numero_ingresos_brutos}
               </p>
               <p className={Styles.enterpriseData}>
-                Inicio de Actividades: {clienteDeFactura.inicio_actividades}
+                Inicio de Actividades: {clienteDeFactura.inicio_actividades.split("-").reverse().join("/")}
               </p>
             </div>
           </div>
