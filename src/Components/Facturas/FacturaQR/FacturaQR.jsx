@@ -109,8 +109,10 @@ export default function FacturaQR() {
               </p>
             </p>
           </div>
+<div >
 
-          <p className={Styles.tipoFactura}>A</p>
+          <p className={Styles.tipoFactura} style={{ position: 'absolute', top: '19mm', left: '50%', transform: 'translate(-50%, -50%)' }}>A</p>
+</div>
 
           <div className={Styles.divDatosFactura}>
             <p className={Styles.textoTop}>
@@ -118,6 +120,8 @@ export default function FacturaQR() {
               <p className={Styles.smallText}>
                 <span className={Styles.negrita}>Nro de Factura: </span>
                 <span>{facturaDetail.nro_factura}</span>
+                <br />
+                <span style={{textAlign: 'right'}}>Codigo 01</span>
               </p>
               <p>
                 <span className={Styles.negrita}>Fecha: </span>
@@ -133,7 +137,7 @@ export default function FacturaQR() {
               </p>
               <p className={Styles.smallText}>
                 <span className={Styles.negrita}>INICIO DE ACTIVIDADES: </span>
-                <spa>{clienteFactura.inicio_actividades}</spa>
+                <spa>{clienteFactura.inicio_actividades.split("-").reverse().join("/")}</spa>
               </p>
             </p>
           </div>

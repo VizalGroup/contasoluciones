@@ -95,15 +95,21 @@ export default function FacturaLogoQR() {
 
               <p>IVA RESPONSABLE INSCRIPTO</p>
             </div>
-            <p className={Styles.tipoFactura}>A</p>
+            <p className={Styles.tipoFactura} style={{ position: 'absolute', top: '14.4mm', left: '50%', transform: 'translate(-50%, -50%)' }}>A</p>
             <div>
               <p className={Styles.onlyFactura}>Factura</p>
-              <div>
+              <div >
                 <p
                   className={Styles.facturaData}
                   style={{ textAlign: "right" }}
                 >
                   Nro A{facturaDetail.nro_factura}
+                </p>
+                <p
+                  className={Styles.facturaData}
+                  style={{ textAlign: "right", lineHeight: '1px' }}
+                >
+                  CODIGO 01
                 </p>
                 <br />
                 <div>
@@ -124,7 +130,7 @@ export default function FacturaLogoQR() {
                   Ing. Brutos: {clienteDeFactura.numero_ingresos_brutos}
                 </p>
                 <p className={Styles.enterpriseData}>
-                  Inicio de Actividades: {clienteDeFactura.inicio_actividades}
+                  Inicio de Actividades: {clienteDeFactura.inicio_actividades.split("-").reverse().join("/")}
                 </p>
               </div>
             </div>
