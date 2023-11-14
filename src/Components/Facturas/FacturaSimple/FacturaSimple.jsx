@@ -79,7 +79,7 @@ export default function FacturaSimple() {
         <div className={Styles.Columna}>
           
           <div className={Styles.firstContainer}>
-            <div>
+            <div style={{maxWidth: '80mm'}}>
               <p>{clienteDeFactura.nombre}</p>
               <p>{clienteDeFactura.direccion}</p>
               <p className={Styles.smallText}>IVA RESPONSABLE INSCRIPTO</p>

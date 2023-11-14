@@ -20,9 +20,9 @@ export const DELETE_PRODUCTO = "DELETE_PRODUCTO";
 
 export const CLEARID = "CLEARID";
 
-const clienteURL = "http://localhost/cc_clientescrud/";
-const facturaURL = "http://localhost/cc_facturascrud/";
-const productosURL = "http://localhost/cc_productoscrud/";
+const clienteURL = process.env.REACT_APP_CLIENTE_URL;
+const facturaURL = process.env.REACT_APP_FACTURA_URL;
+const productosURL = process.env.REACT_APP_PRODUCTOS_URL;
 
 // ACTIONS DE FACTURAS
 export const GetFacturas = () => {

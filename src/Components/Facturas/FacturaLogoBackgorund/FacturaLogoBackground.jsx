@@ -153,7 +153,7 @@ export default function FacturaLogoBackground() {
           </div>
 
           <hr />
-          <div className={Styles.flexContainer}>
+          <div className={Styles.flexContainer} style={{height: '80mm'}}>
             <div className={Styles.LimitedWidthDiv}>
               <p className={Styles.mainTable}>CANTIDAD</p>
               <p>

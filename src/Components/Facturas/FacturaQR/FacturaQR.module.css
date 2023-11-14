@@ -1,4 +1,3 @@
-
 .tipoFactura {
   font-size: 30px;
   font-weight: bold;
@@ -11,34 +10,31 @@
 
 .negrita {
   font-weight: bold;
-  font-family: 'Roboto Mono', sans-serif;
+  font-family: "Roboto Mono", sans-serif;
 }
 
 .divCliente {
   margin-top: 20px;
+  max-width: 350px;
 }
 
 .pageContainer {
   width: 210mm;
   height: 297mm;
-  
-  
   padding: 10mm;
-  overflow: hidden;
-  }
-  
+}
 
 .flexContainer {
   font-size: 13px;
   text-transform: uppercase;
   /* font-family: "Courier New", Courier, monospace; */
-  font-family: 'Roboto Mono', monospace;
+  font-family: "Roboto Mono", monospace;
   display: flex;
   justify-content: space-between;
   align-items: start;
 }
 
-.head{
+.head {
   font-size: 13px;
   display: flex;
   justify-content: space-between;
@@ -49,23 +45,22 @@
   padding-left: 10px;
   padding-right: 10px;
   padding-bottom: 30px;
-
-  
 }
 
 .textoTop {
-  line-height: 0.5;
+  line-height: 1;
   margin-top: 20px;
+  max-width: 85mm;
 }
 
 .TopContainer {
   font-size: 13px;
   text-transform: uppercase;
   /* font-family: "Courier New", Courier, monospace; */
-  font-family: 'Roboto Mono', monospace;
+  font-family: "Roboto Mono", monospace;
   display: flex;
   justify-content: space-around;
-  align-items:end;
+  align-items: end;
   text-align: left;
   padding: 10px;
 }
@@ -73,19 +68,18 @@
 .MidContainer {
   font-size: 13px;
   /* font-family: "Courier New", Courier, monospace; */
-  font-family: 'Roboto Mono', monospace;
+  font-family: "Roboto Mono", monospace;
   display: flex;
   justify-content: space-between;
   align-items: start;
   min-height: 120mm;
   border: 1px solid;
   padding: 20px;
-  
 }
 
 .BottomContainer {
   font-size: 12px;
-  font-family: 'Roboto Mono', monospace;
+  font-family: "Roboto Mono", monospace;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -126,7 +120,6 @@
   }
 }
 
-
 .LimitedWidthDiv {
   max-width: 300px; /* Establece el ancho máximo según tus preferencias */
   /* word-wrap: break-word; Divide las palabras para ajustarse al ancho del div */
@@ -148,4 +141,3 @@
   margin-bottom: 0;
   text-align: left;
 }
-
