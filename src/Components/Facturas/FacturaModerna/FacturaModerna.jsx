@@ -81,7 +81,7 @@ export default function FacturaModerna() {
       {facturaDetail && clienteDeFactura && productosFactura ? (
         <div className={Styles.Columna}>
           <div className={Styles.firstContainer}>
-            <div>
+            <div style={{maxWidth: '90mm'}}>
               <img
                 src={clienteDeFactura.img_logo}
                 className={Styles.fixImgSize}

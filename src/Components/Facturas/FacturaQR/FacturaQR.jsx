@@ -143,7 +143,7 @@ export default function FacturaQR() {
         <div className={Styles.MidContainer}>
           <div className={Styles.LimitedWidthDiv}>
             <p className={Styles.mainTable}>CANTIDAD</p>
-            <p>
+            <p style={{marginLeft: '1mm'}}>
               {productosFactura.map((producto, index) => (
                 <p key={index}>{producto.cantidad}</p>
               ))}
@@ -166,7 +166,7 @@ export default function FacturaQR() {
             <p>
               {" "}
               {productosFactura.map((producto, index) => (
-                <p key={index}>{producto.precioxu}</p>
+                <p key={index}>${producto.precioxu}</p>
               ))}
             </p>
           </div>
@@ -223,7 +223,7 @@ export default function FacturaQR() {
 
         <div className={Styles.BottomContainer}>
             <p className={Styles.mediumText}>
-                <span className={Styles.negrita}>C.A.I Nº:: </span>
+                <span className={Styles.negrita}>C.A.I Nº: </span>
                 <span>{clienteFactura.cai}</span>
             </p>
             <p className={Styles.mediumText}>
