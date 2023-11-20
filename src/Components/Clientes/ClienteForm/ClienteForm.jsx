@@ -9,6 +9,10 @@ import Styles from "./ClienteForm.module.css";
 import InputLabel from '@mui/material/InputLabel';
 import RefreshIcon from '@mui/icons-material/Refresh';
 
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+
 
 export default function ClienteForm() {
   const dispatch = useDispatch();
@@ -22,7 +26,9 @@ export default function ClienteForm() {
     numero_controladora_fiscal: '',
     img_logo: '',
     qr_code: '',
-    ult_factura: ''
+    ult_factura: '',
+    default_model: '',
+    punto_vta: ''
   });
   const [errors, setErrors] = useState({});
 
@@ -69,7 +75,9 @@ export default function ClienteForm() {
           numero_controladora_fiscal: '',
           img_logo: '',
           qr_code: '',
-          ult_factura: ''
+          ult_factura: '',
+          default_model: '',
+          punto_vta: ''
         });
         setErrors({});
         alert("Cliente añadido exitosamente");
@@ -105,6 +113,9 @@ export default function ClienteForm() {
     if (!formData.ult_factura) {
       newErrors.ult_factura = 'El Numero de Facturación es requerido';
     }
+    if (!formData.punto_vta) {
+      newErrors.punto_vta = 'El punto de venta es requerido';
+    }
     if (Object.keys(newErrors).length === 0) { // No hay errores, crear la factura
       await handlePostClient();
     } else {
@@ -125,7 +136,9 @@ export default function ClienteForm() {
       numero_controladora_fiscal: '',
       img_logo: '',
       qr_code: '',
-      ult_factura: ''
+      ult_factura: '',
+      default_model: '',
+      punto_vta: ''
     });
   };
 
@@ -187,7 +200,7 @@ export default function ClienteForm() {
               name="cai"
               value={formData.cai}
               onChange={handleChange}
-              inputProps={{ pattern: '^[0-9-]*$', maxLength: 15 }}
+              //inputProps={{ pattern: '^[0-9-]*$', maxLength: 15 }}
               error={!!errors.cai}
               helperText={errors.cai}
             />
@@ -251,6 +264,40 @@ export default function ClienteForm() {
             />
           </Grid>
 
+          {/* PUNTO DE VENTA */}
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              label="Punto de Venta"
+              type="text"
+              name='punto_vta'
+              value={formData.punto_vta}
+              onChange={handleChange}
+              error={!!errors.punto_vta}
+              helperText={errors.punto_vta}
+            />
+          </Grid>
+
+          {/* DEFAULT MODEL */}
+          <Grid item xs={6}>
+            <FormControl fullWidth>
+              <InputLabel>Modelo de Impresión</InputLabel>
+                <Select
+                  name="default_model"
+                  value={formData.default_model}
+                  label="Modelo de Impresión"
+                  onChange={handleChange}
+                >
+                  <MenuItem value={'facturasimple'}>Factura Simple</MenuItem>
+                  <MenuItem value={'facturalogo'}>Con Logo</MenuItem>
+                  <MenuItem value={'facturaqr'}>Solo QR</MenuItem>
+                  <MenuItem value={'facturalogoyqr'}>Logo y QR</MenuItem>
+                  <MenuItem value={'facturamoderna'}>Moderno</MenuItem>
+                  <MenuItem value={'facturalogobackground'}>Marca de Agua</MenuItem>
+                </Select>
+            </FormControl>
+          </Grid>
+
           {/* INICIO DE ACTIVIDADES */}
           <Grid item xs={6}>
             <TextField
@@ -262,6 +309,7 @@ export default function ClienteForm() {
               helperText={errors.inicio_actividades}
             />
           </Grid>
+
         </Grid>
 
         <Grid container spacing={2} style={{ marginTop: '2%' }}>

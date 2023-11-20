@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { GetDestinatarios } from "../../Redux/actions";
+import { GetDestinatarios } from "../../../Redux/actions";
+import { Link } from "react-router-dom";
 
 // Estilos
 import Styles from "./DestinatariosTable.module.css";
@@ -30,7 +31,7 @@ export default function DestinatariosTable() {
   );
 
   return (
-    <div>
+    <div className={Styles.responsiveContainer}>
       <h2 className={Styles.title}>Destinatarios</h2>
       <p className={Styles.description}>
         Esta tabla contiene todos los destinatarios disponibles para la
@@ -40,7 +41,7 @@ export default function DestinatariosTable() {
         <a href="/home">
           <Button variant="primary">Volver</Button>
         </a>
-        <a href="/addrecipient">
+        <a href="/addDestinatario">
           <Button variant="primary">
             {" "}
             <i className="bi bi-person">+</i> Agregar{" "}
@@ -91,10 +92,11 @@ export default function DestinatariosTable() {
                     {item.cuit}
                   </TableCell>
                   <TableCell style={{ textAlign: "center" }}>
-                    <Button color="primary" style={{ marginRight: "5px" }}>
-                      Ver
-                    </Button>
-
+                    <Link to={`/destinatarioEditar/${item.id}`}>
+                      <Button variant="contained" color="primary" style={{marginRight: '5px'}}>
+                        Ver
+                      </Button>
+                    </Link>
                     <Button variant="danger">Borrar</Button>
                   </TableCell>
                 </TableRow>

@@ -8,6 +8,7 @@ const initialState = {
   clienteDetail: {},
   productosDetail: [],
   destinatarios: [],
+  destinatarioDetail: {},
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -86,12 +87,31 @@ const rootReducer = (state = initialState, action) => {
       ...state,
       facturaDetail: {},
       clienteDetail: {},
-      productosDetail: []
+      productosDetail: [],
+      destinatarioDetail: {}
     }
+
 
     case "GET_DESTINATARIOS": return {
       ...state,
       destinatarios: action.payload
+    }
+    case "GET_ID_DESTINATARIOS": return {
+      ...state,
+      destinatarioDetail: action.payload
+    }
+    case "POST_DESTINATARIOS": return {
+      ...state
+    }
+    case "UPDATE_DESTINATARIOS": return {
+      ...state,
+      destinatarios: state.destinatarios.map((d) => {
+        return d.id === action.payload.id ? action.payload : d;
+      }),
+    }
+    case "DELETE_DESTINATARIOS": return {
+      ...state,
+      destinatarios: state.destinatarios.filter(d => d.id !== action.payload)
     }
 
     default: return {...state};

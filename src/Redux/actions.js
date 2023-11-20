@@ -19,6 +19,10 @@ export const UPDATE_PRODUCTO = "UPDATE_PRODUCTO";
 export const DELETE_PRODUCTO = "DELETE_PRODUCTO";
 
 export const GET_DESTINATARIOS = "GET_DESTINATARIOS";
+export const GET_ID_DESTINATARIOS = "GET_ID_DESTINATARIOS";
+export const POST_DESTINATARIOS = "POST_DESTINATARIOS";
+export const UPDATE_DESTINATARIOS = "UPDATE_DESTINATARIOS";
+export const DELETE_DESTINATARIOS = "DELETE_DESTINATARIOS";
 
 export const CLEARID = "CLEARID";
 
@@ -91,6 +95,7 @@ export const PostFactura = (atributos) => {
       f.append("direccion", atributos.direccion);
       f.append("cuit", atributos.cuit);
       f.append("cond_vta", atributos.cond_vta);
+      f.append("cai", atributos.cai);
       var response = await axios.post(facturaURL, f);
       console.log("Factura creada en la ACTION: ", response.data);
       return dispatch({
@@ -115,6 +120,7 @@ export const UpdateFactura = (id, atributos) => {
       f.append("direccion", atributos.direccion);
       f.append("cuit", atributos.cuit);
       f.append("cond_vta", atributos.cond_vta);
+      f.append("cai", atributos.cai);
       var response = await axios.post(facturaURL, f, { params: { id: id } });
       return dispatch({
         type: UPDATE_FACTURA,
@@ -203,6 +209,8 @@ export const PostCliente = (atributos) => {
       f.append("img_logo", atributos.img_logo);
       f.append("qr_code", atributos.qr_code);
       f.append("ult_factura", atributos.ult_factura);
+      f.append("default_model", atributos.default_model);
+      f.append("punto_vta", atributos.punto_vta);
       var response = await axios.post(clienteURL, f);
       return dispatch({
         type: POST_CLIENTE,
@@ -232,6 +240,8 @@ export const UpdateCliente = (id, atributos) => {
       f.append("img_logo", atributos.img_logo);
       f.append("qr_code", atributos.qr_code);
       f.append("ult_factura", atributos.ult_factura);
+      f.append("default_model", atributos.default_model);
+      f.append("punto_vta", atributos.punto_vta);
       var response = await axios.post(clienteURL, f, { params: { id: id } });
       console.log("Cliente Updateado: ", response.data);
       return dispatch({
@@ -389,6 +399,83 @@ export const GetDestinatarios = () => {
           payload: [],
         });
       }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+};
+
+export const GetDestinatarioDetaill = (id) => {
+  return async function (dispatch) {
+    try {
+      var f = new FormData();
+      f.append("METHOD", "GET");
+      var response = await axios.post(DestinatariosURL, f, { params: { id: id } });
+      if (response.data !== null) {
+        return dispatch({
+          type: GET_ID_DESTINATARIOS,
+          payload: response.data,
+        });
+      } else {
+        return dispatch({
+          type: GET_ID_DESTINATARIOS,
+          payload: {},
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+};
+
+export const PostDestinatario = (atributos) => {
+  return async function (dispatch) {
+    try {
+      var f = new FormData();
+      f.append("METHOD", "POST");
+      f.append("destinatario", atributos.destinatario);
+      f.append("direccion", atributos.direccion);
+      f.append("cuit", atributos.cuit);
+      var response = await axios.post(DestinatariosURL, f);
+      return dispatch({
+        type: POST_DESTINATARIOS,
+        payload: response.data,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+};
+
+export const UpdateDestinatario = (id, atributos) => {
+  return async function (dispatch) {
+    try {
+      var f = new FormData();
+      f.append("METHOD", "PUT");
+      f.append("destinatario", atributos.destinatario);
+      f.append("direccion", atributos.direccion);
+      f.append("cuit", atributos.cuit);
+      var response = await axios.post(DestinatariosURL, f, { params: { id: id } });
+      return dispatch({
+        type: UPDATE_DESTINATARIOS,
+        payload: response.data,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+};
+
+export const DeleteDestinatario = (id) => {
+  return async function (dispatch) {
+    try {
+      var f = new FormData();
+      f.append("METHOD", "DELETE");
+      var response = await axios.post(DestinatariosURL, f, { params: { id: id } });
+      return dispatch({
+        type: DELETE_DESTINATARIOS,
+        payload: response.id,
+      });
     } catch (err) {
       console.log(err);
     }

@@ -13,6 +13,9 @@ import Grid from "@mui/material/Grid";
 import InputLabel from '@mui/material/InputLabel';
 import { Paper, Typography, Modal } from '@mui/material';
 import Box from '@mui/material/Box';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 const ClientesEditar = () => {
   const dispatch = useDispatch();
@@ -29,6 +32,8 @@ const ClientesEditar = () => {
     img_logo: '',
     qr_code: '',
     ult_factura: '',
+    default_model: '',
+    punto_vta: '',
   });
   const [errors, setErrors] = useState({});
   const [modalEdit, setModalEdit] = useState(false);
@@ -45,6 +50,7 @@ const ClientesEditar = () => {
       ...formData,
       [name]: value,
     });
+    console.log(formData);
     return
   };
   
@@ -76,7 +82,9 @@ const ClientesEditar = () => {
           numero_controladora_fiscal: '',
           img_logo: '',
           qr_code: '',
-          ult_factura: ''
+          ult_factura: '',
+          default_model: '',
+          punto_vta: '',
         });
         setErrors({});
         await dispatch(GetClienteDetail(clienteDetail.id));
@@ -96,7 +104,7 @@ const ClientesEditar = () => {
       newErrors.cuit = 'El CUIT es requerido';
     }
     if (!formData.direccion) {
-      newErrors.direccion = 'La Direcció es requerida';
+      newErrors.direccion = 'La Dirección es requerida';
     }
     if (!formData.inicio_actividades) {
       newErrors.inicio_actividades = 'La Fecha de inicio de actividades es requerida';
@@ -113,12 +121,27 @@ const ClientesEditar = () => {
     if (!formData.ult_factura) {
       newErrors.ult_factura = 'El Numero de Facturación es requerido';
     }
+    if (!formData.punto_vta) {
+      newErrors.punto_vta = 'El punto de venta es requerido';
+    }
     if (Object.keys(newErrors).length === 0) { // No hay errores, crear la factura
       await handleUpdateClient();
     } else {
       setErrors(newErrors);
       console.error("HAY ERRORES ", newErrors);
     };
+  };
+
+  const ModeloDeImprecion = (modelo) => {
+    switch(modelo){
+      case "facturasimple": return "Factura Simple"
+      case "facturalogo": return "Con Logo"
+      case "facturaqr": return "Solo QR"
+      case "facturalogoyqr": return "Logo y QR"
+      case "facturamoderna": return "Moderno"
+      case "facturalogobackground": return "Marca de Agua"
+      default: return "No seleccionado";
+    }
   };
 
   // CERRAR MODAL
@@ -133,7 +156,9 @@ const ClientesEditar = () => {
       numero_controladora_fiscal: '',
       img_logo: '',
       qr_code: '',
-      ult_factura: ''
+      ult_factura: '',
+      default_model: '',
+      punto_vta: '',
     });
     setModalEdit(false);
   };
@@ -151,6 +176,8 @@ const ClientesEditar = () => {
       img_logo: clienteDetail.img_logo,
       qr_code: clienteDetail.qr_code,
       ult_factura: clienteDetail.ult_factura,
+      default_model: clienteDetail.default_model,
+      punto_vta: clienteDetail.punto_vta,
     });
     setModalEdit(true);
   };
@@ -269,6 +296,40 @@ const ClientesEditar = () => {
             />
           </Grid>
 
+          {/* PUNTO DE VENTA */}
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              label="Punto de Venta"
+              type="text"
+              name='punto_vta'
+              value={formData.punto_vta}
+              onChange={handleChange}
+              error={!!errors.punto_vta}
+              helperText={errors.punto_vta}
+            />
+          </Grid>
+
+          {/* DEFAULT MODEL */}
+          <Grid item xs={6}>
+            <FormControl fullWidth>
+              <InputLabel>Modelo de Impresión</InputLabel>
+                <Select
+                  name="default_model"
+                  value={formData.default_model}
+                  label="Modelo de Impresión"
+                  onChange={handleChange}
+                >
+                  <MenuItem value={'facturasimple'}>Factura Simple</MenuItem>
+                  <MenuItem value={'facturalogo'}>Con Logo</MenuItem>
+                  <MenuItem value={'facturaqr'}>Solo QR</MenuItem>
+                  <MenuItem value={'facturalogoyqr'}>Logo y QR</MenuItem>
+                  <MenuItem value={'facturamoderna'}>Moderno</MenuItem>
+                  <MenuItem value={'facturalogobackground'}>Marca de Agua</MenuItem>
+                </Select>
+            </FormControl>
+          </Grid>
+
           {/* INICIO DE ACTIVIDADES */}
           <Grid item xs={6}>
             <TextField
@@ -359,6 +420,9 @@ const ClientesEditar = () => {
                   CAI: {clienteDetail.cai}
                 </Typography>
                 <Typography variant="subtitle1">
+                  Punto de Venta: {clienteDetail.punto_vta}
+                </Typography>
+                <Typography variant="subtitle1">
                   Dirección: {clienteDetail.direccion}
                 </Typography>
                 <Typography variant="subtitle1">
@@ -383,6 +447,9 @@ const ClientesEditar = () => {
                 </Typography>
                 <Typography variant="subtitle1">
                   Número de Controladora Fiscal: {clienteDetail.numero_controladora_fiscal}
+                </Typography>
+                <Typography variant="subtitle1">
+                  Modelo de impreción predeterminado: {ModeloDeImprecion(clienteDetail.default_model)}
                 </Typography>
                 <Typography variant="subtitle1">
                   QR:
