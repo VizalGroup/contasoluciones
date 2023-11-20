@@ -18,6 +18,8 @@ export const POST_PRODUCTO = "POST_PRODUCTO";
 export const UPDATE_PRODUCTO = "UPDATE_PRODUCTO";
 export const DELETE_PRODUCTO = "DELETE_PRODUCTO";
 
+export const GET_DESTINATARIOS = "GET_DESTINATARIOS";
+
 export const CLEARID = "CLEARID";
 
 // const clienteURL = process.env.REACT_APP_CLIENTE_URL;
@@ -29,6 +31,7 @@ export const CLEARID = "CLEARID";
 const clienteURL = 'http://localhost/cc_clientescrud/';
 const facturaURL = 'http://localhost/cc_facturascrud/';
 const productosURL = 'http://localhost/cc_productoscrud/';
+const DestinatariosURL = 'http://localhost/cc_destinatarioscrud/';
 
 
 // ACTIONS DE FACTURAS
@@ -368,5 +371,26 @@ export const DeleteProducto = (id) => {
 export const ClearID = () => {
   return {
     type: CLEARID,
+  };
+};
+
+export const GetDestinatarios = () => {
+  return async function (dispatch) {
+    try {
+      var response = await axios.get(DestinatariosURL);
+      if (response.data !== null) {
+        return dispatch({
+          type: GET_DESTINATARIOS,
+          payload: response.data,
+        });
+      } else {
+        return dispatch({
+          type: GET_DESTINATARIOS,
+          payload: [],
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 };

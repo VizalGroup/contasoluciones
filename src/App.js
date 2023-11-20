@@ -16,7 +16,7 @@ import ClientesEditar from "./Components/Clientes/ClientesEditar/ClientesEditar"
 import FacturasEditar from "./Components/Facturas/FacturasEditar/FacturasEditar";
 import Informe from "./Components/Clientes/Informe/Informe";
 import FacturaLogoBackground from "./Components/Facturas/FacturaLogoBackgorund/FacturaLogoBackground";
-import DestinatariosTable from "./Components/Clientes/Destinatarios/DestinatariosTable";
+import DestinatariosTable from "./Components/Destinatarios/DestinatariosTable";
 
 
 const PrivateRoute = ({ element }) => {

@@ -289,7 +289,7 @@ const FacturasForm = () => {
 
                     <Grid item xs={12} sm={2.5}>
                         <Link to='/addclient'><Button variant="contained" color="primary" style={{ fontSize: "13px" }}>
-                            Agregar Nevo Cliente
+                            Agregar Nuevo Cliente
                         </Button></Link>
                     </Grid>
                 </Grid>
@@ -312,7 +312,7 @@ const FacturasForm = () => {
                     <Grid item xs={12} sm={2.5}>
                         <TextField
                             type="text"
-                            label="Direccion"
+                            label="Dirección"
                             variant="outlined"
                             name="direccion"
                             value={facturaData.direccion}
@@ -341,7 +341,7 @@ const FacturasForm = () => {
                             <Select
                                 name="cond_vta"
                                 value={facturaData.cond_vta}
-                                label="Condicion de Venta"
+                                label="Condición de Venta"
                                 onChange={handleChange}
                             >
                                 <MenuItem value={'Efectivo'}>Efectivo</MenuItem>

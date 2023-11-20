@@ -15,10 +15,8 @@ import Styles from "./FacturasTable.module.css";
 import { Link } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import { Modal } from '@mui/material';
-import Box from '@mui/material/Box';
+import { Modal } from "@mui/material";
+import Box from "@mui/material/Box";
 
 // Acciones
 import {
@@ -26,7 +24,7 @@ import {
   GetFacturas,
   DeleteFactura,
   GetProductos,
-  DeleteProducto
+  DeleteProducto,
 } from "../../../Redux/actions";
 
 const FacturasTable = () => {
@@ -35,7 +33,6 @@ const FacturasTable = () => {
   console.log(clientes);
   const productos = useSelector((state) => state.productos);
   const dispatch = useDispatch();
-  const [selectedOption, setSelectedOption] = useState("facturasimple");
 
   const [fechaDesde, setFechaDesde] = useState("");
   const [fechaHasta, setFechaHasta] = useState("");
@@ -43,7 +40,6 @@ const FacturasTable = () => {
 
   const [modalConfirm, setModaConfirm] = useState(false);
   const [facturaParaBorrar, setFacturaParaBorrar] = useState({});
-
 
   const CalcularSubtotal = (id_factura) => {
     if (productos.length > 0) {
@@ -119,10 +115,6 @@ const FacturasTable = () => {
     setClienteFiltrado(event.target.value);
   };
 
-  const handleSelectChange = (event) => {
-    setSelectedOption(event.target.value);
-  };
-
   useEffect(() => {
     dispatch(GetFacturas());
     dispatch(GetClientes());
@@ -139,9 +131,11 @@ const FacturasTable = () => {
     setModaConfirm(false);
   };
 
-  const handleDelete = async(facturaId) => {
-    try{
-      const productosFactura = productos.filter((p) => p.id_factura === facturaId);
+  const handleDelete = async (facturaId) => {
+    try {
+      const productosFactura = productos.filter(
+        (p) => p.id_factura === facturaId
+      );
       await Promise.all(
         productosFactura.map(async (producto) => {
           await dispatch(DeleteProducto(producto.id));
@@ -152,28 +146,33 @@ const FacturasTable = () => {
       await dispatch(GetClientes());
       await dispatch(GetProductos());
       closeModal();
-    } catch (error){
+    } catch (error) {
       console.error("Error al eliminar la Factura:", error);
     }
   };
 
-  const bodyModal = (<Box className={Styles.modalContent}>
-    <div className={Styles.contenidoModal}>
-      <h3>Esta seguro que quiere borrar esta Factura ? </h3>
-      <div>
-        <Button variant="danger" onClick={()=> handleDelete(facturaParaBorrar.id)}>
-          BORRAR
-        </Button>
-        <Button variant="primary" onClick={closeModal}>
-          CANCELAR
-        </Button>
+  const bodyModal = (
+    <Box className={Styles.modalContent}>
+      <div className={Styles.contenidoModal}>
+        <h3>Esta seguro que quiere borrar esta Factura ? </h3>
+        <div>
+          <Button
+            variant="danger"
+            onClick={() => handleDelete(facturaParaBorrar.id)}
+          >
+            BORRAR
+          </Button>
+          <Button variant="primary" onClick={closeModal}>
+            CANCELAR
+          </Button>
+        </div>
       </div>
-    </div>
-  </Box>)
+    </Box>
+  );
 
   return (
     <div className={Styles.responsiveContainer}>
-      <h1 className={Styles.title}>Facturas por Empresa</h1>
+      <h1 className={Styles.title}>Facturas</h1>
       <div className={Styles.filters}>
         <div>
           <TextField
@@ -206,7 +205,7 @@ const FacturasTable = () => {
         </div>
         <div>
           <TextField
-            label="Buscar por Cliente"
+            label="Buscar por Razón Social"
             value={clienteFiltrado}
             onChange={handleClienteFilterChange}
             InputProps={{
@@ -218,17 +217,6 @@ const FacturasTable = () => {
             }}
           />
         </div>
-        {/* <div style={{ marginTop: "10px" }}>
-          <label className={Styles.bold}>Estilo de Impresión: </label>
-          <Select value={selectedOption} onChange={handleSelectChange}>
-            <MenuItem value="facturasimple">Simple</MenuItem>
-            <MenuItem value="facturalogo">Con Logo</MenuItem>
-            <MenuItem value="facturaqr">Con QR</MenuItem>
-            <MenuItem value="facturalogoyqr">Logo y QR</MenuItem>
-            <MenuItem value="facturamoderna">Moderna</MenuItem>
-            <MenuItem value="facturalogobackground">Marca de Agua</MenuItem>
-          </Select>
-        </div> */}
       </div>
 
       <div>
@@ -243,7 +231,6 @@ const FacturasTable = () => {
                 <TableCell>Subtotal</TableCell>
                 <TableCell>Importe</TableCell>
                 <TableCell>Acciones</TableCell>
-
               </TableRow>
             </TableHead>
             <TableBody>
@@ -256,7 +243,7 @@ const FacturasTable = () => {
                     {factura.nro_factura}
                   </TableCell>
                   <TableCell style={{ textAlign: "center" }}>
-                    {ClienteFactura(factura.id_cliente)} 
+                    {ClienteFactura(factura.id_cliente)}
                   </TableCell>
                   <TableCell style={{ textAlign: "center" }}>
                     {factura.destinatario}
@@ -269,17 +256,14 @@ const FacturasTable = () => {
                   </TableCell>
                   <TableCell style={{ textAlign: "center" }}>
                     <Link to={`/facturaEditar/${factura.id}`}>
-                      <Button variant="primary">
-                        Ver
-                      </Button>
+                      <Button variant="primary">Ver</Button>
                     </Link>
-                    <Button
-                      variant="danger"
-                      onClick={() => openModal(factura)}
-                    >
+                    <Button variant="danger" onClick={() => openModal(factura)}>
                       Borrar
                     </Button>
-                    <Link to={`/${ModelDefault(factura.id_cliente)}/${factura.id}`}>
+                    <Link
+                      to={`/${ModelDefault(factura.id_cliente)}/${factura.id}`}
+                    >
                       <Button variant="dark">Imprimir</Button>
                     </Link>
                   </TableCell>
@@ -293,7 +277,6 @@ const FacturasTable = () => {
       <Modal open={modalConfirm} onClose={closeModal}>
         {bodyModal}
       </Modal>
-
     </div>
   );
 };

@@ -6,7 +6,8 @@ const initialState = {
   productos: [],
   facturaDetail: {},
   clienteDetail: {},
-  productosDetail: []
+  productosDetail: [],
+  destinatarios: [],
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -86,6 +87,11 @@ const rootReducer = (state = initialState, action) => {
       facturaDetail: {},
       clienteDetail: {},
       productosDetail: []
+    }
+
+    case "GET_DESTINATARIOS": return {
+      ...state,
+      destinatarios: action.payload
     }
 
     default: return {...state};

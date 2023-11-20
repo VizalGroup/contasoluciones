@@ -6,6 +6,9 @@ import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import Styles from "./Home.module.css";
 import Logout from "../Logout/Logout";
+import PersonIcon from "@mui/icons-material/Person";
+import GroupIcon from "@mui/icons-material/Group";
+import DescriptionIcon from "@mui/icons-material/Description";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -23,6 +26,7 @@ export default function Home() {
             variant="contained"
             color="primary"
             style={{ fontSize: "16px" }}
+            startIcon={<GroupIcon />}
           >
             Clientes
           </Button>
@@ -32,6 +36,7 @@ export default function Home() {
             variant="contained"
             color="primary"
             style={{ fontSize: "16px" }}
+            startIcon={<PersonIcon />}
           >
             Destinatarios
           </Button>
@@ -41,8 +46,9 @@ export default function Home() {
             variant="contained"
             color="primary"
             style={{ fontSize: "16px" }}
+            startIcon={<DescriptionIcon />}
           >
-            Nueva Factura
+           + Nueva Factura
           </Button>
         </Link>
 
