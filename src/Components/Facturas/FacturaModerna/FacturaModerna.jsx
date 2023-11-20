@@ -202,7 +202,7 @@ export default function FacturaModerna() {
             </div>
             <div className={Styles.lastData}>
               <p >
-                C.A.I: {clienteDeFactura.cai}
+                C.A.I: {facturaDetail.cai}
               </p>
               <p>
                 Fecha de vencimiento:{" "}

@@ -249,7 +249,7 @@ export default function FacturaLogoBackground() {
           <div className={Styles.EndContainer}>
             <div>
               <br />
-              <p>C.A.I Nº: {clienteDeFactura.cai}</p>
+              <p>C.A.I Nº: {facturaDetail.cai}</p>
               <p>
                 Fecha de vencimiento:{" "}
                 {facturaDetail.fecha.split("-").reverse().join("-")}

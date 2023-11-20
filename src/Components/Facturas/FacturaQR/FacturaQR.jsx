@@ -268,7 +268,7 @@ export default function FacturaQR() {
           <div className={Styles.BottomContainer}>
             <p className={Styles.mediumText}>
               <span className={Styles.negrita}>C.A.I Nº: </span>
-              <span>{clienteFactura.cai}</span>
+              <span>{facturaDetail.cai}</span>
             </p>
             <p className={Styles.mediumText}>
               <span className={Styles.negrita}>Fecha de vencimiento: </span>

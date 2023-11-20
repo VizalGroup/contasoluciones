@@ -258,8 +258,8 @@ export default function FacturaLogo() {
           <br />
           <div className={Styles.BottomContainer}>
               <p className={Styles.mediumText}>
-                  <span className={Styles.negrita}>C.A.I Nº:: </span>
-                  <span>{clienteFactura.cai}</span>
+                  <span className={Styles.negrita}>C.A.I Nº: </span>
+                  <span>{facturaDetail.cai}</span>
               </p>
               <p className={Styles.mediumText}>
                 <span className={Styles.negrita}>Fecha de vencimiento:{" "}</span>
