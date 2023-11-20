@@ -6,13 +6,15 @@ import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import Styles from "./Home.module.css";
 import Logout from "../Logout/Logout";
+import PersonIcon from "@mui/icons-material/Person";
+import GroupIcon from "@mui/icons-material/Group";
+import DescriptionIcon from "@mui/icons-material/Description";
 
 export default function Home() {
   const dispatch = useDispatch();
   const nombreApp = useSelector((state) => state.nombreApp);
 
-  useEffect(() => {
-  }, [dispatch]);
+  useEffect(() => {}, [dispatch]);
 
   return (
     <div className={Styles.responsiveContainer}>
@@ -24,8 +26,19 @@ export default function Home() {
             variant="contained"
             color="primary"
             style={{ fontSize: "16px" }}
+            startIcon={<GroupIcon />}
           >
             Clientes
+          </Button>
+        </Link>
+        <Link to="/addressee">
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ fontSize: "16px" }}
+            startIcon={<PersonIcon />}
+          >
+            Destinatarios
           </Button>
         </Link>
         <Link to="/newFactura">
@@ -33,10 +46,12 @@ export default function Home() {
             variant="contained"
             color="primary"
             style={{ fontSize: "16px" }}
+            startIcon={<DescriptionIcon />}
           >
-            Nueva Factura
+           + Nueva Factura
           </Button>
         </Link>
+
         <Logout />
       </div>
       <FacturasTable></FacturasTable>

@@ -31,6 +31,18 @@ export default function FacturaLogo() {
       });
   }, [dispatch, id]);
 
+  useEffect(() => {
+    if (facturaDetail && clientes.length > 0) {
+      const clienteDeFactura = clientes.find(
+        (cliente) => cliente.id === facturaDetail.id_cliente
+      );
+
+      if (clienteDeFactura && facturaDetail) {
+        document.title = `${clienteDeFactura.punto_vta}-${facturaDetail.nro_factura}_${facturaDetail.destinatario}`;
+      }
+    }
+  }, [facturaDetail, clientes]);
+
   const productosFactura = productos.filter(
     (producto) => producto.id_factura === facturaDetail.id
   );
@@ -137,7 +149,7 @@ export default function FacturaLogo() {
               <p className={Styles.negrita}>Factura</p>
               <p className={Styles.smallText}>
                 <span className={Styles.negrita}>Nro de Factura: </span>
-                <span>{facturaDetail.nro_factura}</span>
+                <span>{clienteFactura.punto_vta}-{facturaDetail.nro_factura}</span>
                 <br />
                 <span>Codigo 01</span>
 

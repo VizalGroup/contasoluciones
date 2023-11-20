@@ -37,6 +37,18 @@ export default function FacturaModerna() {
       });
   }, [dispatch, id]);
 
+  useEffect(() => {
+    if (facturaDetail && clientes.length > 0) {
+      const clienteDeFactura = clientes.find(
+        (cliente) => cliente.id === facturaDetail.id_cliente
+      );
+
+      if (clienteDeFactura && facturaDetail) {
+        document.title = `${clienteDeFactura.punto_vta}-${facturaDetail.nro_factura}_${facturaDetail.destinatario}`;
+      }
+    }
+  }, [facturaDetail, clientes]);
+
   const productosFactura = productos.filter(
     (producto) => producto.id_factura === facturaDetail.id
   );
@@ -95,7 +107,7 @@ export default function FacturaModerna() {
               <br />
               <p className={Styles.facturaA}>Factura A</p>
               <p className={Styles.original}>Original</p>
-              <p className={Styles.number}>Nº: {facturaDetail.nro_factura}</p>
+              <p className={Styles.number}>Nº: {clienteDeFactura.punto_vta}-{facturaDetail.nro_factura}</p>
               <p className={Styles.code01}>CODIGO 01</p>
               <br />
               <p className={Styles.enterpriseData}>
