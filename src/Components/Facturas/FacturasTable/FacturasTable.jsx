@@ -32,6 +32,7 @@ import {
 const FacturasTable = () => {
   const facturas = useSelector((state) => state.facturas);
   const clientes = useSelector((state) => state.clientes);
+  console.log(clientes);
   const productos = useSelector((state) => state.productos);
   const dispatch = useDispatch();
   const [selectedOption, setSelectedOption] = useState("facturasimple");
@@ -79,6 +80,16 @@ const FacturasTable = () => {
       let cliente = clientes.find((c) => c.id === id_cliente);
       let nombreCliente = cliente.nombre;
       return nombreCliente;
+    } else {
+      return;
+    }
+  };
+
+  const ModelDefault = (id_cliente) => {
+    if (clientes.length > 0) {
+      let cliente = clientes.find((c) => c.id === id_cliente);
+      let modeloDefault = cliente.default_model;
+      return modeloDefault;
     } else {
       return;
     }
@@ -207,7 +218,7 @@ const FacturasTable = () => {
             }}
           />
         </div>
-        <div style={{ marginTop: "10px" }}>
+        {/* <div style={{ marginTop: "10px" }}>
           <label className={Styles.bold}>Estilo de Impresión: </label>
           <Select value={selectedOption} onChange={handleSelectChange}>
             <MenuItem value="facturasimple">Simple</MenuItem>
@@ -217,7 +228,7 @@ const FacturasTable = () => {
             <MenuItem value="facturamoderna">Moderna</MenuItem>
             <MenuItem value="facturalogobackground">Marca de Agua</MenuItem>
           </Select>
-        </div>
+        </div> */}
       </div>
 
       <div>
@@ -228,9 +239,11 @@ const FacturasTable = () => {
                 <TableCell>Fecha</TableCell>
                 <TableCell>Nro Factura</TableCell>
                 <TableCell>Razón social</TableCell>
+                <TableCell>Destinatario</TableCell>
                 <TableCell>Subtotal</TableCell>
                 <TableCell>Importe</TableCell>
                 <TableCell>Acciones</TableCell>
+
               </TableRow>
             </TableHead>
             <TableBody>
@@ -243,7 +256,10 @@ const FacturasTable = () => {
                     {factura.nro_factura}
                   </TableCell>
                   <TableCell style={{ textAlign: "center" }}>
-                    {ClienteFactura(factura.id_cliente)}
+                    {ClienteFactura(factura.id_cliente)} 
+                  </TableCell>
+                  <TableCell style={{ textAlign: "center" }}>
+                    {factura.destinatario}
                   </TableCell>
                   <TableCell style={{ textAlign: "center" }}>
                     {CalcularSubtotal(factura.id)}
@@ -263,7 +279,7 @@ const FacturasTable = () => {
                     >
                       Borrar
                     </Button>
-                    <Link to={`/${selectedOption}/${factura.id}`}>
+                    <Link to={`/${ModelDefault(factura.id_cliente)}/${factura.id}`}>
                       <Button variant="dark">Imprimir</Button>
                     </Link>
                   </TableCell>

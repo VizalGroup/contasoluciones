@@ -2,7 +2,12 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router";
 import Styles from "./FacturaQR.module.css";
-import { GetFacturaDetaill, ClearID, GetProductos, GetClientes } from "../../../Redux/actions";
+import {
+  GetFacturaDetaill,
+  ClearID,
+  GetProductos,
+  GetClientes,
+} from "../../../Redux/actions";
 import afipImg from "../../Img/Afip.png";
 
 // Esta Factura es para los  clientes que Xargue el QR pero no el Logo (Revisa si tenes forma de unificarlos no reenderizando o haciendo ternarios, sino hacelos aparte como vos quieras)
@@ -31,6 +36,18 @@ export default function FacturaQR() {
         console.error("Error al obtener los detalles de la factura:", error);
       });
   }, [dispatch, id]);
+
+  useEffect(() => {
+    if (facturaDetail && clientes.length > 0) {
+      const clienteDeFactura = clientes.find(
+        (cliente) => cliente.id === facturaDetail.id_cliente
+      );
+
+      if (clienteDeFactura && facturaDetail) {
+        document.title = `${clienteDeFactura.punto_vta}-${facturaDetail.nro_factura}_${facturaDetail.destinatario}`;
+      }
+    }
+  }, [facturaDetail, clientes]);
 
   const productosFactura = productos.filter(
     (producto) => producto.id_factura === facturaDetail.id
@@ -71,178 +88,201 @@ export default function FacturaQR() {
     window.print();
   };
 
-
-
   return (
     <div className={Styles.pageContainer}>
       {facturaDetail && clienteFactura && productosFactura ? (
         <div>
-        <div className={Styles.head}>
-        
-          <div className={Styles.divCliente}>
-            <p className={Styles.textoTop}>
-              <p className={Styles.negrita}>{clienteFactura.nombre}</p>
-              <p className={Styles.mediumText}>
-                <span className={Styles.negrita}>{clienteFactura.direccion}</span>
+          <div className={Styles.head}>
+            <div className={Styles.divCliente}>
+              <p className={Styles.textoTop}>
+                <p className={Styles.negrita}>{clienteFactura.nombre}</p>
+                <p className={Styles.mediumText}>
+                  <span className={Styles.negrita}>
+                    {clienteFactura.direccion}
+                  </span>
+                </p>
+                <p className={Styles.mediumText}>
+                  <span className={Styles.negrita}>
+                    IVA RESPONSABLE INSCRIPTO
+                  </span>
+                </p>
               </p>
-              <p className={Styles.mediumText}>
-                <span className={Styles.negrita}>IVA RESPONSABLE INSCRIPTO</span>
+              <br />
+              <p className={Styles.textoTop}>
+                <p className={Styles.mediumText}>
+                  <span className={Styles.negrita}>Destinatario: </span>
+                  <span>{facturaDetail.destinatario}</span>
+                </p>
+                <p className={Styles.mediumText}>
+                  <span className={Styles.negrita}>Dirección: </span>
+                  <span>{facturaDetail.direccion}</span>
+                </p>
+                <p className={Styles.mediumText}>
+                  <span className={Styles.negrita}>Condición de venta: </span>
+                  <span>{facturaDetail.cond_vta}</span>
+                </p>
+                <p className={Styles.mediumText}>
+                  <span className={Styles.negrita}>CUIT: </span>
+                  <span>{facturaDetail.cuit}</span>
+                </p>
               </p>
-            </p>
-            <br />
-            <p className={Styles.textoTop}>
-              <p className={Styles.mediumText}>
-                <span className={Styles.negrita}>Destinatario: </span>
-                <span>{facturaDetail.destinatario}</span>
+            </div>
+            <div>
+              <p
+                className={Styles.tipoFactura}
+                style={{
+                  position: "absolute",
+                  top: "19mm",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                }}
+              >
+                A
               </p>
-              <p className={Styles.mediumText}>
-                <span className={Styles.negrita}>Dirección: </span>
-                <span>{facturaDetail.direccion}</span>
+            </div>
+
+            <div className={Styles.divDatosFactura}>
+              <p className={Styles.textoTop}>
+                <p className={Styles.negrita}>Factura</p>
+                <p className={Styles.smallText}>
+                  <span className={Styles.negrita}>Nro de Factura: </span>
+                  <span>{clienteFactura.punto_vta}-{facturaDetail.nro_factura}</span>
+                  <br />
+                  <span style={{ textAlign: "right" }}>Codigo 01</span>
+                </p>
+                <p>
+                  <span className={Styles.negrita}>Fecha: </span>
+                  <span>
+                    {facturaDetail.fecha.split("-").reverse().join("/")}
+                  </span>
+                </p>
+                <p className={Styles.smallText}>
+                  <span className={Styles.negrita}>C.U.I.T Nº: </span>
+                  <span>{clienteFactura.cuit}</span>
+                </p>
+                <p className={Styles.smallText}>
+                  <span className={Styles.negrita}>ING. BRUTOS: </span>
+                  <span>{clienteFactura.numero_ingresos_brutos}</span>
+                </p>
+                <p className={Styles.smallText}>
+                  <span className={Styles.negrita}>
+                    INICIO DE ACTIVIDADES:{" "}
+                  </span>
+                  <spa>
+                    {clienteFactura.inicio_actividades
+                      .split("-")
+                      .reverse()
+                      .join("/")}
+                  </spa>
+                </p>
               </p>
-              <p className={Styles.mediumText}>
-                <span className={Styles.negrita}>Condición de venta: </span>
-                <span>{facturaDetail.cond_vta}</span>
-              </p>
-              <p className={Styles.mediumText}>
-                <span className={Styles.negrita}>CUIT: </span>
-                <span>{facturaDetail.cuit}</span>
-              </p>
-            </p>
+            </div>
           </div>
-<div >
 
-          <p className={Styles.tipoFactura} style={{ position: 'absolute', top: '19mm', left: '50%', transform: 'translate(-50%, -50%)' }}>A</p>
-</div>
-
-          <div className={Styles.divDatosFactura}>
-            <p className={Styles.textoTop}>
-              <p className={Styles.negrita}>Factura</p>
-              <p className={Styles.smallText}>
-                <span className={Styles.negrita}>Nro de Factura: </span>
-                <span>{facturaDetail.nro_factura}</span>
-                <br />
-                <span style={{textAlign: 'right'}}>Codigo 01</span>
+          {/* <hr /> */}
+          <div className={Styles.MidContainer}>
+            <div className={Styles.LimitedWidthDiv}>
+              <p className={Styles.mainTable}>CANTIDAD</p>
+              <p style={{ marginLeft: "1mm" }}>
+                {productosFactura.map((producto, index) => (
+                  <p key={index}>{producto.cantidad}</p>
+                ))}
+              </p>
+            </div>
+            <div className={Styles.LimitedWidthDiv}>
+              <p className={Styles.mainTable} style={{ marginLeft: "5px" }}>
+                DESCRIPCIÓN
               </p>
               <p>
-                <span className={Styles.negrita}>Fecha: </span>
-                <span>{facturaDetail.fecha.split("-").reverse().join("/")}</span>
+                {productosFactura.map((producto, index) => (
+                  <p className={Styles.Concepto} key={index}>
+                    {producto.concepto}
+                  </p>
+                ))}
               </p>
-              <p className={Styles.smallText}>
-                <span className={Styles.negrita}>C.U.I.T Nº: </span>
-                <span>{clienteFactura.cuit}</span>
+            </div>
+            <div>
+              <p className={Styles.mainTable}>P.UNIT.</p>
+              <p>
+                {" "}
+                {productosFactura.map((producto, index) => (
+                  <p key={index}>${producto.precioxu}</p>
+                ))}
               </p>
-              <p className={Styles.smallText}>
-                <span className={Styles.negrita}>ING. BRUTOS: </span>
-                <span>{clienteFactura.numero_ingresos_brutos}</span> 
+            </div>
+            <div>
+              <p className={Styles.mainTable}>IMPORTE</p>
+              <p>
+                {" "}
+                {productosFactura.map((producto, index) => (
+                  <p key={index}>${producto.subtotal}</p>
+                ))}
               </p>
-              <p className={Styles.smallText}>
-                <span className={Styles.negrita}>INICIO DE ACTIVIDADES: </span>
-                <spa>{clienteFactura.inicio_actividades.split("-").reverse().join("/")}</spa>
-              </p>
-            </p>
+            </div>
           </div>
-        </div>
 
-        {/* <hr /> */}
-        <div className={Styles.MidContainer}>
-          <div className={Styles.LimitedWidthDiv}>
-            <p className={Styles.mainTable}>CANTIDAD</p>
-            <p style={{marginLeft: '1mm'}}>
-              {productosFactura.map((producto, index) => (
-                <p key={index}>{producto.cantidad}</p>
-              ))}
+          <div className={Styles.BottomContainer}>
+            <p>Subtotal: ${subTotalFinal} </p>
+            <p>IVA RESP. INSCRIPTO: ${ivaFinal}</p>
+            <p className={Styles.negrita} style={{ textAlign: "right" }}>
+              TOTAL ${importeFinal}
             </p>
           </div>
-          <div className={Styles.LimitedWidthDiv}>
-            <p className={Styles.mainTable} style={{ marginLeft: "5px" }}>
-              DESCRIPCIÓN
-            </p>
-            <p>
-              {productosFactura.map((producto, index) => (
-                <p className={Styles.Concepto} key={index}>
-                  {producto.concepto}
-                </p>
-              ))}
-            </p>
-          </div>
-          <div>
-            <p className={Styles.mainTable}>P.UNIT.</p>
-            <p>
-              {" "}
-              {productosFactura.map((producto, index) => (
-                <p key={index}>${producto.precioxu}</p>
-              ))}
-            </p>
-          </div>
-          <div>
-            <p className={Styles.mainTable}>IMPORTE</p>
-            <p>
-              {" "}
-              {productosFactura.map((producto, index) => (
-                <p key={index}>${producto.subtotal}</p>
-              ))}
-            </p>
-          </div>
-        </div>
+          {/* <hr /> */}
 
-        <div className={Styles.BottomContainer}>
-          <p>Subtotal: ${subTotalFinal} </p>
-          <p>
-            IVA RESP. INSCRIPTO: ${ivaFinal}
-          </p>
-          <p className={Styles.negrita} style={{ textAlign: "right" }}>
-                TOTAL ${importeFinal}
-          </p>
-        </div>
-        {/* <hr /> */}
-        
-        <div className={Styles.BottomContainer}>
-          <div>
-            <img
+          <div className={Styles.BottomContainer}>
+            <div>
+              <img
                 className={Styles.fixImgSize}
                 src={clienteFactura.qr_code}
                 alt="QR no encontrado"
-            />
-            <img
-              src={afipImg}
-              alt="Sigla de Afip con detalle"
-              style={{ width: "90px", height:"auto", marginRight:"10px", marginLeft: '10px' }}
-            />
-          </div>
-          <div>
-            <p className={Styles.negrita}>Observaciones:</p>
-          {clienteFactura.direccion.toLowerCase().includes("caba") && (
-            <div>
-              <p className={Styles.caba} >
-                Orientación al Consumidor Prov. de Bs. As. 0800 222 9042
-              </p>
-              <p className={Styles.caba} >
-                Area defensa y protección al consumidor Tel. gratuito CABA 147
-              </p>
+              />
+              <img
+                src={afipImg}
+                alt="Sigla de Afip con detalle"
+                style={{
+                  width: "90px",
+                  height: "auto",
+                  marginRight: "10px",
+                  marginLeft: "10px",
+                }}
+              />
             </div>
-          )}
+            <div>
+              <p className={Styles.negrita}>Observaciones:</p>
+              {clienteFactura.direccion.toLowerCase().includes("caba") && (
+                <div>
+                  <p className={Styles.caba}>
+                    Orientación al Consumidor Prov. de Bs. As. 0800 222 9042
+                  </p>
+                  <p className={Styles.caba}>
+                    Area defensa y protección al consumidor Tel. gratuito CABA
+                    147
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-        {/* <hr /> */}
+          {/* <hr /> */}
 
-        <div className={Styles.BottomContainer}>
+          <div className={Styles.BottomContainer}>
             <p className={Styles.mediumText}>
-                <span className={Styles.negrita}>C.A.I Nº: </span>
-                <span>{clienteFactura.cai}</span>
+              <span className={Styles.negrita}>C.A.I Nº: </span>
+              <span>{clienteFactura.cai}</span>
             </p>
             <p className={Styles.mediumText}>
-              <span className={Styles.negrita}>Fecha de vencimiento:{" "}</span>
+              <span className={Styles.negrita}>Fecha de vencimiento: </span>
               <span>{facturaDetail.fecha.split("-").reverse().join("-")}</span>
             </p>
             <p className={Styles.mediumText}>
               <span>CF-</span>
               <span>{clienteFactura.numero_controladora_fiscal}</span>
             </p>
+          </div>
+          <button className={Styles.printButton} onClick={printPage}>
+            Imprimir
+          </button>
         </div>
-        <button className={Styles.printButton} onClick={printPage}>
-          Imprimir
-        </button>
-      </div>
       ) : (
         <h4>Loading...</h4>
       )}

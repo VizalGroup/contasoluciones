@@ -37,6 +37,18 @@ export default function FacturaLogoQR() {
       });
   }, [dispatch, id]);
 
+  useEffect(() => {
+    if (facturaDetail && clientes.length > 0) {
+      const clienteDeFactura = clientes.find(
+        (cliente) => cliente.id === facturaDetail.id_cliente
+      );
+
+      if (clienteDeFactura && facturaDetail) {
+        document.title = `${clienteDeFactura.punto_vta}-${facturaDetail.nro_factura}_${facturaDetail.destinatario}`;
+      }
+    }
+  }, [facturaDetail, clientes]);
+
   const productosFactura = productos.filter(
     (producto) => producto.id_factura === facturaDetail.id
   );
@@ -103,7 +115,7 @@ export default function FacturaLogoQR() {
                   className={Styles.facturaData}
                   style={{ textAlign: "right" }}
                 >
-                  Nro A{facturaDetail.nro_factura}
+                  Nro {clienteDeFactura.punto_vta}-{facturaDetail.nro_factura}
                 </p>
                 <p
                   className={Styles.facturaData}

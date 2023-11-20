@@ -11,8 +11,7 @@ export default function Home() {
   const dispatch = useDispatch();
   const nombreApp = useSelector((state) => state.nombreApp);
 
-  useEffect(() => {
-  }, [dispatch]);
+  useEffect(() => {}, [dispatch]);
 
   return (
     <div className={Styles.responsiveContainer}>
@@ -28,6 +27,15 @@ export default function Home() {
             Clientes
           </Button>
         </Link>
+        <Link to="/addressee">
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ fontSize: "16px" }}
+          >
+            Destinatarios
+          </Button>
+        </Link>
         <Link to="/newFactura">
           <Button
             variant="contained"
@@ -37,6 +45,7 @@ export default function Home() {
             Nueva Factura
           </Button>
         </Link>
+
         <Logout />
       </div>
       <FacturasTable></FacturasTable>

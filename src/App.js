@@ -16,6 +16,7 @@ import ClientesEditar from "./Components/Clientes/ClientesEditar/ClientesEditar"
 import FacturasEditar from "./Components/Facturas/FacturasEditar/FacturasEditar";
 import Informe from "./Components/Clientes/Informe/Informe";
 import FacturaLogoBackground from "./Components/Facturas/FacturaLogoBackgorund/FacturaLogoBackground";
+import DestinatariosTable from "./Components/Clientes/Destinatarios/DestinatariosTable";
 
 
 const PrivateRoute = ({ element }) => {
@@ -39,6 +40,7 @@ function App() {
         <Route path="/home" element={<PrivateRoute element={<Home />} />} />
         <Route path="/newFactura" element={<PrivateRoute element={<FacturasForm />} />} />
         <Route path="/clients" element={<PrivateRoute element={<ClientesTable />} />} />
+        <Route path="/addressee" element={<PrivateRoute element={<DestinatariosTable />} />} />
         <Route path="/addclient" element={<PrivateRoute element={<ClienteForm />} />} />
         <Route path="/facturasimple/:id" element={<PrivateRoute element={<FacturaSimple />} />} />
         <Route path="/facturalogo/:id" element={<PrivateRoute element={<FacturaLogo />} />} />

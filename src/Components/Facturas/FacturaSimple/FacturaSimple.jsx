@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router";
 import Styles from "./FacturaSimple.module.css";
@@ -33,6 +33,18 @@ export default function FacturaSimple() {
         console.error("Error al obtener los detalles de la factura:", error);
       });
   }, [dispatch, id]);
+
+  useEffect(() => {
+    if (facturaDetail && clientes.length > 0) {
+      const clienteDeFactura = clientes.find(
+        (cliente) => cliente.id === facturaDetail.id_cliente
+      );
+
+      if (clienteDeFactura && facturaDetail) {
+        document.title = `${clienteDeFactura.punto_vta}-${facturaDetail.nro_factura}_${facturaDetail.destinatario}`;
+      }
+    }
+  }, [facturaDetail, clientes]);
 
   const productosFactura = productos.filter(
     (producto) => producto.id_factura === facturaDetail.id
@@ -75,24 +87,34 @@ export default function FacturaSimple() {
 
   return (
     <div className={Styles.pageContainer}>
+      <title>
+        {facturaDetail.nro_factura}_{facturaDetail.destinatario}
+      </title>
       {facturaDetail && clienteDeFactura && productosFactura ? (
         <div className={Styles.Columna}>
-          
           <div className={Styles.firstContainer}>
-            <div style={{maxWidth: '80mm'}}>
+            <div style={{ maxWidth: "80mm" }}>
               <p>{clienteDeFactura.nombre}</p>
               <p>{clienteDeFactura.direccion}</p>
               <p className={Styles.smallText}>IVA RESPONSABLE INSCRIPTO</p>
             </div>
-            <p className={Styles.tipoFactura} style={{ position: 'absolute', top: '10%', left: '50%', transform: 'translate(-50%, -50%)' }}>A</p>
+            <p
+              className={Styles.tipoFactura}
+              style={{
+                position: "absolute",
+                top: "10%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+              }}
+            >
+              A
+            </p>
             <div>
               <p>Factura</p>
               <p className={Styles.smallText}>
-                Nro de Factura: {facturaDetail.nro_factura}
+                Nro de Factura: {clienteDeFactura.punto_vta}-{facturaDetail.nro_factura}
               </p>
-              <p className={Styles.smallText}>
-                Codigo 01
-              </p>
+              <p className={Styles.smallText}>Codigo 01</p>
               <p>Fecha: {facturaDetail.fecha.split("-").reverse().join("-")}</p>
               <p className={Styles.smallText}>
                 C.U.I.T Nº: {clienteDeFactura.cuit}
@@ -101,7 +123,11 @@ export default function FacturaSimple() {
                 ING. BRUTOS: {clienteDeFactura.numero_ingresos_brutos}
               </p>
               <p className={Styles.smallText}>
-                INICIO DE ACTIVIDADES: {clienteDeFactura.inicio_actividades.split("-").reverse().join("/")}
+                INICIO DE ACTIVIDADES:{" "}
+                {clienteDeFactura.inicio_actividades
+                  .split("-")
+                  .reverse()
+                  .join("/")}
               </p>
             </div>
           </div>

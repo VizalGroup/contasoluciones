@@ -108,7 +108,6 @@
   display: flex;
   flex-direction: column;
   padding: 10mm;
-  overflow: hidden;
 }
 
 .facturaData {
