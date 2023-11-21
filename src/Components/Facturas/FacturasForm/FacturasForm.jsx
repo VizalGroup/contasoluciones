@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
-import { PostFactura, GetClientes, PostProducto, UpdateCliente } from '../../../Redux/actions';
+import { PostFactura, GetClientes, PostProducto, UpdateCliente, GetDestinatarios } from '../../../Redux/actions';
 
 // material y estilos
 import { Button, Grid } from '@mui/material';
@@ -19,6 +19,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 const FacturasForm = () => {
     const dispatch = useDispatch();
     const clientes = useSelector((state) => state.clientes);
+    const destinatarios = useSelector((state) => state.destinatarios);
     const [facturaData, setFacturaData] = useState({
         fecha: '',
         id_cliente: '',
@@ -26,7 +27,8 @@ const FacturasForm = () => {
         destinatario: '',
         direccion: '',
         cuit: '',
-        cond_vta: ''
+        cond_vta: '',
+        cai: ''
     });
     const [products, setProducts] = useState([
         { concepto: '', 
@@ -52,10 +54,11 @@ const FacturasForm = () => {
 
     useEffect(() => {
         dispatch(GetClientes());
-        if(facturaData.id_cliente !== '' && facturaData.nro_factura === ''){   
+        dispatch(GetDestinatarios());
+        if(facturaData.id_cliente !== '' && facturaData.nro_factura === '' && facturaData.cai === ''){   
             handleNroChange();
         };  
-    }, [dispatch, facturaData.fecha, facturaData.id_cliente, facturaData.nro_factura]);
+    }, [dispatch, facturaData.fecha, facturaData.id_cliente, facturaData.nro_factura, facturaData.cai]);
 
 
     // SETEO DE INPUTS GENERICO
@@ -72,18 +75,23 @@ const FacturasForm = () => {
     const handleNroChange = () => {
         let cliente = clientes.find(c => c.id === facturaData.id_cliente);
         let nroCliente = Number(cliente.ult_factura) + 1;
-        let nroClienteStr = nroCliente.toString().padStart(12, '0');
+        let nroClienteStr = nroCliente.toString().padStart(8, '0');
+        let caiCliente = Number(cliente.cai) + 1;
+        let caiClienteStr = caiCliente.toString();
         setFacturaData({
             ...facturaData,
-            nro_factura: nroClienteStr
+            nro_factura: nroClienteStr,
+            cai: caiClienteStr
         });
         return
     };
 
     const SetearUltimoNroFctura = async() => {
         let nroFactura = Number(facturaData.nro_factura).toString();
+        let caiFactura = Number(facturaData.cai).toString();
         let cliente = clientes.find(c => c.id === facturaData.id_cliente);
-        cliente.ult_factura = nroFactura
+        cliente.ult_factura = nroFactura;
+        cliente.cai = caiFactura;
         const ClienteActualizado = await dispatch(UpdateCliente(cliente.id, cliente));
         return ClienteActualizado;
     };
@@ -174,7 +182,8 @@ const FacturasForm = () => {
                     destinatario: '',
                     direccion: '',
                     cuit: '',
-                    cond_vta: ''
+                    cond_vta: '',
+                    cai: ''
                 });
                 setErrors({});
                 alert("Factura creada exitosamente");
@@ -212,7 +221,8 @@ const FacturasForm = () => {
             destinatario: '',
             direccion: '',
             cuit: '',
-            cond_vta: ''
+            cond_vta: '',
+            cai: ''
         });
         setProducts([
             { concepto: '', 
@@ -282,7 +292,18 @@ const FacturasForm = () => {
                             variant="outlined"
                             name="nro_factura"
                             value={facturaData.nro_factura}
-                            inputProps={{ inputMode:'numeric', pattern: '[0-9]*', maxLength: 12 }}
+                            onChange={handleChange}
+                        />
+                    </Grid>
+
+                    {/* CAI */}
+                    <Grid item xs={12} sm={2.5}>
+                        <TextField
+                            type="text"
+                            label="CAI"
+                            variant="outlined"
+                            name="cai"
+                            value={facturaData.cai}
                             onChange={handleChange}
                         />
                     </Grid>

@@ -1,0 +1,26 @@
+
+.responsiveContainer {
+    width: 100%; /* El ancho ocupará el 100% del espacio disponible */
+    /* max-width: 1200px; Un ancho máximo para evitar que el contenido se vuelva demasiado ancho en pantallas grandes */
+    margin: 0 auto; /* Centra el contenido horizontalmente en el contenedor */
+    padding: 16px; /* Añade un espacio de relleno */
+}
+
+.title{
+    text-align: center;
+    margin-top: 3% ;
+    margin-bottom: 2vh;
+}
+  
+.buttonContainer {
+    display: flex; /* Para justificar los botones horizontalmente */
+    justify-content: space-between; /* Para justificar los botones de forma justificada */
+    margin-bottom: 3vh; /* Añadir margen inferior de 20px entre los botones y la tabla */
+}
+  
+.formContariner {
+    margin-top: 3%;
+    margin-bottom: 5%;
+    margin-left: 5%;
+    margin-right: 5%;
+}

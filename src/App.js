@@ -16,7 +16,9 @@ import ClientesEditar from "./Components/Clientes/ClientesEditar/ClientesEditar"
 import FacturasEditar from "./Components/Facturas/FacturasEditar/FacturasEditar";
 import Informe from "./Components/Clientes/Informe/Informe";
 import FacturaLogoBackground from "./Components/Facturas/FacturaLogoBackgorund/FacturaLogoBackground";
-import DestinatariosTable from "./Components/Destinatarios/DestinatariosTable";
+import DestinatariosTable from "./Components/Destinatarios/DestinatariosTable/DestinatariosTable";
+import DestinatarioEditar from "./Components/Destinatarios/DestinatariosEditar/DestinatarioEditar";
+import DestinatarioForm from "./Components/Destinatarios/DestinatariosForm/DestinatarioForm";
 
 
 const PrivateRoute = ({ element }) => {
@@ -51,6 +53,8 @@ function App() {
         <Route path="/facturaEditar/:id" element={<PrivateRoute element={<FacturasEditar />} />} />
         <Route path="/clienteEditar/:id" element={<PrivateRoute element={<ClientesEditar />} />} />
         <Route path="/informe/:id" element={<PrivateRoute element={<Informe />} />} />
+        <Route path="/destinatarioEditar/:id" element={<PrivateRoute element={<DestinatarioEditar />} />} />
+        <Route path="/addDestinatario" element={<PrivateRoute element={<DestinatarioForm />} />} />
       </Routes>
     </div>
   </BrowserRouter> );

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useParams } from "react-router";
 import { useSelector, useDispatch } from 'react-redux';
 import { GetClientes, UpdateCliente, ClearID,  
-    GetFacturaDetaill, UpdateFactura, GetProductos } from '../../../Redux/actions';
+    GetFacturaDetaill, UpdateFactura, GetProductos, GetDestinatarios } from '../../../Redux/actions';
 
 // material y estilos
 import Styles from './FacturasEditar.module.css';
@@ -34,13 +34,15 @@ const FacturasEditar = () => {
         destinatario: '',
         direccion: '',
         cuit: '',
-        cond_vta: ''
+        cond_vta: '',
+        cai: ''
     });
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
         dispatch(GetClientes());
         dispatch(GetProductos());
+        dispatch(GetDestinatarios());
         dispatch(ClearID());
         if(id){
             dispatch(GetFacturaDetaill(id));
@@ -75,8 +77,10 @@ const FacturasEditar = () => {
     // SETEO DEL NRO DE FACTURA
     const SetearUltimoNroFctura = async() => {
         let nroFactura = Number(facturaData.nro_factura).toString();
+        let caiFactura = Number(facturaData.cai).toString();
         let cliente = clientes.find(c => c.id === facturaData.id_cliente);
-        cliente.ult_factura = nroFactura
+        cliente.ult_factura = nroFactura;
+        cliente.cai = caiFactura;
         const ClienteActualizado = await dispatch(UpdateCliente(cliente.id, cliente));
         return ClienteActualizado;
     };
@@ -94,7 +98,8 @@ const FacturasEditar = () => {
                     destinatario: '',
                     direccion: '',
                     cuit: '',
-                    cond_vta: ''
+                    cond_vta: '',
+                    cai: ''
                 });
                 setErrors({});
                 await dispatch(GetFacturaDetaill(facturaDetail.id));
@@ -132,7 +137,8 @@ const FacturasEditar = () => {
             destinatario: '',
             direccion: '',
             cuit: '',
-            cond_vta: ''
+            cond_vta: '',
+            cai: ''
         });
         setModalEdit(false);
     };
@@ -146,7 +152,8 @@ const FacturasEditar = () => {
             destinatario: facturaDetail.destinatario,
             direccion: facturaDetail.direccion,
             cuit: facturaDetail.cuit,
-            cond_vta: facturaDetail.cond_vta
+            cond_vta: facturaDetail.cond_vta,
+            cai: facturaDetail.cai
         });
         setModalEdit(true);
     };
@@ -200,7 +207,18 @@ const FacturasEditar = () => {
                             variant="outlined"
                             name="nro_factura"
                             value={facturaData.nro_factura}
-                            inputProps={{ inputMode:'numeric', pattern: '[0-9]*', maxLength: 12 }}
+                            onChange={handleChange}
+                        />
+                    </Grid>
+
+                    {/* CAI */}
+                    <Grid item xs={12} sm={2.5}>
+                        <TextField
+                            type="text"
+                            label="CAI"
+                            variant="outlined"
+                            name="cai"
+                            value={facturaData.cai}
                             onChange={handleChange}
                         />
                     </Grid>
@@ -333,6 +351,9 @@ const FacturasEditar = () => {
                             </Typography>
                             <Typography variant="subtitle1">
                                 Número de factura: {facturaDetail.nro_factura}
+                            </Typography>
+                            <Typography variant="subtitle1">
+                                CAI: {facturaDetail.cai}
                             </Typography>
                         </Paper>
                     </Grid>
