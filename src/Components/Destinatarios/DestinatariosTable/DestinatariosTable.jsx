@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { GetDestinatarios } from "../../../Redux/actions";
+import { DeleteDestinatario, GetDestinatarios } from "../../../Redux/actions";
 import { Link } from "react-router-dom";
 
 // Estilos
 import Styles from "./DestinatariosTable.module.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import Button from "react-bootstrap/Button";
+//import Button from "react-bootstrap/Button";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -16,11 +16,16 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { InputAdornment, TextField } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import Button from "@mui/material/Button"; 
+import { Modal } from '@mui/material';
+import Box from '@mui/material/Box';
 
 export default function DestinatariosTable() {
   const destinatarios = useSelector((state) => state.destinatarios);
   const dispatch = useDispatch();
   const [searchTerm, setSearchTerm] = useState("");
+  const [modalConfirm, setModaConfirm] = useState(false);
+  const [itemBorrar, setItemBorrar] = useState({});
 
   useEffect(() => {
     dispatch(GetDestinatarios());
@@ -29,6 +34,40 @@ export default function DestinatariosTable() {
   const filteredDestinatarios = destinatarios.filter((item) =>
     item.destinatario.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleDelete = async (itemId) => {
+    try{
+      await dispatch(DeleteDestinatario(itemId));
+      await dispatch(GetDestinatarios());
+      closeModal();
+    } catch (error) {
+      console.error("Error al eliminar el cliente:", error);
+    }
+  };
+
+  const openModal = (item) => {
+    setItemBorrar(item);
+    setModaConfirm(true);
+  };
+
+  const closeModal = () => {
+    setItemBorrar();
+    setModaConfirm(false);
+  };
+
+  const bodyModal = (<Box className={Styles.modalContent}>
+    <div className={Styles.contenidoModal}>
+      <h3>Esta seguro que quiere borrar al destinatario ? </h3>
+      <div>
+        <Button variant="contained" color="error" onClick={()=> handleDelete(itemBorrar.id)}>
+          BORRAR
+        </Button>
+        <Button variant="contained" onClick={closeModal}>
+          CANCELAR
+        </Button>
+      </div>
+    </div>
+  </Box>)
 
   return (
     <div className={Styles.responsiveContainer}>
@@ -39,10 +78,10 @@ export default function DestinatariosTable() {
       </p>
       <div className={Styles.buttonsContainer}>
         <a href="/home">
-          <Button variant="primary">Volver</Button>
+          <Button variant="contained" color="primary">Volver</Button>
         </a>
         <a href="/addDestinatario">
-          <Button variant="primary">
+          <Button variant="contained" color="primary">
             {" "}
             <i className="bi bi-person">+</i> Agregar{" "}
           </Button>
@@ -97,7 +136,9 @@ export default function DestinatariosTable() {
                         Ver
                       </Button>
                     </Link>
-                    <Button variant="danger">Borrar</Button>
+                    <Button variant="contained" color="error" onClick={() => openModal(item)}>
+                      Borrar
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -105,6 +146,11 @@ export default function DestinatariosTable() {
           </Table>
         </TableContainer>
       </div>
+
+      <Modal open={modalConfirm} onClose={closeModal}>
+          {bodyModal}
+      </Modal>
+
     </div>
   );
 }
