@@ -57,7 +57,7 @@ const FacturasForm = () => {
         dispatch(GetDestinatarios());
         if(facturaData.id_cliente !== '' && facturaData.nro_factura === '' && facturaData.cai === ''){   
             handleNroChange();
-        };  
+        }; 
     }, [dispatch, facturaData.fecha, facturaData.id_cliente, facturaData.nro_factura, facturaData.cai]);
 
 
@@ -68,6 +68,20 @@ const FacturasForm = () => {
             ...facturaData,
             [name]: value
         });
+        console.log("FORM: ", facturaData);
+        return
+    };
+
+    // SETEAR PROPIEDADES DE DESTINATARIO
+    const handleDestinatario = (e) => {
+        let findDestinatario = destinatarios.find(d => d.id === e.target.value);
+        setFacturaData({
+            ...facturaData,
+            destinatario: findDestinatario.destinatario,
+            direccion: findDestinatario.direccion,
+            cuit: findDestinatario.cuit
+        });
+        console.log("FORM: ", facturaData);
         return
     };
 
@@ -86,6 +100,7 @@ const FacturasForm = () => {
         return
     };
 
+    // SETEO DEL ULTIMO NRO DE FACTURA PARA ACTIALIZARLO EN EL CLIENTE
     const SetearUltimoNroFctura = async() => {
         let nroFactura = Number(facturaData.nro_factura).toString();
         let caiFactura = Number(facturaData.cai).toString();
@@ -266,7 +281,7 @@ const FacturasForm = () => {
                     </Grid>
 
                     {/* CLIENTE */}
-                    <Grid item xs={12} sm={2.5}>
+                    <Grid item xs={12} sm={2}>
                         <FormControl fullWidth>
                             <InputLabel>Cliente</InputLabel>
                             <Select
@@ -285,7 +300,7 @@ const FacturasForm = () => {
                     </Grid>
 
                     {/* NRO FACTURA */}
-                    <Grid item xs={12} sm={2.5}>
+                    <Grid item xs={12} sm={2}>
                         <TextField
                             type="text"
                             label="Nro Factura"
@@ -297,7 +312,7 @@ const FacturasForm = () => {
                     </Grid>
 
                     {/* CAI */}
-                    <Grid item xs={12} sm={2.5}>
+                    <Grid item xs={12} sm={2}>
                         <TextField
                             type="text"
                             label="CAI"
@@ -316,11 +331,27 @@ const FacturasForm = () => {
                 </Grid>
 
                 <Grid container spacing={2} style={{ marginTop: 16, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row' }}>
+                    
+                    {/* ELEGIR DESTINATARIO */}
+                    <Grid item xs={12} sm={2}>
+                        <FormControl fullWidth>
+                            <InputLabel>Lista de Destinatarios</InputLabel>
+                            <Select
+                                label="Lista de Destinatarios"
+                                onChange={handleDestinatario}
+                            >
+                                {destinatarios.map(d =>(<MenuItem key={d.id} value={d.id}>
+                                    {d.destinatario}
+                                    </MenuItem>))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+
                     {/* DESTINATARIO */}
-                    <Grid item xs={12} sm={2.5}>
+                    <Grid item xs={12} sm={2}>
                         <TextField
                             type="text"
-                            label="Destinatario"
+                            label="Destinatario de factura"
                             variant="outlined"
                             name="destinatario"
                             value={facturaData.destinatario}
@@ -330,7 +361,7 @@ const FacturasForm = () => {
                     </Grid>
 
                     {/* DIRECCION */}
-                    <Grid item xs={12} sm={2.5}>
+                    <Grid item xs={12} sm={2}>
                         <TextField
                             type="text"
                             label="Dirección"
@@ -343,7 +374,7 @@ const FacturasForm = () => {
                     </Grid>
 
                     {/* CUIT */}
-                    <Grid item xs={12} sm={2.5}>
+                    <Grid item xs={12} sm={2}>
                         <TextField
                             type="text"
                             label="CUIT"
@@ -356,7 +387,7 @@ const FacturasForm = () => {
                     </Grid>
 
                     {/* COND_VTA */}
-                    <Grid item xs={12} sm={2.5}>
+                    <Grid item xs={12} sm={2}>
                         <FormControl fullWidth>
                             <InputLabel>Condicion de Venta</InputLabel>
                             <Select

@@ -1,7 +1,7 @@
 
 
 .responsiveContainer {
-    width: 100%; /* El ancho ocupará el 100% del espacio disponible */
+    width: 90%; /* El ancho ocupará el 100% del espacio disponible */
     /* max-width: 1200px; Un ancho máximo para evitar que el contenido se vuelva demasiado ancho en pantallas grandes */
     margin: 0 auto; /* Centra el contenido horizontalmente en el contenedor */
     padding: 16px; /* Añade un espacio de relleno */
