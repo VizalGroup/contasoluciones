@@ -70,3 +70,22 @@
   
     /* Otras reglas de estilo según sea necesario */
 }
+
+.contenidoModal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .contenidoModal h3 {
+    margin-bottom: 20px;
+  }
+  
+  .contenidoModal div {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
