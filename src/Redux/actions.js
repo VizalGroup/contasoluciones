@@ -26,16 +26,17 @@ export const DELETE_DESTINATARIOS = "DELETE_DESTINATARIOS";
 
 export const CLEARID = "CLEARID";
 
-// const clienteURL = process.env.REACT_APP_CLIENTE_URL;
-// const facturaURL = process.env.REACT_APP_FACTURA_URL;
-// const productosURL = process.env.REACT_APP_PRODUCTOS_URL;
+const clienteURL = process.env.REACT_APP_CLIENTE_URL;
+const facturaURL = process.env.REACT_APP_FACTURA_URL;
+const productosURL = process.env.REACT_APP_PRODUCTOS_URL;
+const DestinatariosURL = process.env.REACT_APP_DESTINATARIOS_URL;
 
 //DEV
 
-const clienteURL = 'http://localhost/cc_clientescrud/';
-const facturaURL = 'http://localhost/cc_facturascrud/';
-const productosURL = 'http://localhost/cc_productoscrud/';
-const DestinatariosURL = 'http://localhost/cc_destinatarioscrud/';
+// const clienteURL = 'http://localhost/cc_clientescrud/';
+// const facturaURL = 'http://localhost/cc_facturascrud/';
+// const productosURL = 'http://localhost/cc_productoscrud/';
+// const DestinatariosURL = 'http://localhost/cc_destinatarioscrud/';
 
 
 // ACTIONS DE FACTURAS

@@ -109,17 +109,20 @@ export default function FacturaSimple() {
             >
               A
             </p>
-            <div>
+            <div style={{ lineHeight: "1" }}>
               <p>Factura</p>
-              <p className={Styles.smallText}>
-                Nro de Factura: {clienteDeFactura.punto_vta}-{facturaDetail.nro_factura}
+              <p className={Styles.smallText} style={{ marginBottom: "0" }}>
+                Nro de Factura: {clienteDeFactura.punto_vta}-
+                {facturaDetail.nro_factura}
               </p>
-              <p className={Styles.smallText}>Codigo 01</p>
+              <p className={Styles.smallText} style={{ marginTop: "5px" }}>
+                Codigo 01
+              </p>
               <p>Fecha: {facturaDetail.fecha.split("-").reverse().join("-")}</p>
-              <p className={Styles.smallText}>
+              <p className={Styles.smallText} style={{ marginBottom: "5px" }}>
                 C.U.I.T Nº: {clienteDeFactura.cuit}
               </p>
-              <p className={Styles.smallText}>
+              <p className={Styles.smallText} style={{ marginBottom: "5px" }}>
                 ING. BRUTOS: {clienteDeFactura.numero_ingresos_brutos}
               </p>
               <p className={Styles.smallText}>
@@ -131,21 +134,23 @@ export default function FacturaSimple() {
               </p>
             </div>
           </div>
-          <br />
           <hr />
           <br />
           <hr />
           <div className={Styles.secondData}>
-            <p>{facturaDetail.destinatario}</p>
+            <div style={{ justifyContent: "space-between", display: "flex" }}>
+              <p>{facturaDetail.destinatario} </p>
+              <p> CUIT: {facturaDetail.cuit} </p>
+              <p> Responsable Inscripto </p>
+            </div>
+            <br />
             <p>{facturaDetail.direccion}</p>
-            <p>Responsable Inscripto</p>
-            <p>{facturaDetail.cuit}</p>
             <br />
             <p>condición de venta: {facturaDetail.cond_vta}</p>
-
-            <br />
+            <hr />
+            
           </div>
-          <div className={Styles.flexContainer}>
+          <div className={Styles.detailContainer}>
             <div className={Styles.LimitedWidthDiv}>
               <p>Cantidad</p>
               <p>
@@ -227,7 +232,7 @@ export default function FacturaSimple() {
               <br />
               <p>C.A.I Nº: {facturaDetail.cai}</p>
               <p>
-                Fecha de vencimiento:{" "}
+                Fecha de vto:{" "}
                 {facturaDetail.fecha.split("-").reverse().join("-")}
               </p>
               <p>CF-{clienteDeFactura.numero_controladora_fiscal}</p>

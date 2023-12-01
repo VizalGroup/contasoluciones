@@ -93,7 +93,7 @@ export default function FacturaLogoQR() {
       {facturaDetail && clienteDeFactura && productosFactura ? (
         <div className={Styles.Columna}>
           <div className={Styles.firstContainer}>
-            <div>
+            <div style={{ width: "340px" }}>
               <img
                 src={clienteDeFactura.img_logo}
                 alt="Logo no encontrado"
@@ -107,34 +107,33 @@ export default function FacturaLogoQR() {
 
               <p>IVA RESPONSABLE INSCRIPTO</p>
             </div>
-            <p className={Styles.tipoFactura} style={{ position: 'absolute', top: '14.4mm', left: '50%', transform: 'translate(-50%, -50%)' }}>A</p>
+            <p
+              className={Styles.tipoFactura}
+              style={{
+                position: "absolute",
+                top: "14.4mm",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+              }}
+            >
+              A
+            </p>
             <div>
               <p className={Styles.onlyFactura}>Factura</p>
-              <div >
-                <p
-                  className={Styles.facturaData}
-                  style={{ textAlign: "right" }}
-                >
+              <div style={{ width: "300px" }}>
+                <p className={Styles.facturaData} style={{ textAlign: "left", marginBottom: '0' }}>
                   Nro {clienteDeFactura.punto_vta}-{facturaDetail.nro_factura}
                 </p>
-                <p
-                  className={Styles.facturaData}
-                  style={{ textAlign: "right", lineHeight: '1px' }}
-                >
+                <p className={Styles.facturaData} style={{ textAlign: "left" }}>
                   CODIGO 01
                 </p>
                 <br />
-                <div>
-                  <span>
-                    Fecha:
-                    <p
-                      className={Styles.facturaData}
-                      style={{ textAlign: "right" }}
-                    >
-                      {facturaDetail.fecha.split("-").reverse().join("/")}
-                    </p>
-                  </span>
+                <div style={{ display: "inline-block" }}>
+                  <p>
+                    Fecha: {facturaDetail.fecha.split("-").reverse().join("/")}
+                  </p>
                 </div>
+
                 <p className={Styles.enterpriseData}>
                   C.U.I.T : {clienteDeFactura.cuit}
                 </p>
@@ -142,7 +141,11 @@ export default function FacturaLogoQR() {
                   Ing. Brutos: {clienteDeFactura.numero_ingresos_brutos}
                 </p>
                 <p className={Styles.enterpriseData}>
-                  Inicio de Actividades: {clienteDeFactura.inicio_actividades.split("-").reverse().join("/")}
+                  Inicio de Actividades:{" "}
+                  {clienteDeFactura.inicio_actividades
+                    .split("-")
+                    .reverse()
+                    .join("/")}
                 </p>
               </div>
             </div>
@@ -281,17 +284,24 @@ export default function FacturaLogoQR() {
                     alt="Sigla de Afip con detalle"
                     style={{ width: "70px" }}
                   />
-                  <p style={{textAlign: 'right', fontFamily: 'arial', fontWeight: 'bold'}}>Original</p>
+                  <p
+                    style={{
+                      textAlign: "right",
+                      fontFamily: "arial",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Original
+                  </p>
                 </div>
               </div>
             </div>
 
             <div className={Styles.EndContainer}>
               <div>
-               
                 <p>C.A.I Nº: {facturaDetail.cai}</p>
                 <p>
-                  Fecha de vencimiento:{" "}
+                  Fecha de Vto:{" "}
                   {facturaDetail.fecha.split("-").reverse().join("-")}
                 </p>
                 <p>CF-{clienteDeFactura.numero_controladora_fiscal}</p>

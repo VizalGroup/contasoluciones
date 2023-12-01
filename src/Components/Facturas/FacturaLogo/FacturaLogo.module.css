@@ -1,5 +1,4 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,400;1,300&family=Roboto+Mono:wght@600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,400;1,300&family=Roboto+Mono:wght@600&display=swap");
 
 .tipoFactura {
   font-size: 50px;
@@ -10,11 +9,12 @@
   color: rgb(255, 255, 255);
   width: fit-content;
   height: fit-content;
+  margin-right: 15%;
 }
 
 .negrita {
   font-weight: bold;
-  font-family: 'Roboto Mono', sans-serif;
+  font-family: "Roboto Mono", sans-serif;
 }
 
 .divCliente,
@@ -28,16 +28,15 @@
   display: flex;
   flex-direction: flex;
   padding: 10mm;
-  overflow: hidden;
+ 
   justify-content: space-between;
-  }
-  
+}
 
 .flexContainer {
   font-size: 14px;
   text-transform: uppercase;
   /* font-family: "Courier New", Courier, monospace; */
-  font-family: 'Roboto Mono', monospace;
+  font-family: "Roboto Mono", monospace;
   display: flex;
   justify-content: space-between;
   align-items: start;
@@ -47,7 +46,7 @@
   font-size: 13.5px;
   text-transform: uppercase;
   /* font-family: "Courier New", Courier, monospace; */
-  font-family: 'Roboto Mono', monospace;
+  font-family: "Roboto Mono", monospace;
   display: flex;
   justify-content: space-around;
   align-items: baseline;
@@ -57,22 +56,29 @@
 .MidContainer {
   font-size: 14px;
   /* font-family: "Courier New", Courier, monospace; */
-  font-family: 'Roboto Mono', monospace;
+  font-family: "Roboto Mono", monospace;
   display: flex;
   justify-content: space-around;
   align-items: start;
-  min-height: 70mm;
+  min-height: 80mm;
 }
 
 .BottomContainer {
   font-size: 13px;
   /* text-transform: uppercase; */
   /* font-family: "Courier New", Courier, monospace; */
-  font-family: 'Roboto Mono', monospace;
+  font-family: "Roboto Mono", monospace;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   text-align: center;
+}
+
+.dataFinalContainer {
+  font-size: 13px;
+  font-family: "Roboto Mono", monospace;
+  display: flex;
+  line-height: 0.5;
 }
 
 /* .EndContainer {
@@ -101,9 +107,9 @@
 }
 
 .fixImgSize {
-  width: auto;
-  height: 150px;
+  height: auto;
   margin-bottom: 12px;
+  width: 280px;
 }
 
 .printButton {
@@ -124,7 +130,6 @@
   }
 }
 
-
 .LimitedWidthDiv {
   max-width: 300px; /* Establece el ancho máximo según tus preferencias */
   /* word-wrap: break-word; Divide las palabras para ajustarse al ancho del div */
@@ -144,10 +149,4 @@
 .caba {
   font-size: 10px;
   margin-bottom: 0;
-}
-
-.head{
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
 }
