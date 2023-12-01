@@ -34,6 +34,7 @@ const ProductInput = (props) => {
                 type="text"
                 label="Concepto"
                 //variant="outlined"
+                required
                 name="concepto"
                 value={props.product.concepto}
                 inputProps={{ maxLength: 30 }}
@@ -47,6 +48,7 @@ const ProductInput = (props) => {
                 type="number"
                 label="Cantidad"
                 //variant="outlined"
+                required
                 name="cantidad"
                 value={props.product.cantidad}
                 onChange={(e) => props.onCantidadChange(e.target.value)}
@@ -59,6 +61,7 @@ const ProductInput = (props) => {
                 type="number"
                 label="Precio X Unidad"
                 //variant="outlined"
+                required
                 name="precioxu"
                 value={props.product.precioxu}
                 onChange={(e) => props.onPrecioChange(e.target.value)}
@@ -66,7 +69,7 @@ const ProductInput = (props) => {
             </Grid>
 
             {/* IVA */}
-            <Grid item xs={12} sm={1}>
+            <Grid item xs={12} sm={1.5}>
                 <TextField
                 type="number"
                 label="IVA"
@@ -80,7 +83,7 @@ const ProductInput = (props) => {
             </Grid>
 
             {/* SUBTOTAL */}
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12} sm={1.5}>
                 <TextField
                 type="number"
                 label="Subtotal"
@@ -94,7 +97,7 @@ const ProductInput = (props) => {
             </Grid>
 
             {/* IMPORTE */}
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12} sm={1.5}>
                 <TextField
                 type="number"
                 label="Importe"

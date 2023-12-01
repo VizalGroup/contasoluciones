@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 import { useParams } from "react-router";
 import { useSelector, useDispatch } from 'react-redux';
 import { GetClientes, UpdateCliente, ClearID,  
-    GetFacturaDetaill, UpdateFactura, GetProductos, GetDestinatarios } from '../../../Redux/actions';
+    GetFacturaDetaill, UpdateFactura, GetProductos, GetDestinatarios, PostProducto, DeleteProducto, UpdateProducto, } from '../../../Redux/actions';
+import ProductInput from '../../Productos/ProductoInput';
 
 // material y estilos
 import Styles from './FacturasEditar.module.css';
@@ -26,6 +27,11 @@ const FacturasEditar = () => {
     const [selectedOption, setSelectedOption] = useState("facturasimple");
     const productosFactura = productos.filter((p) => p.id_factura === facturaDetail.id);
 
+    const [modalProductos, setModalProductos] = useState(false);
+    const [productData, setProductData] = useState({});
+    const [modalConfirm, setModaConfirm] = useState(false);
+    const [itemBorrar, setItemBorrar] = useState({});
+
     const [modalEdit, setModalEdit] = useState(false);
     const [facturaData, setFacturaData] = useState({
         fecha: '',
@@ -37,6 +43,28 @@ const FacturasEditar = () => {
         cond_vta: '',
         cai: ''
     });
+
+    const [agregaProductos, setAgregarProductos] = useState(false);
+    const [products, setProducts] = useState([
+        { concepto: '', 
+        cantidad: '', 
+        precioxu: '', 
+        iva: '', 
+        subtotal: '', 
+        importe: '', 
+        id_factura: '' },
+    ]);
+    const addProduct = () => {
+        setProducts([...products, 
+            { concepto: '', 
+            cantidad: '', 
+            precioxu: '', 
+            iva: '', 
+            subtotal: '', 
+            importe: '', 
+            id_factura: '' }
+        ]);
+    };
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
@@ -47,7 +75,10 @@ const FacturasEditar = () => {
         if(id){
             dispatch(GetFacturaDetaill(id));
         };
-    }, [dispatch, id]);
+        if(productData.cantidad !== '' && productData.precioxu !== '' && productData.cantidad !== 0 && productData.precioxu !== 0){
+            AutocalcularValores();
+        };
+    }, [dispatch, id, productData.cantidad, productData.precioxu]);
 
 
     const ClienteFactura = (id_cliente) => {
@@ -128,6 +159,313 @@ const FacturasEditar = () => {
         };
     };
 
+
+/* SECCION DE BORRAR UN PRODUCTO */
+  const openModalDelete = (item) => {
+    setItemBorrar(item);
+    setModaConfirm(true);
+  };
+
+  const closeModalDelete = () => {
+    setItemBorrar();
+    setModaConfirm(false);
+  };
+
+  const handleDelete = async (itemId) => {
+    try{
+      await dispatch(DeleteProducto(itemId));
+      await  dispatch(GetProductos());
+      closeModalDelete();
+    } catch (error) {
+      console.error("Error al eliminar el Producto:", error);
+    }
+  };
+
+  const bodyModalDelete = (<Box className={Styles.modalContent}>
+    <div className={Styles.contenidoModal}>
+      <h3>Esta seguro que quiere eliminar el producto ? </h3>
+      <div>
+        <Button variant="contained" color="error" onClick={()=> handleDelete(itemBorrar.id)}>
+          BORRAR
+        </Button>
+        <Button variant="contained" onClick={closeModalDelete}>
+          CANCELAR
+        </Button>
+      </div>
+    </div>
+  </Box>)
+
+/* SECCION DE AÑADIR PRODUCTOS */
+    // BORRAR UN INPUT DE PRODUCTO 
+    const deleteProduct = (index) => {
+        if (products.length > 1) {
+            const updatedProducts = [...products];
+            updatedProducts.splice(index, 1);
+            setProducts(updatedProducts);
+        }
+    };
+    
+    // SETEO DE CONCEPTO DE PRODUCTO
+    const handleConceptoChange = (value, index) => {
+        const updatedProducts = [...products];
+        updatedProducts[index].concepto = value;
+        setProducts(updatedProducts);
+    };
+        
+    // SETEO DE PRECIO DE PRODUCTO
+    const handlePrecioChange = (value, index) => {
+        const updatedProducts = [...products];
+        updatedProducts[index].precioxu = value;
+        setProducts(updatedProducts);
+    };
+        
+    // SETEO DE CANTIDAD DE PRODUCTO
+    const handleCantidadChange = (value, index) => {
+        const updatedProducts = [...products];
+        updatedProducts[index].cantidad = value;
+        setProducts(updatedProducts);
+    };
+    
+    // SETEO DE IVA DE PRODUCTO
+    const handleIvaChange = (value, index) =>{
+        const updatedProducts = [...products];
+        updatedProducts[index].iva = ((updatedProducts[index].cantidad * updatedProducts[index].precioxu) * 21) / 100;
+        setProducts(updatedProducts);
+    };
+    
+    // SETEO DE SUBTOTAL DE PRODUCTO
+    const handleSubtotalChange = (value, index) =>{
+        const updatedProducts = [...products];
+        updatedProducts[index].subtotal = updatedProducts[index].cantidad * updatedProducts[index].precioxu;
+        setProducts(updatedProducts);
+    };
+    
+    // SETEO DE IMPORTE DE PRODUCTO
+    const handleImporteChange = (value, index) =>{
+        const updatedProducts = [...products];
+        updatedProducts[index].importe= updatedProducts[index].subtotal + (updatedProducts[index].subtotal * 0.21);
+        setProducts(updatedProducts);
+    };
+    
+    // FUNCION POSTEO DE PRODUCTOS
+    const PostearProductos = async() => {
+        const Productos = products.map((product) => ({
+            ...product,
+            id_factura: facturaDetail.id, // Establece el id_factura de cada producto
+        }));
+        setProducts(Productos);
+        for(let producto of Productos){
+            await dispatch(PostProducto(producto))
+        };
+        setProducts([
+            { concepto: '', 
+            cantidad: '', 
+            precioxu: '', 
+            iva: '', 
+            subtotal: '', 
+            importe: '', 
+            id_factura: '' }
+        ]);
+        await dispatch(GetProductos());
+    };
+    
+    // BODY DE AGREGAR NEVOS PRODUCTOS
+    const bodyAgregarProductos = (<div>
+        {/* PRODUCTOS */}
+        <form onSubmit={()=>PostearProductos()}>
+            <div>
+            {products.map((product, index) => (
+                <ProductInput
+                    key={index}
+                    product={product}
+                    onConceptoChange={(value) => handleConceptoChange(value, index)}
+                    onCantidadChange={(value) => handleCantidadChange(value, index)}
+                    onPrecioChange={(value) => handlePrecioChange(value, index)}
+                    onIvaChange={(value) => handleIvaChange(value, index)}
+                    onSubtotalChange={(value) => handleSubtotalChange(value, index)}
+                    onImporteChange={(value) => handleImporteChange(value, index)}
+                    onDelete={() => deleteProduct(index)}
+                    />
+                ))}
+                <Button variant="contained" color="primary" style={{ fontSize: "10px" }} onClick={addProduct}>
+                    Agregar otro producto
+                </Button>
+            </div>
+            <div>
+                {/* <Button variant="contained" color="error" style={{ fontSize: "10px", margin: "12px", marginLeft:"-2px" }} onClick={(()=>setAgregarProductos(false))}>
+                    Canselar Añadir
+                </Button> */}
+                <Button variant="contained" color="primary" style={{ fontSize: "12px", margin: "12px" }} type='submit'>
+                    Añadir Productos
+                </Button>
+            </div>
+        </form>
+    </div>);
+
+/* SECCION DE EDITAR PRODUCTO */
+    const closeModalProducto = () => {
+        setProductData({});
+        setModalProductos(false);
+    };
+
+    const openModalProducto = (item) => {
+        setProductData({
+            id: item.id,
+            concepto: item.concepto, 
+            cantidad: item.cantidad, 
+            precioxu: item.precioxu, 
+            iva: item.iva, 
+            subtotal: item.subtotal, 
+            importe: item.importe, 
+            id_factura: facturaDetail.id 
+        });
+        setModalProductos(true);
+    };
+
+    const handleChangeProducto = (e) => {
+        const { name, value } = e.target;
+        setProductData({
+            ...productData,
+            [name]: value,
+        });
+        console.log("FORM: ", productData);
+        return
+    };
+
+    const AutocalcularValores = () => {
+        setProductData({
+            ...productData,
+            iva: (((productData.cantidad * productData.precioxu) * 21) / 100),
+            subtotal: (productData.cantidad * productData.precioxu),
+            importe: ((productData.cantidad * productData.precioxu) * 21)
+        });
+        console.log("FORM: ", productData);
+        return
+    };
+
+    const handleUpdateProducto = async(e) => {
+        e.preventDefault();
+        const ProductoEditado = await dispatch(UpdateProducto(productData.id ,productData));
+            if(ProductoEditado){
+                setProductData({
+                    fecha: '',
+                    id_cliente: '',
+                    nro_factura: '',
+                    destinatario: '',
+                    direccion: '',
+                    cuit: '',
+                    cond_vta: '',
+                    cai: ''
+                });
+                //await dispatch(GetFacturaDetaill(facturaDetail.id));
+                await dispatch(GetProductos());
+                closeModalProducto();
+            } else {
+                console.error("ALGO SALIO MAL EN EL POST DE FACTURA");
+            }
+    };
+
+    const bodyModalProducto = (<Box className={Styles.modalContent}>
+        <h4 className={Styles.title}>Modificar datos de Producto</h4>
+        <div className={Styles.formContariner}>
+            <Button onClick={closeModalProducto} color="primary"
+                style={{ marginTop: "2px", marginLeft: "3vw", marginBottom: "5vh" }}>
+                Cancelar Editor
+            </Button>
+            <form onSubmit={(e)=>handleUpdateProducto(e)}>
+            <Grid container spacing={1.5} style={{ marginTop: '1.5%', marginBottom: '1.5%', display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row' }}>
+                {/* CONCEPTO */}
+                <Grid item xs={12} sm={2}>
+                    <TextField
+                    type="text"
+                    label="Concepto"
+                    variant="outlined"
+                    required
+                    name="concepto"
+                    value={productData.concepto}
+                    inputProps={{ maxLength: 30 }}
+                    onChange={handleChangeProducto}
+                    />
+                </Grid>
+
+                {/* CANTIDAD */}
+                <Grid item xs={12} sm={2}>
+                    <TextField
+                    type="number"
+                    label="Cantidad"
+                    variant="outlined"
+                    required
+                    name="cantidad"
+                    value={productData.cantidad}
+                    onChange={handleChangeProducto}
+                    />
+                </Grid>
+
+                {/* PRECIOXU */}
+                <Grid item xs={12} sm={2}>
+                    <TextField
+                    type="number"
+                    label="Precio X Unidad"
+                    variant="outlined"
+                    required
+                    name="precioxu"
+                    value={productData.precioxu}
+                    onChange={handleChangeProducto}
+                    />
+                </Grid>
+
+                {/* IVA */}
+                <Grid item xs={12} sm={1.5}>
+                    <TextField
+                    type="number"
+                    label="IVA"
+                    variant="outlined"
+                    name="iva"
+                    value={productData.iva}
+                    disabled
+                    placeholder={productData.iva}
+                    onChange={handleChangeProducto}
+                    />
+                </Grid>
+
+                {/* SUBTOTAL */}
+                <Grid item xs={12} sm={2}>
+                    <TextField
+                    type="number"
+                    label="Subtotal"
+                    variant="outlined"
+                    name="subtotal"
+                    value={productData.subtotal}
+                    disabled
+                    placeholder={productData.subtotal}
+                    onChange={handleChangeProducto}
+                    />
+                </Grid>
+
+                {/* IMPORTE */}
+                <Grid item xs={12} sm={2}>
+                    <TextField
+                    type="number"
+                    label="Importe"
+                    variant="outlined"
+                    name="importe"
+                    value={productData.importe}
+                    disabled
+                    placeholder={productData.importe}
+                    onChange={handleChangeProducto}
+                    />
+                </Grid>
+            </Grid>
+            <div className={Styles.buttonContainer}>
+                <Button variant="contained" color="primary" style={{ fontSize: "10px", margin:"10px" }} type='submit' fullWidth>
+                    Guardar cambios
+                </Button>
+            </div>
+            </form>
+        </div>
+    </Box>);
+    
+/* SECCION DE EDITAR FACTURA */
     // CERRAR MODAL
     const closeModal = () => {
         setFacturaData({
@@ -365,17 +703,44 @@ const FacturasEditar = () => {
                                 <span> -Concepto: {producto.concepto}</span>
                                 <span> -Cantidad: {producto.cantidad} - Precio x unidad: {producto.precioxu}</span>
                                 <span> -IVA: {producto.iva} - Subtotal: {producto.subtotal} - Importe: {producto.importe}</span>
+                                <p>
+                                    <Button variant="outlined" color="info" style={{ fontSize: "10px", margin: "12px" }} 
+                                        onClick={() => openModalProducto(producto)}>
+                                        ver
+                                    </Button>
+                                    <Button variant="outlined" color="error" style={{ fontSize: "10px", margin: "12px" }} 
+                                        onClick={() => openModalDelete(producto)}>
+                                        Eliminar
+                                    </Button>
+                                </p>
                             </p>
                         </div>))}
                         </Paper>
                     </Grid>
                 </Grid>
+
+                <div>
+                    <Button variant="contained" color="secondary" style={{ fontSize: "10px", margin: "12px", marginLeft:"-2px" }} onClick={(()=>setAgregarProductos(!agregaProductos))}>
+                        Añadir + Productos
+                    </Button>
+                    {agregaProductos ? <div>{bodyAgregarProductos}</div> : null}
+                </div>
+                
+
             </div> : <h4>Loading...</h4>}
         </div>
         </div>
 
         <Modal open={modalEdit} onClose={closeModal}>
             {bodyModal}
+        </Modal>
+
+        <Modal open={modalConfirm} onClose={closeModalDelete}>
+          {bodyModalDelete}
+        </Modal>
+
+        <Modal open={modalProductos} onClose={closeModalProducto}>
+          {bodyModalProducto}
         </Modal>
         
     </div>);

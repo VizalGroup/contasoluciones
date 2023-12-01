@@ -6,7 +6,7 @@ const initialState = {
   productos: [],
   facturaDetail: {},
   clienteDetail: {},
-  productosDetail: [],
+  productosDetail: {},
   destinatarios: [],
   destinatarioDetail: {},
 };
