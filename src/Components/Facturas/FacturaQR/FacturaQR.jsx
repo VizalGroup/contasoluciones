@@ -84,12 +84,28 @@ export default function FacturaQR() {
     }, 0);
   }
 
+  const imagenFondo = clienteFactura && clienteFactura.img_logo;
+  const backgroundImageStyle = {
+    backgroundImage: `url(${imagenFondo})`,
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "contain",
+    opacity: 0.2,
+    position: "fixed",
+    top: "60%",
+    left: "50%",
+    transform: "translate(-50%, -50%)", // Centra la imagen tanto en el eje X como en el eje Y
+    width: "500px",
+    height: "500px",
+    zIndex: -1,
+  };
+
   const printPage = () => {
     window.print();
   };
 
   return (
     <div className={Styles.pageContainer}>
+      <div style={backgroundImageStyle}></div>
       {facturaDetail && clienteFactura && productosFactura ? (
         <div>
           <div className={Styles.head}>
@@ -146,7 +162,9 @@ export default function FacturaQR() {
                 <p className={Styles.negrita}>Factura</p>
                 <p className={Styles.smallText}>
                   <span className={Styles.negrita}>Nro de Factura: </span>
-                  <span>{clienteFactura.punto_vta}-{facturaDetail.nro_factura}</span>
+                  <span>
+                    {clienteFactura.punto_vta}-{facturaDetail.nro_factura}
+                  </span>
                   <br />
                   <span style={{ textAlign: "right" }}>Codigo 01</span>
                 </p>
@@ -223,7 +241,7 @@ export default function FacturaQR() {
 
           <div className={Styles.BottomContainer}>
             <p>Subtotal: ${subTotalFinal} </p>
-            <p>IVA RESP. INSCRIPTO: ${ivaFinal}</p>
+            <p>IVA 21%: ${ivaFinal}</p>
             <p className={Styles.negrita} style={{ textAlign: "right" }}>
               TOTAL ${importeFinal}
             </p>
@@ -263,18 +281,16 @@ export default function FacturaQR() {
               )}
             </div>
           </div>
-          {/* <hr /> */}
-
-          <div className={Styles.BottomContainer}>
-            <p className={Styles.mediumText}>
+          <div className={Styles.lastContainer}>
+            <p>
               <span className={Styles.negrita}>C.A.I Nº: </span>
               <span>{facturaDetail.cai}</span>
             </p>
-            <p className={Styles.mediumText}>
-              <span className={Styles.negrita}>Fecha de vencimiento: </span>
+            <p>
+              <span className={Styles.negrita}>Fecha de Vto: </span>
               <span>{facturaDetail.fecha.split("-").reverse().join("-")}</span>
             </p>
-            <p className={Styles.mediumText}>
+            <p>
               <span>CF-</span>
               <span>{clienteFactura.numero_controladora_fiscal}</span>
             </p>

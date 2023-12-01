@@ -2,7 +2,12 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router";
 import Styles from "./FacturaLogo.module.css";
-import { GetFacturaDetaill, ClearID, GetProductos, GetClientes } from "../../../Redux/actions";
+import {
+  GetFacturaDetaill,
+  ClearID,
+  GetProductos,
+  GetClientes,
+} from "../../../Redux/actions";
 import afipImg from "../../Img/Afip.png";
 // Esta Factura tiene el logo arriba a la izquierda y marca de agua en el cuerpo del medio Donde van los productos, hay un ejemplo en la carpeta con los archivos del cliente
 
@@ -92,11 +97,10 @@ export default function FacturaLogo() {
     top: "60%",
     left: "50%",
     transform: "translate(-50%, -50%)", // Centra la imagen tanto en el eje X como en el eje Y
-    width: '500px',
-    height: '500px',
+    width: "500px",
+    height: "500px",
     zIndex: -1,
   };
-  
 
   return (
     <div className={Styles.pageContainer}>
@@ -104,26 +108,39 @@ export default function FacturaLogo() {
       {facturaDetail && clienteFactura && productosFactura ? (
         <div>
           <div className={Styles.head}>
-
-            <div >
+            <div>
               <img
                 src={clienteFactura.img_logo}
                 className={Styles.fixImgSize}
                 alt=""
-                />
+              />
             </div>
-            <p className={Styles.tipoFactura}>A</p>
-                </div>
+            <p
+              className={Styles.tipoFactura}
+              style={{
+                position: "absolute",
+                top: "25mm",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+              }}
+            >
+              A
+            </p>
+          </div>
 
           <div className={Styles.TopContainer}>
             <div className={Styles.divCliente}>
-                <p className={Styles.negrita}>{clienteFactura.nombre}</p>
-                <p className={Styles.mediumText}>
-                  <span className={Styles.negrita}>{clienteFactura.direccion}</span>
-                </p>
-                <p className={Styles.mediumText}>
-                  <span className={Styles.negrita}>IVA RESPONSABLE INSCRIPTO</span>
-                </p>
+              <p className={Styles.negrita}>{clienteFactura.nombre}</p>
+              <p className={Styles.mediumText}>
+                <span className={Styles.negrita}>
+                  {clienteFactura.direccion}
+                </span>
+              </p>
+              <p className={Styles.mediumText}>
+                <span className={Styles.negrita}>
+                  IVA RESPONSABLE INSCRIPTO
+                </span>
+              </p>
             </div>
 
             <div className={Styles.divDestinatario}>
@@ -149,14 +166,17 @@ export default function FacturaLogo() {
               <p className={Styles.negrita}>Factura</p>
               <p className={Styles.smallText}>
                 <span className={Styles.negrita}>Nro de Factura: </span>
-                <span>{clienteFactura.punto_vta}-{facturaDetail.nro_factura}</span>
+                <span>
+                  {clienteFactura.punto_vta}-{facturaDetail.nro_factura}
+                </span>
                 <br />
                 <span>Codigo 01</span>
-
               </p>
               <p>
                 <span className={Styles.negrita}>Fecha: </span>
-                <span>{facturaDetail.fecha.split("-").reverse().join("/")}</span>
+                <span>
+                  {facturaDetail.fecha.split("-").reverse().join("/")}
+                </span>
               </p>
               <p className={Styles.smallText}>
                 <span className={Styles.negrita}>C.U.I.T Nº: </span>
@@ -164,11 +184,16 @@ export default function FacturaLogo() {
               </p>
               <p className={Styles.smallText}>
                 <span className={Styles.negrita}>ING. BRUTOS: </span>
-                <span>{clienteFactura.numero_ingresos_brutos}</span> 
+                <span>{clienteFactura.numero_ingresos_brutos}</span>
               </p>
               <p className={Styles.smallText}>
                 <span className={Styles.negrita}>INICIO DE ACTIVIDADES: </span>
-                <spa>{clienteFactura.inicio_actividades.split("-").reverse().join("/")}</spa>
+                <spa>
+                  {clienteFactura.inicio_actividades
+                    .split("-")
+                    .reverse()
+                    .join("/")}
+                </spa>
               </p>
             </div>
           </div>
@@ -217,16 +242,13 @@ export default function FacturaLogo() {
           </div>
           <br />
           {/* <hr /> */}
-          
 
           <br />
           <div className={Styles.BottomContainer}>
             <p>Subtotal: ${subTotalFinal} </p>
-            <p>
-              IVA RESP. INSCRIPTO: ${ivaFinal}
-            </p>
+            <p>IVA 21%: ${ivaFinal}</p>
             <p className={Styles.negrita} style={{ textAlign: "right" }}>
-                  TOTAL ${importeFinal}
+              TOTAL ${importeFinal}
             </p>
           </div>
           {/* <hr /> */}
@@ -241,34 +263,37 @@ export default function FacturaLogo() {
               />
             </div>
             <div>
-            {clienteFactura.direccion.toLowerCase().includes("caba") && (
-              <div>
-                <p className={Styles.caba} >
-                  Orientación al Consumidor Prov. de Bs. As. 0800 222 9042
-                </p>
-                <p className={Styles.caba} >
-                  Area defensa y protección al consumidor Tel. gratuito CABA 147
-                </p>
-              </div>
-            )}
+              {clienteFactura.direccion.toLowerCase().includes("caba") && (
+                <div>
+                  <p className={Styles.caba}>
+                    Orientación al Consumidor Prov. de Bs. As. 0800 222 9042
+                  </p>
+                  <p className={Styles.caba}>
+                    Area defensa y protección al consumidor Tel. gratuito CABA
+                    147
+                  </p>
+                </div>
+              )}
             </div>
           </div>
           {/* <hr /> */}
 
           <br />
-          <div className={Styles.BottomContainer}>
+          <div className={Styles.dataFinalContainer}>
+            <div>
               <p className={Styles.mediumText}>
-                  <span className={Styles.negrita}>C.A.I Nº: </span>
-                  <span>{facturaDetail.cai}</span>
+                <span className={Styles.negrita}>C.A.I Nº: </span>
+                <span>{facturaDetail.cai}</span>
               </p>
-              <p className={Styles.mediumText}>
-                <span className={Styles.negrita}>Fecha de vencimiento:{" "}</span>
-                <span>{facturaDetail.fecha.split("-").reverse().join("-")}</span>
-              </p>
+            <p className={Styles.mediumText} >
+              <span className={Styles.negrita}>Fecha de Vto: </span>
+              <span>{facturaDetail.fecha.split("-").reverse().join("-")}</span>
+            </p>
               <p className={Styles.mediumText}>
                 <span>CF-</span>
                 <span>{clienteFactura.numero_controladora_fiscal}</span>
               </p>
+            </div>
           </div>
           <button className={Styles.printButton} onClick={printPage}>
             Imprimir
@@ -280,4 +305,3 @@ export default function FacturaLogo() {
     </div>
   );
 }
-

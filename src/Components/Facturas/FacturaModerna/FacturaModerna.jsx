@@ -205,7 +205,7 @@ export default function FacturaModerna() {
                 C.A.I: {facturaDetail.cai}
               </p>
               <p>
-                Fecha de vencimiento:{" "}
+                Fecha de Vto:{" "}
                 {facturaDetail.fecha.split("-").reverse().join("-")}
               </p>
               <p>CF-{clienteDeFactura.numero_controladora_fiscal}</p>

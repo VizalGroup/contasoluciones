@@ -210,18 +210,18 @@ export default function FacturaLogoBackground() {
           <div className={Styles.rightContainer}>
             <p className={Styles.facturaData}>Subtotal: ${subTotalFinal} </p>
             <p className={Styles.facturaData}>
-              IVA RESP. INSCRIPTO: ${ivaFinal}
+              IVA 21%: ${ivaFinal}
             </p>
           </div>
           <hr />
           <div className={Styles.flexContainer}>
             <p className={Styles.bold}>Observaciones:</p>
             <div>
-              <img
+              {/* <img
                 src={clienteDeFactura.qr_code}
                 alt="Codigo QR del cliente"
                 style={{ width: "70px" }}
-              />
+              /> */}
               <img
                 src={afipImg}
                 alt="Sigla de Afip con detalle"
@@ -251,7 +251,7 @@ export default function FacturaLogoBackground() {
               <br />
               <p>C.A.I Nº: {facturaDetail.cai}</p>
               <p>
-                Fecha de vencimiento:{" "}
+                Fecha de Vto:{" "}
                 {facturaDetail.fecha.split("-").reverse().join("-")}
               </p>
               <p>CF-{clienteDeFactura.numero_controladora_fiscal}</p>
